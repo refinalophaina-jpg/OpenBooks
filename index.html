@@ -1,47 +1,416 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenBooks</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>OpenBooks</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0e0e10;
+  --bg2:     #16161a;
+  --bg3:     #1e1e24;
+  --bdr:     #2a2a32;
+  --bdr2:    #333340;
+  --text:    #f0f0f5;
+  --t2:      #a0a0b8;
+  --t3:      #606078;
+  --accent:  #b8f000;
+  --adim:    rgba(184,240,0,.12);
+  --aborder: rgba(184,240,0,.35);
+  --r:       8px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 0 16px 72px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── header ── */
+.header {
+  text-align: center;
+  padding: 52px 0 34px;
+  user-select: none;
+}
+.header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -.5px;
+}
+.header h1 span { color: var(--accent); }
+.header p {
+  color: var(--t3);
+  font-size: .82rem;
+  margin-top: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: .02em;
+}
+
+/* ── search card ── */
+.card {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--bg2);
+  border: 1px solid var(--bdr);
+  border-radius: 14px;
+  padding: 22px 18px 18px;
+}
+
+/* ── search row ── */
+.search-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.sinput {
+  flex: 1;
+  padding: 11px 14px;
+  background: var(--bg3);
+  border: 1px solid var(--bdr2);
+  border-radius: var(--r);
+  font-size: .95rem;
+  font-family: 'Syne', sans-serif;
+  color: var(--text);
+  outline: none;
+  -webkit-appearance: none;
+  transition: border-color .2s;
+  min-width: 0;
+}
+.sinput:focus        { border-color: var(--accent); }
+.sinput::placeholder { color: var(--t3); }
+
+.btn-go {
+  padding: 11px 18px;
+  background: var(--accent);
+  color: #000;
+  border-radius: var(--r);
+  font-size: .88rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Syne', sans-serif;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  transition: opacity .15s;
+}
+.btn-go:hover    { opacity: .88; }
+.btn-go:active   { opacity: .7; }
+.btn-go:disabled { opacity: .4; cursor: default; }
+
+/* ── section label ── */
+.row-label {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 8px;
+  margin-top: 16px;
+}
+
+/* ── source pills ── */
+.src-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.spill {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--bdr2);
+  color: var(--t2);
+  background: none;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  -webkit-appearance: none;
+  transition: all .15s;
+  line-height: 1.4;
+  touch-action: manipulation;
+}
+.spill:hover { border-color: var(--t2); color: var(--text); }
+.spill.on {
+  background: var(--adim);
+  border-color: var(--aborder);
+  color: var(--accent);
+}
+
+/* ── format row ── */
+.fmt-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ── divider ── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--bdr);
+  margin: 16px 0 0;
+}
+
+/* ── results ── */
+.results {
+  max-width: 720px;
+  margin: 16px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.result-item {
+  background: var(--bg2);
+  border: 1px solid var(--bdr);
+  border-radius: 10px;
+  padding: 15px 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: border-color .15s;
+  cursor: default;
+}
+.result-item:hover { border-color: var(--bdr2); }
+
+.ri-body { flex: 1; min-width: 0; }
+
+.ri-title {
+  font-family: 'Lora', serif;
+  font-size: .95rem;
+  font-weight: 400;
+  margin-bottom: 5px;
+  line-height: 1.35;
+  color: var(--text);
+}
+.ri-title em {
+  font-style: italic;
+  color: var(--t2);
+}
+
+.ri-meta {
+  font-size: .75rem;
+  color: var(--t3);
+  font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ri-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.ri-src {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent);
+  background: var(--adim);
+  border: 1px solid var(--aborder);
+  border-radius: 4px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+
+.ri-fmt {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--t3);
+  border: 1px solid var(--bdr2);
+  border-radius: 4px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+
+/* ── states ── */
+.state-msg {
+  text-align: center;
+  padding: 48px 0;
+}
+.state-msg p {
+  color: var(--t3);
+  font-size: .85rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+.state-msg .big {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+  color: var(--t3);
+}
+
+/* ── spinner ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid var(--bdr2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin: 0 auto 12px;
+}
+
+/* ── mobile tweaks ── */
+@media (max-width: 480px) {
+  body { padding: 0 12px 80px; }
+  .header { padding: 36px 0 24px; }
+  .header h1 { font-size: 1.7rem; }
+  .card { padding: 18px 14px 14px; border-radius: 12px; }
+  .btn-go { padding: 11px 14px; font-size: .85rem; }
+}
+</style>
 </head>
 <body>
 
-  <header class="header">
-    <h1>Open<span>Books</span></h1>
-    <p>Multi-source open book &amp; paper finder — 12 sources</p>
-  </header>
+<header class="header">
+  <h1>Open<span>Books</span></h1>
+  <p>12 sources · books, papers &amp; more</p>
+</header>
 
-  <div class="card">
-    <!-- search row -->
-    <div class="search-row">
-      <input
-        class="sinput"
-        id="q"
-        type="text"
-        placeholder="Title, author, ISBN, DOI…"
-        autocomplete="off"
-        spellcheck="false"
-      />
-      <button class="btn-go" id="btn-go" onclick="doSearch()">Search</button>
-    </div>
-
-    <!-- source pills -->
-    <div class="src-row" id="src-row">
-      <!-- populated by JS -->
-    </div>
-
-    <!-- format filter row -->
-    <div class="fmt-row" id="fmt-row">
-      <span class="fmt-label">Format:</span>
-      <!-- populated by JS -->
-    </div>
+<div class="card">
+  <div class="search-row">
+    <input
+      class="sinput"
+      id="q"
+      type="search"
+      placeholder="Title, author, ISBN, DOI…"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+      enterkeyhint="search"
+    />
+    <button class="btn-go" id="btn-go">Search</button>
   </div>
 
-  <!-- results -->
-  <div class="results" id="results"></div>
+  <hr class="divider">
 
-  <script src="app.js"></script>
+  <p class="row-label" style="margin-top:14px">Sources</p>
+  <div class="src-row" id="src-row"></div>
+
+  <p class="row-label">Format</p>
+  <div class="fmt-row" id="fmt-row"></div>
+</div>
+
+<div class="results" id="results">
+  <div class="state-msg">
+    <p class="big">📖</p>
+    <p>Enter a title, author, ISBN or DOI to search.</p>
+  </div>
+</div>
+
+<script>
+const SOURCES = [
+  'LibGen','Sci-Hub','OpenAlex','Semantic Scholar',
+  'arXiv','PubMed','DOAJ','Project Gutenberg',
+  'Internet Archive','Open Library','CORE','Unpaywall',
+];
+const FORMATS = ['PDF','EPUB','DJVU','MOBI','HTML'];
+
+const activeSources = new Set(SOURCES);
+const activeFormats = new Set();
+
+function initPills() {
+  const srcRow = document.getElementById('src-row');
+  SOURCES.forEach(src => {
+    const b = document.createElement('button');
+    b.className = 'spill on';
+    b.textContent = src;
+    b.addEventListener('click', () => {
+      activeSources.has(src) ? activeSources.delete(src) : activeSources.add(src);
+      b.classList.toggle('on', activeSources.has(src));
+    });
+    srcRow.appendChild(b);
+  });
+
+  const fmtRow = document.getElementById('fmt-row');
+  FORMATS.forEach(fmt => {
+    const b = document.createElement('button');
+    b.className = 'spill';
+    b.textContent = fmt;
+    b.addEventListener('click', () => {
+      activeFormats.has(fmt) ? activeFormats.delete(fmt) : activeFormats.add(fmt);
+      b.classList.toggle('on', activeFormats.has(fmt));
+    });
+    fmtRow.appendChild(b);
+  });
+}
+
+function doSearch() {
+  const q = document.getElementById('q').value.trim();
+  if (!q) return;
+
+  const btn = document.getElementById('btn-go');
+  const results = document.getElementById('results');
+
+  btn.disabled = true;
+  results.innerHTML = '<div class="state-msg"><div class="spinner"></div><p>Searching ' + activeSources.size + ' sources…</p></div>';
+
+  // Replace this timeout with real parallel fetch calls per source
+  setTimeout(() => {
+    btn.disabled = false;
+    renderResults(q);
+  }, 900);
+}
+
+function renderResults(q) {
+  const results = document.getElementById('results');
+  const srcs = [...activeSources];
+
+  if (!srcs.length) {
+    results.innerHTML = '<div class="state-msg"><p>No sources selected — toggle some above.</p></div>';
+    return;
+  }
+
+  const fmts = ['PDF','EPUB','DJVU','MOBI','HTML'];
+  const demo = srcs.slice(0, 8).map((src, i) => ({
+    title: q,
+    author: 'Author ' + (i + 1),
+    year: 2015 + (i % 10),
+    fmt: fmts[i % fmts.length],
+    source: src,
+  }));
+
+  results.innerHTML = demo.map(r => `
+    <div class="result-item">
+      <div class="ri-body">
+        <div class="ri-title">${esc(r.title)} <em>— ${esc(r.author)}</em></div>
+        <div class="ri-meta">${esc(r.source)} · ${r.year}</div>
+      </div>
+      <div class="ri-right">
+        <span class="ri-src">${esc(r.source)}</span>
+        <span class="ri-fmt">${r.fmt}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+document.getElementById('q').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+document.getElementById('btn-go').addEventListener('click', doSearch);
+
+initPills();
+</script>
 </body>
 </html>
