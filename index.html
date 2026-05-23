@@ -33,6 +33,7 @@
   --rs:      6px;
   --rl:      14px;
 }
+/* #10 — thin scrollbar on body */
 body {
   background: var(--bg);
   color: var(--text);
@@ -41,6 +42,8 @@ body {
   min-height: 100dvh;
   padding: 0 16px 80px;
   -webkit-font-smoothing: antialiased;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bdr2) transparent;
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -64,9 +67,11 @@ body {
 }
 
 /* ── tabs ───────────────────────────────────────────────────── */
+/* #1 — sliding underline indicator */
 .tabs {
   display: flex; gap: 4px; margin-bottom: 14px;
   background: var(--bg3); border-radius: var(--r); padding: 4px;
+  position: relative;
 }
 .tab {
   flex: 1; padding: 9px 12px; background: none; border: none;
@@ -74,8 +79,29 @@ body {
   font-family: 'JetBrains Mono', monospace; font-size: 11px;
   font-weight: 500; letter-spacing: .04em; text-transform: uppercase;
   cursor: pointer; transition: all .15s; -webkit-appearance: none;
+  position: relative;
 }
 .tab.on { background: var(--bg4); color: var(--text); }
+.tab.on::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 20%; right: 20%;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  transform: scaleX(1);
+  transition: transform .2s ease, left .2s ease, right .2s ease;
+}
+.tab:not(.on)::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 50%; right: 50%;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transition: transform .2s ease, left .2s ease, right .2s ease;
+}
 .tab .badge {
   display: inline-block; margin-left: 6px; padding: 1px 6px;
   background: var(--adim); color: var(--accent);
@@ -84,14 +110,18 @@ body {
 
 /* ── search inputs ──────────────────────────────────────────── */
 .search-row { display: flex; gap: 8px; margin-bottom: 10px; }
+/* #3 — inner shadow on focus */
 .sinput {
   flex: 1; padding: 11px 14px; background: var(--bg3);
   border: 1px solid var(--bdr2); border-radius: var(--r);
   font-size: .95rem; font-family: 'Syne', sans-serif;
   color: var(--text); outline: none; -webkit-appearance: none;
-  transition: border-color .2s; min-width: 0;
+  transition: border-color .2s, box-shadow .2s; min-width: 0;
 }
-.sinput:focus { border-color: var(--accent); }
+.sinput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--adim);
+}
 .sinput::placeholder { color: var(--t3); }
 
 textarea.sinput {
@@ -99,6 +129,18 @@ textarea.sinput {
   font-family: 'JetBrains Mono', monospace; font-size: .82rem;
   line-height: 1.55; padding: 12px 14px;
 }
+
+/* #13 / #14 — shake animation for empty guard */
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  15%     { transform: translateX(-6px); }
+  30%     { transform: translateX(6px); }
+  45%     { transform: translateX(-4px); }
+  60%     { transform: translateX(4px); }
+  75%     { transform: translateX(-2px); }
+  90%     { transform: translateX(2px); }
+}
+.shake { animation: shake .45s ease; }
 
 .btn-go {
   padding: 11px 18px; background: var(--accent); color: #000;
@@ -134,9 +176,21 @@ textarea.sinput {
 }
 
 /* ── pills ──────────────────────────────────────────────────── */
+/* #11 — select-all/none row */
+.src-toggle-row {
+  display: flex; justify-content: flex-end; margin-bottom: 4px;
+}
+.src-toggle-row a {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--t3); text-decoration: none; cursor: pointer;
+  letter-spacing: .04em;
+}
+.src-toggle-row a:hover { color: var(--t2); }
+
 .src-row, .fmt-row {
   display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px;
 }
+/* #2 — pill active scale feedback */
 .spill {
   padding: 5px 12px; border-radius: 20px; font-size: 11px;
   font-weight: 500; border: 1px solid var(--bdr2);
@@ -148,6 +202,7 @@ textarea.sinput {
 .spill.on {
   background: var(--adim); border-color: var(--aborder); color: var(--accent);
 }
+.spill:active { transform: scale(0.95); }
 
 /* ── collapsible ────────────────────────────────────────────── */
 .adv-toggle {
@@ -162,6 +217,15 @@ textarea.sinput {
 .adv-toggle.open .chev { transform: rotate(90deg); }
 .adv-body { display: none; padding-top: 6px; }
 .adv-body.open { display: block; }
+
+/* ── qb live hint ────────────────────────────────────────────── */
+/* #12 */
+#qb-hint {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--t3); margin-top: 5px; min-height: 14px;
+  letter-spacing: .02em;
+}
+#qb-hint span { color: var(--accent); }
 
 /* ════════════════════════════════════════════════════════════════
    PARSE PREVIEW
@@ -183,6 +247,19 @@ textarea.sinput {
   color: var(--t2);
 }
 .preview-stats span { color: var(--accent); font-weight: 600; }
+
+/* #20 — ToC jump pills */
+.toc-jump {
+  display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px;
+}
+.toc-jump-pill {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  padding: 3px 8px; border-radius: 4px;
+  background: var(--bg4); border: 1px solid var(--bdr2);
+  color: var(--t2); cursor: pointer; -webkit-appearance: none;
+  transition: all .15s;
+}
+.toc-jump-pill:hover { color: var(--accent); border-color: var(--aborder); }
 
 /* outline tree */
 .outline { font-family: 'JetBrains Mono', monospace; font-size: .8rem; }
@@ -242,9 +319,19 @@ textarea.sinput {
 .tree-item.done    .dot { background: var(--ok); }
 .tree-item.empty   .dot { background: var(--err); }
 .tree-item-body { flex: 1; min-width: 0; }
+/* #9 — clamp tree-item titles to 2 lines, expand on hover */
 .tree-item-title {
   font-family: 'Lora', serif; font-size: .82rem;
   color: var(--text); line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.tree-item:hover .tree-item-title {
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
 }
 .tree-item-title em { color: var(--t2); font-style: italic; }
 .tree-item-meta {
@@ -275,12 +362,16 @@ textarea.sinput {
   color: var(--t3); text-transform: uppercase; letter-spacing: .08em;
   margin-right: 4px;
 }
+/* #8 — custom chevron on selects */
 .toolbar select {
   background: var(--bg3); color: var(--text);
   border: 1px solid var(--bdr2); border-radius: var(--rs);
-  padding: 5px 8px; font-size: .72rem;
+  padding: 5px 28px 5px 8px; font-size: .72rem;
   font-family: 'JetBrains Mono', monospace;
   -webkit-appearance: none; cursor: pointer; outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23606078'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
 }
 .toolbar .grow { flex: 1; }
 .toolbar .stats {
@@ -288,6 +379,16 @@ textarea.sinput {
   font-family: 'JetBrains Mono', monospace;
 }
 .toolbar .stats span { color: var(--accent); }
+
+/* #15 — Clear button in toolbar */
+.btn-clear-results {
+  padding: 4px 9px; background: none; color: var(--t3);
+  border: 1px solid var(--bdr); border-radius: var(--rs);
+  font-family: 'JetBrains Mono', monospace; font-size: .68rem;
+  cursor: pointer; -webkit-appearance: none; transition: all .15s;
+  white-space: nowrap;
+}
+.btn-clear-results:hover { color: var(--err); border-color: var(--err); }
 
 /* section group */
 .rsec {
@@ -323,17 +424,25 @@ textarea.sinput {
 }
 
 /* item card */
+/* #4 — hover border + shadow on icard */
 .icard {
   background: var(--bg3); border: 1px solid var(--bdr);
   border-radius: var(--r); padding: 12px 14px;
   margin-bottom: 6px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.icard:hover {
+  border-color: var(--bdr2);
+  box-shadow: 0 2px 12px rgba(0,0,0,.25);
 }
 .icard-row1 {
   display: flex; gap: 10px; align-items: flex-start;
 }
+/* #22 — break very long titles */
 .icard-title {
   flex: 1; min-width: 0; font-family: 'Lora', serif;
   font-size: .95rem; line-height: 1.35; color: var(--text);
+  overflow-wrap: break-word; word-break: break-word;
 }
 .icard-title em { color: var(--t2); font-style: italic; font-size: .88rem; }
 .icard-year {
@@ -385,35 +494,56 @@ textarea.sinput {
 .icard.expanded .icard-collapse .chev { transform: rotate(90deg); }
 .icard-collapse .chev { display: inline-block; transition: transform .15s; }
 
+/* untitled muted style */
+.untitled { color: var(--t3); font-style: italic; }
+
 /* state */
 .state-msg { text-align: center; padding: 48px 0; }
 .state-msg p { color: var(--t3); font-size: .85rem; font-family: 'JetBrains Mono', monospace; }
 .state-msg .big { font-size: 1.6rem; margin-bottom: 8px; color: var(--t3); }
 
-/* spinner */
+/* #5 — spinner centred with flex wrapper */
 @keyframes spin { to { transform: rotate(360deg); } }
+.spinner-wrap { display: flex; justify-content: center; margin-bottom: 12px; }
 .spinner {
   width: 20px; height: 20px; border: 2px solid var(--bdr2);
   border-top-color: var(--accent); border-radius: 50%;
-  animation: spin .7s linear infinite; margin: 0 auto 12px;
+  animation: spin .7s linear infinite;
 }
 
-/* progress bar */
+/* #7 — progress bar colour animates to green at 100% */
 .progress {
   height: 3px; background: var(--bg3); border-radius: 2px;
   overflow: hidden; margin-top: 10px;
 }
 .progress-fill {
   height: 100%; background: var(--accent);
-  width: 0%; transition: width .25s ease-out;
+  width: 0%; transition: width .25s ease-out, background .4s ease;
+}
+.progress-fill.complete { background: var(--ok); }
+
+/* toast / inline message */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--bg4); color: var(--text); border: 1px solid var(--bdr2);
+  border-radius: var(--r); padding: 9px 18px;
+  font-family: 'JetBrains Mono', monospace; font-size: .8rem;
+  z-index: 200; pointer-events: none;
+  animation: toastIn .2s ease forwards;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 /* ════════════════════════════════════════════════════════════════
    READER OVERLAY (book-style view + print → PDF)
    ════════════════════════════════════════════════════════════════ */
+/* #6 — safe-area-inset-bottom for iPhone notch */
 .reader-fab {
   position: fixed; right: 16px; bottom: 16px; z-index: 40;
   display: flex; flex-direction: column; gap: 8px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 .fab-btn {
   background: var(--accent); color: #000;
@@ -565,6 +695,7 @@ textarea.sinput {
     @bottom-center { content: counter(page); font-family: 'JetBrains Mono', monospace; font-size: 9pt; color: #888; }
   }
   body { background: #fff !important; padding: 0 !important; }
+  /* #29 — body.printing hides non-reader elements */
   .header, .card, .preview, .results, .reader-bar, .reader-fab { display: none !important; }
   .reader { position: static !important; background: #fff !important; }
   .book { padding: 0 !important; max-width: 100% !important; font-size: 11pt; line-height: 1.55; }
@@ -572,6 +703,15 @@ textarea.sinput {
   .book .chapter { page-break-before: always; padding-top: 10mm; }
   .book .chapter p { orphans: 3; widows: 3; }
   a { color: inherit; text-decoration: none; }
+}
+
+/* #29 — body.printing class (JS beforeprint/afterprint) */
+body.printing .header,
+body.printing .card,
+body.printing .preview,
+body.printing .results,
+body.printing .reader-fab {
+  display: none !important;
 }
 
 /* mobile */
@@ -586,6 +726,8 @@ textarea.sinput {
   .book { padding: 40px 24px 60px; font-size: 16px; }
   .book .title-page h1 { font-size: 1.8rem; }
   .book .chapter h2 { font-size: 1.4rem; }
+  /* #30 — FAB bottom padding on mobile */
+  .results { padding-bottom: 80px; }
 }
 </style>
 </head>
@@ -612,7 +754,7 @@ textarea.sinput {
         placeholder="Title, author, ISBN, DOI…"
         autocomplete="off" autocorrect="off" autocapitalize="off"
         spellcheck="false" enterkeyhint="search" />
-      <button class="btn-go" id="btn-go">Search</button>
+      <button class="btn-go" id="btn-go" title="Search (Enter)">Search</button>
     </div>
   </div>
 
@@ -626,8 +768,9 @@ Examples:
 • arXiv:1706.03762
 • Emotional Intelligence — Daniel Goleman (1995)
 • A pasted multi-section resource list with SECTION headers"></textarea>
+    <div id="qb-hint"></div>
     <div class="batch-actions">
-      <button class="btn-go" id="btn-parse">Parse</button>
+      <button class="btn-go" id="btn-parse" title="Parse batch input (Enter)">Parse</button>
       <button class="btn-ghost grow" id="btn-clear">Clear</button>
     </div>
   </div>
@@ -639,6 +782,10 @@ Examples:
   </div>
   <div class="adv-body" id="adv-body">
     <p class="row-label" style="margin-top:6px">Sources</p>
+    <!-- #11 — select all / none -->
+    <div class="src-toggle-row">
+      <a id="src-all-none" href="#">[all]</a>
+    </div>
     <div class="src-row" id="src-row"></div>
 
     <p class="row-label">Format</p>
@@ -655,6 +802,7 @@ Examples:
     <div class="preview-title">Detected structure</div>
     <div class="preview-stats" id="preview-stats"></div>
   </div>
+  <div id="toc-jump-wrap"></div>
   <div class="outline" id="outline"></div>
   <div class="batch-actions" style="margin-top:14px">
     <button class="btn-go grow" id="btn-search-all">Search All Items</button>
@@ -685,7 +833,7 @@ Examples:
 <!-- ── RESULTS ──────────────────────────────────────────────── -->
 <div class="results" id="results">
   <div class="state-msg">
-    <div class="spinner"></div>
+    <div class="spinner-wrap"><div class="spinner"></div></div>
     <p>Loading 102-item dataset…</p>
   </div>
 </div>
@@ -748,13 +896,14 @@ const RE_PMID      = /\b(?:pmid|PMID):?\s*(\d+)/;
 const RE_URL       = /https?:\/\/[^\s)]+/;
 const RE_DIVIDER   = /^[=─-]{3,}\s*$/;
 const RE_SECTION   = /^SECTION\s+\d+\s*:\s*(.+?)\s*$/i;
-const RE_SUBSECTION= /^[A-Z][A-Z0-9 ,&'’\-\/]{3,}$/;          // ALL CAPS line (with allowed chars)
+const RE_SUBSECTION= /^[A-Z][A-Z0-9 ,&''\-\/]{3,}$/;          // ALL CAPS line (with allowed chars)
 const RE_ITEM_DASH = /^(.+?)\s+[—–-]\s+(.+?)(?:\s*\((\d{4})\))?\s*$/;
 const RE_LINK_LINE = /^([A-Za-z][A-Za-z0-9 &'-]{1,40}?):\s*(https?:\/\/\S+)/;
 const RE_BING_TAIL = /\s*\([^)]*\bin Bing\b[^)]*\)\s*$/i;
 
+/* #27 — uid uses timestamp prefix to avoid collisions across loadDataset + manual parse */
 let nextId = 0;
-const uid = () => `i${++nextId}`;
+const uid = () => `${Date.now()}-${++nextId}`;
 
 function detectShape(lines) {
   const nonBlank = lines.filter(l => l.trim());
@@ -804,7 +953,7 @@ function parseStructured(lines) {
   const finalize = () => { curItem = null; };
 
   for (let raw of lines) {
-    const line = raw.replace(/ /g,' ').replace(/\s+$/,'').replace(RE_BING_TAIL,'');
+    const line = raw.replace(/ /g,' ').replace(/\s+$/,'').replace(RE_BING_TAIL,'');
     const trim = line.trim();
 
     if (!trim || RE_DIVIDER.test(trim)) { finalize(); continue; }
@@ -967,6 +1116,30 @@ function toTitle(s) {
   return s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()).replace(/&/g,'&');
 }
 
+/* ── lightweight batch hint counter ──────────────────────────── */
+/* #12 — used for live preview */
+function countBatchHint(raw) {
+  if (!raw.trim()) return null;
+  const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const dashItems  = lines.filter(l => RE_ITEM_DASH.test(l)).length;
+  const idItems    = lines.filter(l => RE_DOI.test(l) || RE_ARXIV.test(l) || RE_ISBN13.test(l) || RE_PMID.test(l)).length;
+  const secCount   = lines.filter(l => RE_SECTION.test(l)).length;
+  const total      = Math.max(dashItems + idItems, lines.filter(l => l.length > 2 && !/^[=─-]{3,}$/.test(l) && !RE_SECTION.test(l) && !RE_LINK_LINE.test(l)).length);
+  return { total, dashItems, idItems, secCount };
+}
+
+/* ════════════════════════════════════════════════════════════════
+   TOAST
+   ════════════════════════════════════════════════════════════════ */
+function showToast(msg, duration) {
+  const dur = duration || 2800;
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 320); }, dur);
+}
+
 /* ════════════════════════════════════════════════════════════════
    UI: PILLS / TABS / ADVANCED
    ════════════════════════════════════════════════════════════════ */
@@ -976,6 +1149,7 @@ function initPills() {
       const b = document.createElement('button');
       b.className = 'spill' + (onByDefault ? ' on' : '');
       b.textContent = v;
+      b.title = 'Click to toggle source';
       if (onByDefault) set.add(v);
       b.addEventListener('click', () => {
         set.has(v) ? set.delete(v) : set.add(v);
@@ -987,6 +1161,20 @@ function initPills() {
   mk(document.getElementById('src-row'),  SOURCES, state.activeSources, true);
   mk(document.getElementById('fmt-row'),  FORMATS, state.activeFormats, false);
   mk(document.getElementById('type-row'), TYPES,   state.activeTypes,   false);
+
+  /* #11 — all / none toggle for sources */
+  const toggleLink = document.getElementById('src-all-none');
+  let allOn = true;
+  toggleLink.addEventListener('click', e => {
+    e.preventDefault();
+    allOn = !allOn;
+    toggleLink.textContent = allOn ? '[all]' : '[none]';
+    document.querySelectorAll('#src-row .spill').forEach(b => {
+      const v = b.textContent;
+      if (allOn) { state.activeSources.add(v); b.classList.add('on'); }
+      else       { state.activeSources.delete(v); b.classList.remove('on'); }
+    });
+  });
 }
 
 function initTabs() {
@@ -1017,11 +1205,29 @@ function renderPreview() {
   const wrap = document.getElementById('preview');
   const out  = document.getElementById('outline');
   const stats= document.getElementById('preview-stats');
+  const tocWrap = document.getElementById('toc-jump-wrap');
   if (!state.parsed || !state.parsed.items.length) { wrap.hidden = true; return; }
 
   wrap.hidden = false;
   const s = state.parsed.stats;
   stats.innerHTML = `<span>${s.items}</span> items · <span>${s.sections}</span> sections · <span>${s.subsections}</span> subsections · <span>${s.withLinks}</span> with links`;
+
+  /* #20 — mini ToC jump row when sections >= 3 */
+  if (s.sections >= 3) {
+    tocWrap.innerHTML = '<div class="toc-jump" id="toc-jump">' +
+      state.parsed.sections.map((sec, si) =>
+        `<button class="toc-jump-pill" data-sec="${si}">${esc(sec.name)}</button>`
+      ).join('') +
+      '</div>';
+    tocWrap.querySelectorAll('.toc-jump-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const target = out.querySelector(`.tree-sec[data-sec="${pill.dataset.sec}"]`);
+        if (target) { target.classList.add('open'); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      });
+    });
+  } else {
+    tocWrap.innerHTML = '';
+  }
 
   out.innerHTML = state.parsed.sections.map((sec, si) => `
     <div class="tree-sec ${si === 0 ? 'open' : ''}" data-sec="${si}">
@@ -1061,6 +1267,12 @@ function renderPreview() {
   badge.hidden = false; badge.textContent = s.items;
 }
 
+/* #21 — render "(untitled)" for missing titles */
+function titleOrUntitled(title) {
+  if (!title) return '<span class="untitled">(untitled)</span>';
+  return esc(title);
+}
+
 function itemRow(it) {
   const yr = it.year ? `${it.year} · ` : '';
   const auth = it.author ? `<em>— ${esc(it.author)}</em>` : '';
@@ -1069,7 +1281,7 @@ function itemRow(it) {
     <div class="tree-item ${it.status}" data-id="${it.id}">
       <div class="dot"></div>
       <div class="tree-item-body">
-        <div class="tree-item-title">${esc(it.title)} ${auth}</div>
+        <div class="tree-item-title">${titleOrUntitled(it.title)} ${auth}</div>
         <div class="tree-item-meta">${yr}${esc(it.type||'')}${links?' · '+links:''}</div>
       </div>
     </div>
@@ -1081,6 +1293,13 @@ function itemRow(it) {
    ════════════════════════════════════════════════════════════════ */
 async function doSearchAll() {
   if (state.searching || !state.parsed) return;
+
+  /* #25 — guard zero active sources */
+  if (state.activeSources.size === 0) {
+    showToast('Select at least one source');
+    return;
+  }
+
   state.searching = true; state.cancelled = false;
 
   const items = state.parsed.items;
@@ -1091,6 +1310,7 @@ async function doSearchAll() {
 
   btn.disabled = true; cancel.hidden = false; prog.hidden = false;
   fill.style.width = '0%';
+  fill.classList.remove('complete');
 
   const total = items.length; let done = 0;
   const limit = 4;
@@ -1103,14 +1323,18 @@ async function doSearchAll() {
       await doSearchItem(it);
       it.status = it.searchResults.length ? 'done' : 'empty';
       refreshItemRow(it);
-      done++; fill.style.width = (done/total*100).toFixed(1) + '%';
+      done++;
+      const pct = (done/total*100).toFixed(1);
+      fill.style.width = pct + '%';
+      /* #7 — turn green at 100% */
+      if (done === total) fill.classList.add('complete');
     }
   }
   await Promise.all(Array.from({length: limit}, worker));
 
   state.searching = false;
   btn.disabled = false; cancel.hidden = true;
-  setTimeout(() => prog.hidden = true, 400);
+  setTimeout(() => { prog.hidden = true; fill.classList.remove('complete'); }, 1200);
   renderResults();
 }
 
@@ -1128,7 +1352,7 @@ async function doSearchItem(it) {
         format: pick(['PDF','EPUB','HTML']),
         size:   `${(0.5 + Math.random()*8).toFixed(1)}MB`,
         year:   it.year || (2000 + Math.floor(Math.random()*25)),
-        url:    `https://example.com/${encodeURIComponent(src)}/${encodeURIComponent(it.title.slice(0,40))}`,
+        url:    `https://example.com/${encodeURIComponent(src)}/${encodeURIComponent((it.title||'').slice(0,40))}`,
       });
     }
   }
@@ -1151,6 +1375,7 @@ function renderResults() {
   const all = state.parsed.items;
   const found = all.filter(i => i.searchResults.length).length;
 
+  /* #15 — clear results button in toolbar */
   wrap.innerHTML = `
     <div class="toolbar">
       <span class="toolbar-label">View</span>
@@ -1168,6 +1393,7 @@ function renderResults() {
       </select>
       <span class="grow"></span>
       <span class="stats"><span>${found}</span>/${all.length} found</span>
+      <button class="btn-clear-results" id="btn-clear-results" title="Clear results">✕ Clear</button>
     </div>
     ${state.parsed.sections.map(sec => sectionBlock(sec)).join('')}
   `;
@@ -1176,6 +1402,15 @@ function renderResults() {
   document.getElementById('rsort').value   = state.resultsSort;
   document.getElementById('rfilter').addEventListener('change', e => { state.resultsFilter = e.target.value; renderResults(); });
   document.getElementById('rsort').addEventListener('change',   e => { state.resultsSort   = e.target.value; renderResults(); });
+
+  /* #15 — clear button handler */
+  document.getElementById('btn-clear-results').addEventListener('click', () => {
+    state.parsed = null;
+    document.getElementById('fab').hidden = true;
+    document.getElementById('preview').hidden = true;
+    document.getElementById('batch-badge').hidden = true;
+    wrap.innerHTML = '<div class="state-msg"><p class="big">📖</p><p>Search a single query, or paste a list in Batch mode.</p></div>';
+  });
 
   // wire collapsibles
   wrap.querySelectorAll('.rsec-head').forEach(h => h.addEventListener('click', () => h.parentElement.classList.toggle('open')));
@@ -1191,17 +1426,21 @@ function renderResults() {
   document.getElementById('fab').hidden = !(state.parsed && state.parsed.items.length);
 }
 
+/* #19 — sectionBlock skips rendering if no items after filter */
 function sectionBlock(sec) {
   const items = filterSort(sec.items);
-  const subBlocks = sec.subs.map(sub => {
-    const subItems = filterSort(sub.items);
+  const subPairs = sec.subs.map(sub => ({ sub, subItems: filterSort(sub.items) }));
+  const hasContent = items.length || subPairs.some(p => p.subItems.length);
+  if (!hasContent) return '';
+
+  const subBlocks = subPairs.map(({ sub, subItems }) => {
     if (!subItems.length) return '';
     return `<div class="rsub">
       <div class="rsub-name">${esc(sub.name)} · ${subItems.length}</div>
       ${subItems.map(itemCard).join('')}
     </div>`;
   }).join('');
-  if (!items.length && !subBlocks) return '';
+
   return `<div class="rsec open">
     <div class="rsec-head">
       <span class="chev">›</span>
@@ -1225,32 +1464,36 @@ function filterSort(items) {
   if (state.resultsFilter === 'missing') out = out.filter(i => !i.searchResults.length);
   if (state.activeTypes.size)            out = out.filter(i => !i.type || state.activeTypes.has(i.type));
 
-  if (state.resultsSort === 'title')   out.sort((a,b) => a.title.localeCompare(b.title));
+  if (state.resultsSort === 'title')   out.sort((a,b) => (a.title||'').localeCompare(b.title||''));
   if (state.resultsSort === 'year')    out.sort((a,b) => (b.year||0) - (a.year||0));
   if (state.resultsSort === 'results') out.sort((a,b) => b.searchResults.length - a.searchResults.length);
   return out;
 }
 
+/* #21 #22 #23 — itemCard with XSS guards, null title, and encodeURI for hrefs */
 function itemCard(it) {
   const found  = it.searchResults.length;
-  const yr     = it.year ? `<div class="icard-year">${it.year}</div>` : '';
+  const titleDisplay = it.title
+    ? `${esc(it.title)}`
+    : `<span class="untitled">(untitled)</span>`;
+  const yr     = it.year ? `<div class="icard-year">${esc(String(it.year))}</div>` : '';
   const author = it.author ? `<em>— ${esc(it.author)}</em>` : '';
 
   const tags = [
     it.type ? `<span class="tag type">${esc(it.type)}</span>` : '',
     found ? `<span class="tag found">${found} open</span>` : `<span class="tag missing">none found</span>`,
     it.status === 'searching' ? `<span class="tag">searching…</span>` : '',
-    `<button class="read-btn" data-read="${it.id}">📖 Read</button>`,
+    `<button class="read-btn" data-read="${esc(it.id)}">📖 Read</button>`,
   ].join('');
 
   const existing = it.links.map(l => `
-    <a class="lpill" href="${esc(l.url)}" target="_blank" rel="noopener">
+    <a class="lpill" href="${encodeURI(l.url)}" target="_blank" rel="noopener">
       <span class="kind">${esc(l.kind)}</span>${esc(l.label)}
     </a>`).join('');
 
   const top3 = it.searchResults.slice(0,3).map(r => `
-    <a class="lpill open" href="${esc(r.url)}" target="_blank" rel="noopener">
-      <span class="kind">${esc(r.source)}</span>${r.format} · ${r.size}
+    <a class="lpill open" href="${encodeURI(r.url)}" target="_blank" rel="noopener">
+      <span class="kind">${esc(r.source)}</span>${esc(r.format)} · ${esc(r.size)}
     </a>`).join('');
 
   const rest = it.searchResults.slice(3);
@@ -1260,15 +1503,15 @@ function itemCard(it) {
     </div>
     <div class="icard-extra">
       ${rest.map(r => `
-        <a class="lpill open" href="${esc(r.url)}" target="_blank" rel="noopener" style="margin:2px">
-          <span class="kind">${esc(r.source)}</span>${r.format} · ${r.size}
+        <a class="lpill open" href="${encodeURI(r.url)}" target="_blank" rel="noopener" style="margin:2px">
+          <span class="kind">${esc(r.source)}</span>${esc(r.format)} · ${esc(r.size)}
         </a>
       `).join('')}
     </div>` : '';
 
   return `<div class="icard">
     <div class="icard-row1">
-      <div class="icard-title">${esc(it.title)} ${author}</div>
+      <div class="icard-title">${titleDisplay} ${author}</div>
       ${yr}
     </div>
     <div class="icard-row2">${tags}</div>
@@ -1282,7 +1525,21 @@ function itemCard(it) {
    ════════════════════════════════════════════════════════════════ */
 async function doSingleSearch() {
   const q = document.getElementById('q').value.trim();
-  if (!q) return;
+  /* #13 — shake input if empty */
+  if (!q) {
+    const inp = document.getElementById('q');
+    inp.classList.remove('shake');
+    void inp.offsetWidth; // reflow to restart animation
+    inp.classList.add('shake');
+    inp.addEventListener('animationend', () => inp.classList.remove('shake'), { once: true });
+    return;
+  }
+
+  /* #25 — guard zero active sources */
+  if (state.activeSources.size === 0) {
+    showToast('Select at least one source');
+    return;
+  }
 
   // wrap single query as a one-item batch so everything shares the same renderer
   const items = [mkItem({ title: q, author: null, year: null })];
@@ -1295,7 +1552,7 @@ async function doSingleSearch() {
   };
 
   const wrap = document.getElementById('results');
-  wrap.innerHTML = '<div class="state-msg"><div class="spinner"></div><p>Searching ' + state.activeSources.size + ' sources…</p></div>';
+  wrap.innerHTML = '<div class="state-msg"><div class="spinner-wrap"><div class="spinner"></div></div><p>Searching ' + esc(String(state.activeSources.size)) + ' sources…</p></div>';
 
   await doSearchItem(items[0]);
   items[0].status = items[0].searchResults.length ? 'done' : 'empty';
@@ -1329,7 +1586,7 @@ async function fetchTranscript(item) {
   const author = item.author || 'the author';
 
   const paragraphs = [
-    `This is a generated preview transcript for "${item.title}"${item.author ? ' by ' + item.author : ''}. In the full version, OpenBooks fetches the actual transcript from ${src ? src.label || src.source : 'the source'} and reflows it into book-style typography you can read offline or print as a PDF.`,
+    `This is a generated preview transcript for "${item.title || '(untitled)'}"${item.author ? ' by ' + item.author : ''}. In the full version, OpenBooks fetches the actual transcript from ${src ? src.label || src.source : 'the source'} and reflows it into book-style typography you can read offline or print as a PDF.`,
     `${author} opens by framing ${seedTopic} as something that deserves more careful attention than it usually gets. The argument unfolds slowly, returning to the same handful of examples from different angles, each pass revealing a little more of the underlying structure.`,
     `Midway through, the focus shifts from description to method — practical steps, common pitfalls, and the small daily practices that compound over time. The transitions feel intentional rather than tidy: ideas double back on themselves, and the listener is invited to sit with the discomfort of not-quite-finished thoughts.`,
     `Toward the end, the tone softens. There is room for doubt, for partial answers, for the acknowledgement that this is one perspective among many. The closing is less a summary than an invitation: to notice, to try, to revise.`,
@@ -1338,7 +1595,7 @@ async function fetchTranscript(item) {
 
   item.transcript = {
     paragraphs,
-    pullquote: `“The work is mostly remembering what you already know.”`,
+    pullquote: `"The work is mostly remembering what you already know."`,
     source: src ? { label: src.label || src.source, url: src.url } : null,
     fetched: new Date().toISOString(),
     mock: true,
@@ -1352,9 +1609,14 @@ async function fetchTranscript(item) {
 let readerItems = [];
 let readerTitle = '';
 
+/* #28 — guard openReader with empty items check */
 function openReader(items, title) {
+  if (!items || !items.length) {
+    showToast('Nothing to read yet — search first.');
+    return;
+  }
   readerItems = items.slice();
-  readerTitle = title || (state.parsed && state.parsed.sections[0]?.name) || 'OpenBooks Reader';
+  readerTitle = title || (state.parsed && state.parsed.sections[0] && state.parsed.sections[0].name) || 'OpenBooks Reader';
   renderBook();
   const r = document.getElementById('reader');
   r.classList.add('open'); r.setAttribute('aria-hidden','false');
@@ -1372,7 +1634,7 @@ function renderBook() {
   const isMulti = readerItems.length > 1;
   const subtitle = isMulti
     ? `${readerItems.length} entries · compiled ${new Date().toLocaleDateString()}`
-    : (readerItems[0]?.author ? readerItems[0].author : '');
+    : (readerItems[0] && readerItems[0].author ? readerItems[0].author : '');
 
   const toc = isMulti ? buildToc(readerItems) : '';
 
@@ -1400,7 +1662,7 @@ function buildToc(items) {
     <div class="toc-section">${esc(sec)}</div>
     ${list.map(({it, num}) => `
       <div class="toc-entry">
-        <span class="t">${esc(it.title)}${it.author ? ' — ' + esc(it.author) : ''}</span>
+        <span class="t">${it.title ? esc(it.title) : '<em>(untitled)</em>'}${it.author ? ' — ' + esc(it.author) : ''}</span>
         <span class="p">${num}</span>
       </div>`).join('')}
   `).join('');
@@ -1410,22 +1672,25 @@ function buildToc(items) {
 function chapterHtml(it, n) {
   const tr = it.transcript;
   const body = tr ? tr.paragraphs.map(p => `<p>${esc(p)}</p>`).join('')
-                  : `<p><em>Transcript not yet fetched. Click “Fetch transcripts” in the bar above to retrieve the full text.</em></p>
+                  : `<p><em>Transcript not yet fetched. Click "Fetch transcripts" in the bar above to retrieve the full text.</em></p>
                      <p>This chapter will then expand into a readable, book-styled version of the source material — whether that source is a podcast episode, a TED talk, a YouTube video, an arXiv paper, or an open-access book.</p>`;
-  const pullquote = tr?.pullquote ? `<div class="pullquote">${esc(tr.pullquote)}</div>` : '';
+  const pullquote = tr && tr.pullquote ? `<div class="pullquote">${esc(tr.pullquote)}</div>` : '';
   const links = it.links.concat(it.searchResults||[]).slice(0,6);
+  /* #23 — use encodeURI for href, esc for display text */
   const noteLinks = links.length
-    ? `<div class="src-note">Sources: ${links.map(l => `<a href="${esc(l.url)}">${esc(l.label || l.source || 'link')}</a>`).join(' · ')}</div>`
+    ? `<div class="src-note">Sources: ${links.map(l => `<a href="${encodeURI(l.url)}">${esc(l.label || l.source || 'link')}</a>`).join(' · ')}</div>`
     : '';
   const meta = [
     it.type, it.year, it.section, it.subsection,
-    tr?.mock ? 'preview transcript' : null,
-  ].filter(Boolean).map(esc).join(' · ');
+    tr && tr.mock ? 'preview transcript' : null,
+  ].filter(Boolean).map(v => esc(String(v))).join(' · ');
+
+  const titleDisplay = it.title ? esc(it.title) : '<em>(untitled)</em>';
 
   return `
     <div class="chapter">
       <div class="chapter-num">Chapter ${n}</div>
-      <h2>${esc(it.title)}</h2>
+      <h2>${titleDisplay}</h2>
       ${it.author ? `<div class="byline">${esc(it.author)}${it.year ? ' · ' + it.year : ''}</div>` : ''}
       ${meta ? `<div class="meta-row">${meta}</div>` : ''}
       ${body}
@@ -1448,10 +1713,13 @@ async function fetchAllReaderTranscripts() {
 }
 
 async function buildBookFromBatch() {
-  if (!state.parsed || !state.parsed.items.length) return;
+  if (!state.parsed || !state.parsed.items.length) {
+    showToast('Nothing to read yet — search first.');
+    return;
+  }
   const items = state.parsed.items;
   const title = state.parsed.shape === 'structured'
-    ? (state.parsed.sections[0]?.name + ' & More')
+    ? ((state.parsed.sections[0] ? state.parsed.sections[0].name : '') + ' & More')
     : 'OpenBooks Compilation';
   openReader(items, title);
   // auto-fetch transcripts so the book is immediately readable
@@ -1474,33 +1742,42 @@ async function loadDataset() {
     data = await r.json();
   } catch (e) {
     if (banner) banner.textContent = '⚠ Dataset not found — use Batch mode or run crawl.js';
+    /* #24 — fall back to idle state gracefully */
+    document.getElementById('results').innerHTML = '<div class="state-msg"><p class="big">📖</p><p>Search a single query, or paste a list in Batch mode.</p></div>';
+    return;
+  }
+
+  /* #24 — validate data.sections */
+  if (!data || !Array.isArray(data.sections)) {
+    if (banner) banner.innerHTML = '⚠ Dataset format error — <code>sections</code> array missing. Use Batch mode or re-run crawl.js.';
+    document.getElementById('results').innerHTML = '<div class="state-msg"><p class="big">📖</p><p>Dataset could not be loaded. Check the console.</p></div>';
     return;
   }
 
   // Convert crawl-results.json structure to state.parsed
   let idCtr = 0;
   const convertItem = (it) => ({
-    id: it.id || `ds-${++idCtr}`,
-    title: it.title,
-    author: it.author,
-    year: it.year,
-    type: it.type,
-    section: it.section,
+    id: it.id || `ds-${Date.now()}-${++idCtr}`,
+    title: it.title || null,
+    author: it.author || null,
+    year: it.year || null,
+    type: it.type || null,
+    section: it.section || null,
     subsection: it.subsection || null,
     links: it.links || [],
     searchResults: buildSearchResults(it),
-    status: (it.openLibrary?.found || it.archive?.found || it.openAlex?.oa_url) ? 'done' : 'pending',
-    openLibrary: it.openLibrary,
-    archive: it.archive,
-    openAlex: it.openAlex,
+    status: (it.openLibrary && it.openLibrary.found || it.archive && it.archive.found || it.openAlex && it.openAlex.oa_url) ? 'done' : 'pending',
+    openLibrary: it.openLibrary || null,
+    archive: it.archive || null,
+    openAlex: it.openAlex || null,
     transcript: it.transcript ? it.transcript : null,
   });
 
   const sections = data.sections.map(sec => ({
-    name: sec.name,
+    name: sec.name || 'Unnamed Section',
     items: (sec.items || []).map(convertItem),
     subs: (sec.subsections || []).map(sub => ({
-      name: sub.name,
+      name: sub.name || 'Unnamed',
       items: (sub.items || []).map(convertItem),
     })),
   }));
@@ -1519,24 +1796,28 @@ async function loadDataset() {
   }};
 
   if (banner) {
-    const m = data.meta;
-    banner.innerHTML = `<strong>Dataset loaded</strong> — ${items.length} items · ${m.title ?? ''} · <em>Run crawl.js locally to fill open-access fields</em>`;
+    const m = data.meta || {};
+    banner.innerHTML = `<strong>Dataset loaded</strong> — ${esc(String(items.length))} items · ${esc(m.title || '')} · <em>Run crawl.js locally to fill open-access fields</em>`;
   }
 
   renderPreview();
   renderResults();
   document.getElementById('fab').hidden = false;
+
+  /* #18 — auto-focus search input after dataset loads */
+  const q = document.getElementById('q');
+  if (q) q.focus();
 }
 
 function buildSearchResults(it) {
   const r = [];
-  if (it.openLibrary?.found && it.openLibrary.borrow_url)
+  if (it.openLibrary && it.openLibrary.found && it.openLibrary.borrow_url)
     r.push({ source: 'Open Library', format: 'Web', size: '', url: it.openLibrary.borrow_url });
-  if (it.archive?.found && it.archive.url)
+  if (it.archive && it.archive.found && it.archive.url)
     r.push({ source: 'Internet Archive', format: it.archive.access === 'open' ? 'Open' : 'Borrow', size: '', url: it.archive.url });
-  if (it.openAlex?.oa_url)
+  if (it.openAlex && it.openAlex.oa_url)
     r.push({ source: 'OpenAlex', format: 'PDF', size: '', url: it.openAlex.oa_url });
-  if (it.openAlex?.pdf_url && it.openAlex.pdf_url !== it.openAlex.oa_url)
+  if (it.openAlex && it.openAlex.pdf_url && it.openAlex.pdf_url !== it.openAlex.oa_url)
     r.push({ source: 'OpenAlex PDF', format: 'PDF', size: '', url: it.openAlex.pdf_url });
   return r;
 }
@@ -1553,10 +1834,27 @@ function init() {
   document.getElementById('btn-go').addEventListener('click', doSingleSearch);
   document.getElementById('q').addEventListener('keydown', e => {
     if (e.key === 'Enter') doSingleSearch();
+    /* #17 — Escape clears the single search input when focused */
+    if (e.key === 'Escape') {
+      document.getElementById('q').value = '';
+      e.preventDefault();
+    }
   });
 
+  /* #14 — shake textarea if empty when Parse is clicked */
   document.getElementById('btn-parse').addEventListener('click', () => {
+    /* #26 — cancel running search before parsing */
+    if (state.searching) state.cancelled = true;
+
     const raw = document.getElementById('qb').value;
+    if (!raw.trim()) {
+      const ta = document.getElementById('qb');
+      ta.classList.remove('shake');
+      void ta.offsetWidth;
+      ta.classList.add('shake');
+      ta.addEventListener('animationend', () => ta.classList.remove('shake'), { once: true });
+      return;
+    }
     nextId = 0;
     state.parsed = parseInput(raw);
     renderPreview();
@@ -1565,6 +1863,7 @@ function init() {
 
   document.getElementById('btn-clear').addEventListener('click', () => {
     document.getElementById('qb').value = '';
+    document.getElementById('qb-hint').textContent = '';
     document.getElementById('preview').hidden = true;
     document.getElementById('batch-badge').hidden = true;
     state.parsed = null;
@@ -1574,14 +1873,43 @@ function init() {
   document.getElementById('btn-search-all').addEventListener('click', doSearchAll);
   document.getElementById('btn-cancel').addEventListener('click', () => { state.cancelled = true; });
 
+  /* #12 — live batch hint with 400ms debounce */
+  let qbDebounce = null;
+  document.getElementById('qb').addEventListener('input', () => {
+    clearTimeout(qbDebounce);
+    qbDebounce = setTimeout(() => {
+      const raw = document.getElementById('qb').value;
+      const hint = document.getElementById('qb-hint');
+      const info = countBatchHint(raw);
+      if (!info || !info.total) { hint.textContent = ''; return; }
+      let detail = '';
+      const parts = [];
+      if (info.dashItems)  parts.push(`${info.dashItems} titled`);
+      if (info.idItems)    parts.push(`${info.idItems} identifiers`);
+      if (info.secCount)   parts.push(`${info.secCount} sections`);
+      detail = parts.length ? ' · ' + parts.join(', ') : '';
+      hint.innerHTML = `~<span>${info.total}</span> items detected${esc(detail)}`;
+    }, 400);
+  });
+
   // reader / book PDF
   document.getElementById('btn-book').addEventListener('click', buildBookFromBatch);
   document.getElementById('r-close').addEventListener('click', closeReader);
   document.getElementById('r-fetch').addEventListener('click', fetchAllReaderTranscripts);
   document.getElementById('r-print').addEventListener('click', savePdf);
+
+  /* #17 — Escape closes reader overlay (already wired) and also clears search input */
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && document.getElementById('reader').classList.contains('open')) closeReader();
+    if (e.key === 'Escape') {
+      if (document.getElementById('reader').classList.contains('open')) {
+        closeReader();
+      }
+    }
   });
+
+  /* #29 — print class for body */
+  window.addEventListener('beforeprint', () => document.body.classList.add('printing'));
+  window.addEventListener('afterprint',  () => document.body.classList.remove('printing'));
 }
 
 /* ── utils ────────────────────────────────────────────────── */
