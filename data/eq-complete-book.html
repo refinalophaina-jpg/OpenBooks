@@ -24,6 +24,28 @@
   --adim:    rgba(184,240,0,.10);
   --aborder: rgba(184,240,0,.30);
   --r:       8px;
+  --reading-size: 17px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE
+═══════════════════════════════════════════════════════════ */
+body.light-mode {
+  --bg:      #f7f3ea;
+  --bg2:     #ede9df;
+  --bg3:     #e4dfd3;
+  --bg4:     #d9d3c5;
+  --bdr:     #c8c2b2;
+  --bdr2:    #b8b1a0;
+  --text:    #1a1a1a;
+  --t2:      #3a3a3a;
+  --t3:      #6a6a6a;
+  --accent:  #5a7a00;
+  --adim:    rgba(90,122,0,.10);
+  --aborder: rgba(90,122,0,.30);
+}
+body.light-mode .nav-bar {
+  background: rgba(247,243,234,.95);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -34,10 +56,23 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Lora', Georgia, serif;
-  font-size: 17px;
+  font-size: var(--reading-size);
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
   padding-bottom: 80px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   READING PROGRESS BAR
+═══════════════════════════════════════════════════════════ */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 0%;
+  height: 3px;
+  background: var(--accent);
+  z-index: 200;
+  transition: width .1s linear;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -45,12 +80,38 @@ body {
 ═══════════════════════════════════════════════════════════ */
 .nav-bar {
   position: sticky; top: 0; z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
   background: rgba(14,14,16,.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--bdr);
-  padding: 0 24px; height: 52px;
+  padding: 0 16px; height: 52px;
+  gap: 8px;
+}
+.nav-left {
+  display: flex; align-items: center; gap: 6px;
+  min-width: 0;
+}
+.nav-center {
+  display: flex; align-items: center; justify-content: center;
+  min-width: 0; overflow: hidden;
+}
+#nav-title {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: .78rem;
+  color: var(--t2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+.nav-right {
+  display: flex; align-items: center; gap: 6px;
+  justify-content: flex-end;
+  min-width: 0;
 }
 .nav-brand {
   font-family: 'Syne', sans-serif;
@@ -58,19 +119,20 @@ body {
   letter-spacing: .06em; text-transform: uppercase;
   color: var(--accent);
   text-decoration: none;
+  white-space: nowrap;
 }
-.nav-actions { display: flex; gap: 10px; align-items: center; }
 .nav-btn {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex; align-items: center; gap: 5px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: .72rem; font-weight: 500;
-  letter-spacing: .04em; text-transform: uppercase;
+  font-size: .68rem; font-weight: 500;
+  letter-spacing: .03em; text-transform: uppercase;
   border: 1px solid var(--bdr2);
   background: var(--bg3);
   color: var(--t2);
   border-radius: var(--r);
-  padding: 6px 14px; cursor: pointer;
+  padding: 5px 10px; cursor: pointer;
   transition: all .15s; text-decoration: none;
+  white-space: nowrap;
 }
 .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
 .nav-btn.primary {
@@ -79,6 +141,51 @@ body {
   color: var(--accent);
 }
 .nav-btn.primary:hover { background: rgba(184,240,0,.18); }
+
+/* Part jump links */
+.nav-part-links {
+  display: flex; gap: 4px; align-items: center;
+}
+.nav-part-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .64rem; color: var(--t3);
+  text-decoration: none; letter-spacing: .04em;
+  padding: 3px 7px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.nav-part-link:hover { color: var(--accent); border-color: var(--aborder); }
+
+/* Mobile: hide part links below 600px */
+@media (max-width: 600px) {
+  .nav-part-links { display: none; }
+  #nav-title { max-width: 120px; font-size: .72rem; }
+  .nav-btn { padding: 4px 7px; font-size: .62rem; }
+  .nav-brand { font-size: .75rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BACK TO TOP BUTTON
+═══════════════════════════════════════════════════════════ */
+.back-top {
+  position: fixed;
+  bottom: 28px; right: 24px;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: 1px solid var(--bdr2);
+  color: var(--t2);
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s, border-color .15s, color .15s;
+  z-index: 99;
+}
+.back-top.visible { opacity: 1; pointer-events: auto; }
+.back-top:hover { border-color: var(--accent); color: var(--accent); }
 
 /* ═══════════════════════════════════════════════════════════
    CONTENT WRAPPER
@@ -244,12 +351,37 @@ body {
   font-size: clamp(1.25rem, 2.5vw, 1.7rem);
   line-height: 1.3; color: var(--text);
   margin-bottom: 8px;
+  overflow-wrap: break-word;
 }
 .chapter-byline {
   font-family: 'JetBrains Mono', monospace;
   font-size: .75rem; color: var(--accent);
   letter-spacing: .04em;
 }
+.chapter-byline:empty { display: none; }
+
+/* Chapter Prev/Next navigation */
+.ch-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--bdr);
+  gap: 8px;
+}
+.ch-nav a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem; color: var(--t3);
+  text-decoration: none; letter-spacing: .04em;
+  padding: 6px 12px;
+  border: 1px solid var(--bdr);
+  border-radius: var(--r);
+  transition: all .15s;
+}
+.ch-nav a:hover { color: var(--accent); border-color: var(--aborder); }
+.ch-nav a.ch-toc { color: var(--t3); }
+.ch-nav a.ch-prev { }
+.ch-nav a.ch-next { }
+.ch-nav-placeholder { flex: 1; }
 
 /* ═══════════════════════════════════════════════════════════
    SECTION LABELS
@@ -269,6 +401,7 @@ body {
   font-size: 1rem; line-height: 1.8;
   color: var(--text); text-align: justify;
   margin-bottom: 14px;
+  orphans: 3; widows: 3;
 }
 .chapter p.core-arg {
   font-style: italic; color: var(--t2);
@@ -314,7 +447,10 @@ blockquote {
   border-top: 2px solid var(--accent);
   border-bottom: 1px solid var(--bdr2);
   text-align: center;
+  position: relative;
+  page-break-inside: avoid;
 }
+blockquote:hover { background: rgba(0,0,0,.04); cursor: default; }
 blockquote p {
   font-family: 'Lora', serif !important;
   font-style: italic !important;
@@ -331,6 +467,37 @@ blockquote cite {
   color: var(--t3); font-style: normal;
   text-transform: uppercase;
 }
+
+/* Copy quote button */
+.copy-btn {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: none;
+  border: 1px solid var(--bdr);
+  border-radius: 4px;
+  color: var(--t3);
+  font-size: .75rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  transition: all .15s;
+  line-height: 1.4;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+.copy-tooltip {
+  position: absolute;
+  top: 8px; right: 44px;
+  background: var(--bg3);
+  border: 1px solid var(--bdr2);
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem; color: var(--accent);
+  padding: 2px 8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s;
+  white-space: nowrap;
+}
+.copy-tooltip.show { opacity: 1; }
 
 /* ═══════════════════════════════════════════════════════════
    WHY IT MATTERS
@@ -405,6 +572,25 @@ blockquote cite {
 .ref-card a:hover { color: var(--accent); }
 
 /* ═══════════════════════════════════════════════════════════
+   MOBILE
+═══════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  body { font-size: 15px; }
+  .book { padding: 20px 16px; }
+  .ch-nav {
+    flex-wrap: wrap;
+  }
+  .ch-nav a {
+    flex: 1 1 calc(50% - 4px);
+    text-align: center;
+  }
+  .ch-nav a.ch-toc {
+    flex: 1 1 100%;
+    order: -1;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
    PRINT STYLES
 ═══════════════════════════════════════════════════════════ */
 @media print {
@@ -430,7 +616,15 @@ blockquote cite {
     padding-bottom: 0;
   }
 
-  .nav-bar { display: none !important; }
+  .nav-bar,
+  .back-top,
+  .ch-nav,
+  .copy-btn,
+  .copy-tooltip,
+  .progress-bar { display: none !important; }
+
+  /* Hide anchor hrefs when printing */
+  a[href]::after { content: none !important; }
 
   .book { max-width: 100%; padding: 0; }
 
@@ -485,7 +679,7 @@ blockquote cite {
   .chapter-byline { color: #333 !important; }
   .section-label { color: #666 !important; }
 
-  .chapter p { color: #1a1a1a !important; }
+  .chapter p { color: #1a1a1a !important; orphans: 3; widows: 3; }
   .chapter p.core-arg { color: #333 !important; }
   .chapter p.drop-cap::first-letter { color: #000 !important; }
 
@@ -495,6 +689,7 @@ blockquote cite {
   blockquote {
     border-top-color: #000 !important;
     border-bottom-color: #ccc !important;
+    page-break-inside: avoid;
   }
   blockquote p { color: #1a1a1a !important; }
   blockquote cite { color: #666 !important; }
@@ -524,18 +719,41 @@ blockquote cite {
 }
 </style>
 </head>
+
 <body>
+
+<!-- Reading progress bar -->
+<div class="progress-bar" id="progress-bar"></div>
+
+<!-- Back to top button -->
+<button class="back-top" id="back-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <!-- ═══════════════════════════════════════════════════════
      NAV BAR
 ═══════════════════════════════════════════════════════ -->
 <nav class="nav-bar">
-  <a href="../index.html" class="nav-brand">OpenBooks</a>
-  <div class="nav-actions">
+  <div class="nav-left">
     <a href="../index.html" class="nav-btn">✕ Close</a>
-    <button class="nav-btn primary" onclick="window.print()">⎙ Save PDF</button>
+    <div class="nav-part-links">
+      <a href="#part-1" class="nav-part-link">Part I</a>
+      <a href="#part-2" class="nav-part-link">Part II</a>
+      <a href="#part-3" class="nav-part-link">Part III</a>
+    </div>
+  </div>
+  <div class="nav-center">
+    <span id="nav-title">Emotional Intelligence, Relationships &amp; Personal Growth</span>
+  </div>
+  <div class="nav-right">
+    <button class="nav-btn" id="font-dec" title="Decrease font size">A−</button>
+    <button class="nav-btn" id="font-inc" title="Increase font size">A+</button>
+    <button class="nav-btn" id="theme-toggle" title="Toggle light/dark mode">☾</button>
+    <button class="nav-btn primary" onclick="window.print()" title="Opens browser print dialog — choose 'Save as PDF'">⬇ Save as PDF</button>
   </div>
 </nav>
+
+
+
+
 
 <div class="book">
 
@@ -558,56 +776,56 @@ blockquote cite {
 <!-- ═══════════════════════════════════════════════════════
      TABLE OF CONTENTS
 ═══════════════════════════════════════════════════════ -->
-<nav class="toc" aria-label="Table of Contents">
+<nav class="toc" id="toc" aria-label="Table of Contents">
   <h2 class="toc-heading">Contents</h2>
 
   <div class="toc-part">Part I — Books</div>
 
   <div class="toc-section">Subsection A · Foundational EQ</div>
-  <div class="toc-entry"><span class="toc-entry-num">01</span><a href="#ch1">Emotional Intelligence — Daniel Goleman</a><span class="toc-dots"></span><span class="toc-page">§1</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">02</span><a href="#ch2">Emotional Intelligence 2.0 — Bradberry &amp; Greaves</a><span class="toc-dots"></span><span class="toc-page">§2</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">03</span><a href="#ch3">Permission to Feel — Marc Brackett</a><span class="toc-dots"></span><span class="toc-page">§3</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">04</span><a href="#ch4">Emotional Agility — Susan David</a><span class="toc-dots"></span><span class="toc-page">§4</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">05</span><a href="#ch5">Working with Emotional Intelligence — Daniel Goleman</a><span class="toc-dots"></span><span class="toc-page">§5</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">01</span><a href="#chapter-1">Emotional Intelligence — Daniel Goleman</a><span class="toc-dots"></span><span class="toc-page">§1</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">02</span><a href="#chapter-2">Emotional Intelligence 2.0 — Bradberry &amp; Greaves</a><span class="toc-dots"></span><span class="toc-page">§2</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">03</span><a href="#chapter-3">Permission to Feel — Marc Brackett</a><span class="toc-dots"></span><span class="toc-page">§3</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">04</span><a href="#chapter-4">Emotional Agility — Susan David</a><span class="toc-dots"></span><span class="toc-page">§4</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">05</span><a href="#chapter-5">Working with Emotional Intelligence — Daniel Goleman</a><span class="toc-dots"></span><span class="toc-page">§5</span></div>
 
   <div class="toc-section">Subsection B · Relationships &amp; Communication</div>
-  <div class="toc-entry"><span class="toc-entry-num">06</span><a href="#ch6">The Seven Principles for Making Marriage Work — Gottman &amp; Silver</a><span class="toc-dots"></span><span class="toc-page">§6</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">07</span><a href="#ch7">Nonviolent Communication — Marshall B. Rosenberg</a><span class="toc-dots"></span><span class="toc-page">§7</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">08</span><a href="#ch8">Attached — Amir Levine &amp; Rachel Heller</a><span class="toc-dots"></span><span class="toc-page">§8</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">09</span><a href="#ch9">Mating in Captivity — Esther Perel</a><span class="toc-dots"></span><span class="toc-page">§9</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">10</span><a href="#ch10">The State of Affairs — Esther Perel</a><span class="toc-dots"></span><span class="toc-page">§10</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">11</span><a href="#ch11">Us — Terrence Real</a><span class="toc-dots"></span><span class="toc-page">§11</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">12</span><a href="#ch12">How to Win Friends and Influence People — Dale Carnegie</a><span class="toc-dots"></span><span class="toc-page">§12</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">13</span><a href="#ch13">The Language of Emotional Intelligence — Jeanne Segal</a><span class="toc-dots"></span><span class="toc-page">§13</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">06</span><a href="#chapter-6">The Seven Principles for Making Marriage Work — Gottman &amp; Silver</a><span class="toc-dots"></span><span class="toc-page">§6</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">07</span><a href="#chapter-7">Nonviolent Communication — Marshall B. Rosenberg</a><span class="toc-dots"></span><span class="toc-page">§7</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">08</span><a href="#chapter-8">Attached — Amir Levine &amp; Rachel Heller</a><span class="toc-dots"></span><span class="toc-page">§8</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">09</span><a href="#chapter-9">Mating in Captivity — Esther Perel</a><span class="toc-dots"></span><span class="toc-page">§9</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">10</span><a href="#chapter-10">The State of Affairs — Esther Perel</a><span class="toc-dots"></span><span class="toc-page">§10</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">11</span><a href="#chapter-11">Us — Terrence Real</a><span class="toc-dots"></span><span class="toc-page">§11</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">12</span><a href="#chapter-12">How to Win Friends and Influence People — Dale Carnegie</a><span class="toc-dots"></span><span class="toc-page">§12</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">13</span><a href="#chapter-13">The Language of Emotional Intelligence — Jeanne Segal</a><span class="toc-dots"></span><span class="toc-page">§13</span></div>
 
   <div class="toc-section">Subsection C · Men, Masculinity &amp; Inner Work</div>
-  <div class="toc-entry"><span class="toc-entry-num">14</span><a href="#ch14">I Don't Want to Talk About It — Terrence Real</a><span class="toc-dots"></span><span class="toc-page">§14</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">15</span><a href="#ch15">Daring Greatly — Brené Brown</a><span class="toc-dots"></span><span class="toc-page">§15</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">16</span><a href="#ch16">Atlas of the Heart — Brené Brown</a><span class="toc-dots"></span><span class="toc-page">§16</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">17</span><a href="#ch17">The Way of the Superior Man — David Deida</a><span class="toc-dots"></span><span class="toc-page">§17</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">18</span><a href="#ch18">Adult Children of Emotionally Immature Parents — Lindsay C. Gibson</a><span class="toc-dots"></span><span class="toc-page">§18</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">19</span><a href="#ch19">The Masculine in Relationship — G.S. Youngblood</a><span class="toc-dots"></span><span class="toc-page">§19</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">14</span><a href="#chapter-14">I Don't Want to Talk About It — Terrence Real</a><span class="toc-dots"></span><span class="toc-page">§14</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">15</span><a href="#chapter-15">Daring Greatly — Brené Brown</a><span class="toc-dots"></span><span class="toc-page">§15</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">16</span><a href="#chapter-16">Atlas of the Heart — Brené Brown</a><span class="toc-dots"></span><span class="toc-page">§16</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">17</span><a href="#chapter-17">The Way of the Superior Man — David Deida</a><span class="toc-dots"></span><span class="toc-page">§17</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">18</span><a href="#chapter-18">Adult Children of Emotionally Immature Parents — Lindsay C. Gibson</a><span class="toc-dots"></span><span class="toc-page">§18</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">19</span><a href="#chapter-19">The Masculine in Relationship — G.S. Youngblood</a><span class="toc-dots"></span><span class="toc-page">§19</span></div>
 
   <div class="toc-section">Subsection D · Consciousness &amp; Self-Awareness</div>
-  <div class="toc-entry"><span class="toc-entry-num">20</span><a href="#ch20">The Body Keeps the Score — Bessel van der Kolk</a><span class="toc-dots"></span><span class="toc-page">§20</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">21</span><a href="#ch21">Awareness — Anthony de Mello</a><span class="toc-dots"></span><span class="toc-page">§21</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">22</span><a href="#ch22">Maybe You Should Talk to Someone — Lori Gottlieb</a><span class="toc-dots"></span><span class="toc-page">§22</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">23</span><a href="#ch23">Self-Compassion — Kristin Neff</a><span class="toc-dots"></span><span class="toc-page">§23</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">24</span><a href="#ch24">How Emotions Are Made — Lisa Feldman Barrett</a><span class="toc-dots"></span><span class="toc-page">§24</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">25</span><a href="#ch25">The Genius of Empathy — Judith Orloff</a><span class="toc-dots"></span><span class="toc-page">§25</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">26</span><a href="#ch26">Hope for Cynics — Jamil Zaki</a><span class="toc-dots"></span><span class="toc-page">§26</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">27</span><a href="#ch27">Shift — Ethan Kross</a><span class="toc-dots"></span><span class="toc-page">§27</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">20</span><a href="#chapter-20">The Body Keeps the Score — Bessel van der Kolk</a><span class="toc-dots"></span><span class="toc-page">§20</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">21</span><a href="#chapter-21">Awareness — Anthony de Mello</a><span class="toc-dots"></span><span class="toc-page">§21</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">22</span><a href="#chapter-22">Maybe You Should Talk to Someone — Lori Gottlieb</a><span class="toc-dots"></span><span class="toc-page">§22</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">23</span><a href="#chapter-23">Self-Compassion — Kristin Neff</a><span class="toc-dots"></span><span class="toc-page">§23</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">24</span><a href="#chapter-24">How Emotions Are Made — Lisa Feldman Barrett</a><span class="toc-dots"></span><span class="toc-page">§24</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">25</span><a href="#chapter-25">The Genius of Empathy — Judith Orloff</a><span class="toc-dots"></span><span class="toc-page">§25</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">26</span><a href="#chapter-26">Hope for Cynics — Jamil Zaki</a><span class="toc-dots"></span><span class="toc-page">§26</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">27</span><a href="#chapter-27">Shift — Ethan Kross</a><span class="toc-dots"></span><span class="toc-page">§27</span></div>
 
   <div class="toc-part">Part II — TED Talks</div>
-  <div class="toc-entry"><span class="toc-entry-num">T1</span><a href="#talk1">The Secret to Desire in a Long-Term Relationship — Esther Perel</a><span class="toc-dots"></span><span class="toc-page">§T1</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">T2</span><a href="#talk2">Rethinking Infidelity — Esther Perel</a><span class="toc-dots"></span><span class="toc-page">§T2</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">T3</span><a href="#talk3">The Power of Vulnerability — Brené Brown</a><span class="toc-dots"></span><span class="toc-page">§T3</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">T4</span><a href="#talk4">Listening to Shame — Brené Brown</a><span class="toc-dots"></span><span class="toc-page">§T4</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">T5</span><a href="#talk5">The Gift and Power of Emotional Courage — Susan David</a><span class="toc-dots"></span><span class="toc-page">§T5</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">T6</span><a href="#talk6">Why Aren't We More Compassionate? — Daniel Goleman</a><span class="toc-dots"></span><span class="toc-page">§T6</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">T7</span><a href="#talk7">What Makes a Good Life? — Robert Waldinger</a><span class="toc-dots"></span><span class="toc-page">§T7</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">T8</span><a href="#talk8">How to Make Stress Your Friend — Kelly McGonigal</a><span class="toc-dots"></span><span class="toc-page">§T8</span></div>
-  <div class="toc-entry"><span class="toc-entry-num">T9</span><a href="#talk9">All It Takes Is 10 Mindful Minutes — Andy Puddicombe</a><span class="toc-dots"></span><span class="toc-page">§T9</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">T1</span><a href="#chapter-28">The Secret to Desire in a Long-Term Relationship — Esther Perel</a><span class="toc-dots"></span><span class="toc-page">§T1</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">T2</span><a href="#chapter-29">Rethinking Infidelity — Esther Perel</a><span class="toc-dots"></span><span class="toc-page">§T2</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">T3</span><a href="#chapter-30">The Power of Vulnerability — Brené Brown</a><span class="toc-dots"></span><span class="toc-page">§T3</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">T4</span><a href="#chapter-31">Listening to Shame — Brené Brown</a><span class="toc-dots"></span><span class="toc-page">§T4</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">T5</span><a href="#chapter-32">The Gift and Power of Emotional Courage — Susan David</a><span class="toc-dots"></span><span class="toc-page">§T5</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">T6</span><a href="#chapter-33">Why Aren't We More Compassionate? — Daniel Goleman</a><span class="toc-dots"></span><span class="toc-page">§T6</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">T7</span><a href="#chapter-34">What Makes a Good Life? — Robert Waldinger</a><span class="toc-dots"></span><span class="toc-page">§T7</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">T8</span><a href="#chapter-35">How to Make Stress Your Friend — Kelly McGonigal</a><span class="toc-dots"></span><span class="toc-page">§T8</span></div>
+  <div class="toc-entry"><span class="toc-entry-num">T9</span><a href="#chapter-36">All It Takes Is 10 Mindful Minutes — Andy Puddicombe</a><span class="toc-dots"></span><span class="toc-page">§T9</span></div>
 
   <div class="toc-part">Part III — Reference Guide</div>
   <div class="toc-entry"><span class="toc-entry-num">R1</span><a href="#ref-podcasts">Podcasts</a><span class="toc-dots"></span><span class="toc-page">§R1</span></div>
@@ -621,7 +839,7 @@ blockquote cite {
 <!-- ═══════════════════════════════════════════════════════
      PART I: BOOKS
 ═══════════════════════════════════════════════════════ -->
-<section class="part-divider" id="part1">
+<section class="part-divider" id="part-1">
   <div class="part-label">Part I</div>
   <h2 class="part-title">Books</h2>
   <p class="part-desc">Twenty-seven essential works spanning the science of emotion, the architecture of relationships, masculine psychology, and the practice of self-awareness — read sequentially or use as a reference.</p>
@@ -634,7 +852,7 @@ blockquote cite {
 </div>
 
 <!-- CH 1 -->
-<article class="chapter" id="ch1">
+<article class="chapter" id="chapter-1">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 01 · Foundational EQ</div>
     <h2 class="chapter-title">Emotional Intelligence: Why It Can Matter More Than IQ</h2>
@@ -663,10 +881,16 @@ blockquote cite {
   <div class="why-box">
     <p>Goleman gave the world a new vocabulary for something people had always sensed but never named: that emotional skill is as real and as learnable as any technical competency. This book launched a global conversation about EI in schools, workplaces, and therapy rooms that continues three decades later, and remains the essential starting point for anyone serious about understanding why some people thrive while others — no matter how brilliant — struggle.</p>
   </div>
+
+<div class="ch-nav">
+  <span class="ch-nav-placeholder"></span>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-2" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 2 -->
-<article class="chapter" id="ch2">
+<article class="chapter" id="chapter-2">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 02 · Foundational EQ</div>
     <h2 class="chapter-title">Emotional Intelligence 2.0</h2>
@@ -695,10 +919,16 @@ blockquote cite {
   <div class="why-box">
     <p>This book is the most widely used practical EQ guide in corporate training and leadership development worldwide. Its strength lies in translating abstract concepts into specific, repeatable behaviors. For readers who want not just to understand emotional intelligence but to systematically build it, the combination of validated assessment and concrete strategy makes this an indispensable companion to Goleman's foundational text.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-1" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-3" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 3 -->
-<article class="chapter" id="ch3">
+<article class="chapter" id="chapter-3">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 03 · Foundational EQ</div>
     <h2 class="chapter-title">Permission to Feel</h2>
@@ -727,10 +957,16 @@ blockquote cite {
   <div class="why-box">
     <p>Brackett brings rare credentials to this subject — both the rigor of a Yale research scientist and the personal testimony of someone who was himself emotionally damaged by adults who couldn't hold his feelings. His RULER framework is one of the most evidence-backed emotional literacy programs in existence, and the book makes it accessible to anyone — parent, teacher, executive, or person who simply wants to understand themselves better.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-2" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-4" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 4 -->
-<article class="chapter" id="ch4">
+<article class="chapter" id="chapter-4">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 04 · Foundational EQ</div>
     <h2 class="chapter-title">Emotional Agility</h2>
@@ -759,10 +995,16 @@ blockquote cite {
   <div class="why-box">
     <p>In a culture saturated with calls to "think positive" and "choose happiness," David's work is a necessary corrective. She demonstrates that emotional health is not about feeling good — it is about having a flexible, authentic, values-driven relationship with the full range of human experience. The framework is both scientifically grounded and immediately practical, offering one of the clearest maps available for navigating inner life with wisdom rather than mere control.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-3" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-5" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 5 -->
-<article class="chapter" id="ch5">
+<article class="chapter" id="chapter-5">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 05 · Foundational EQ</div>
     <h2 class="chapter-title">Working with Emotional Intelligence</h2>
@@ -786,6 +1028,12 @@ blockquote cite {
   <div class="why-box">
     <p>This book made the business case for emotional intelligence with empirical rigor at a moment when many organizations still viewed feelings as irrelevant to professional performance. It gave HR professionals, executives, and leadership coaches a concrete framework for understanding why some leaders inspire extraordinary results while others — equally intelligent and experienced — leave a trail of disengagement behind them. Its influence on corporate leadership development continues to be felt across industries worldwide.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-4" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-6" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- ── SUBSECTION B ─────────────────────────────────── -->
@@ -795,7 +1043,7 @@ blockquote cite {
 </div>
 
 <!-- CH 6 -->
-<article class="chapter" id="ch6">
+<article class="chapter" id="chapter-6">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 06 · Relationships &amp; Communication</div>
     <h2 class="chapter-title">The Seven Principles for Making Marriage Work</h2>
@@ -824,10 +1072,16 @@ blockquote cite {
   <div class="why-box">
     <p>Gottman transformed relationship science by replacing opinion-based advice with observable, replicable behavioral data. This book is remarkable for combining deep scientific credibility with genuine warmth and practical accessibility. Whether read before marriage, during strain, or in repair mode, the Seven Principles provide one of the clearest and most evidence-grounded guides to the daily practice of keeping love alive that exists in the literature.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-5" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-7" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 7 -->
-<article class="chapter" id="ch7">
+<article class="chapter" id="chapter-7">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 07 · Relationships &amp; Communication</div>
     <h2 class="chapter-title">Nonviolent Communication: A Language of Life</h2>
@@ -856,10 +1110,16 @@ blockquote cite {
   <div class="why-box">
     <p>NVC is one of the few communication frameworks that works with equal power in intimate partnerships, workplace negotiations, parenting, and international diplomacy. Its insight — that all conflict is ultimately about unmet needs — is both profoundly simple and endlessly applicable. For anyone who wants to move from reactive arguing to genuine dialogue, Rosenberg's work offers the clearest practical path available.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-6" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-8" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 8 -->
-<article class="chapter" id="ch8">
+<article class="chapter" id="chapter-8">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 08 · Relationships &amp; Communication</div>
     <h2 class="chapter-title">Attached</h2>
@@ -888,10 +1148,16 @@ blockquote cite {
   <div class="why-box">
     <p>Attachment theory is arguably the most empirically robust framework for understanding adult relationships. Levine and Heller make it genuinely accessible — readable, practical, and immediately recognizable. The book has become one of the most widely recommended resources by therapists and coaches working with relationship issues, because it gives people a framework for understanding their own patterns without shame, and concrete strategies for moving toward security.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-7" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-9" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 9 -->
-<article class="chapter" id="ch9">
+<article class="chapter" id="chapter-9">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 09 · Relationships &amp; Communication</div>
     <h2 class="chapter-title">Mating in Captivity</h2>
@@ -920,10 +1186,16 @@ blockquote cite {
   <div class="why-box">
     <p>Perel reframes one of the most privately painful experiences in long-term partnerships — the gradual dimming of erotic desire — as a structural rather than personal failure, and in doing so removes an enormous burden of shame and self-blame. Her work is both intellectually rigorous and clinically wise, drawing on cross-cultural observation, psychoanalytic depth, and frank honesty about what actually sustains intimacy across time.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-8" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-10" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 10 -->
-<article class="chapter" id="ch10">
+<article class="chapter" id="chapter-10">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 10 · Relationships &amp; Communication</div>
     <h2 class="chapter-title">The State of Affairs</h2>
@@ -952,10 +1224,16 @@ blockquote cite {
   <div class="why-box">
     <p>Perel's willingness to explore infidelity without moral simplification is both intellectually courageous and clinically necessary. For anyone who has experienced an affair — as the straying partner, the betrayed partner, or both — this book offers something that most resources do not: a framework for understanding rather than only condemning, and a path toward the reckoning that genuine healing requires.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-9" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-11" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 11 -->
-<article class="chapter" id="ch11">
+<article class="chapter" id="chapter-11">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 11 · Relationships &amp; Communication</div>
     <h2 class="chapter-title">Us</h2>
@@ -983,10 +1261,16 @@ blockquote cite {
   <div class="why-box">
     <p>Real draws on forty years of couples therapy to argue that the skills of genuine partnership must be consciously cultivated against the grain of a culture that celebrates independence over connection. His framework is practically demanding — he asks couples to give up winning — but the relational vision he offers is among the most clear-eyed and emotionally mature accounts of what lasting, honest love actually requires.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-10" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-12" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 12 -->
-<article class="chapter" id="ch12">
+<article class="chapter" id="chapter-12">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 12 · Relationships &amp; Communication</div>
     <h2 class="chapter-title">How to Win Friends and Influence People</h2>
@@ -1015,10 +1299,16 @@ blockquote cite {
   <div class="why-box">
     <p>The longevity of this book — nearly a century of continuous readership — is itself evidence for its claims. Carnegie distilled a set of relational truths that hold because they are rooted in unchanging human psychology rather than contemporary trend. For all its age, the book reads as urgently relevant in any environment where human skill — rather than technical or algorithmic ability — determines outcomes.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-11" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-13" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 13 -->
-<article class="chapter" id="ch13">
+<article class="chapter" id="chapter-13">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 13 · Relationships &amp; Communication</div>
     <h2 class="chapter-title">The Language of Emotional Intelligence</h2>
@@ -1041,6 +1331,12 @@ blockquote cite {
   <div class="why-box">
     <p>Segal's contribution is to redirect attention from the cognitive layer of emotional intelligence — where most books live — to the somatic and nonverbal layer where emotional life actually originates. Her work is particularly valuable for people who are verbally articulate but relationally disconnected, helping them understand that words alone cannot carry the relational freight they are trying to carry, and that the body must be brought into the conversation.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-12" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-14" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- ── SUBSECTION C ─────────────────────────────────── -->
@@ -1050,7 +1346,7 @@ blockquote cite {
 </div>
 
 <!-- CH 14 -->
-<article class="chapter" id="ch14">
+<article class="chapter" id="chapter-14">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 14 · Men, Masculinity &amp; Inner Work</div>
     <h2 class="chapter-title">I Don't Want to Talk About It</h2>
@@ -1079,10 +1375,16 @@ blockquote cite {
   <div class="why-box">
     <p>This book broke ground by naming a phenomenon that had been invisible because it didn't fit the clinical picture — and by doing so with the authority of both clinical expertise and personal confession. Real wrote about his own father's covert depression and his own struggles with the masculine inheritance. For men who have felt something deeply wrong but could not name it, this book is often described as the first time they felt genuinely seen.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-13" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-15" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 15 -->
-<article class="chapter" id="ch15">
+<article class="chapter" id="chapter-15">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 15 · Men, Masculinity &amp; Inner Work</div>
     <h2 class="chapter-title">Daring Greatly</h2>
@@ -1111,10 +1413,16 @@ blockquote cite {
   <div class="why-box">
     <p>Brown's work — initially delivered as a TED talk that became one of the most-watched in history — reframed vulnerability from a liability into a form of moral and relational courage. The book builds on the talk with research depth, practical guidance, and particular attention to how shame operates in organizations and families. It has influenced not only individual readers but corporate culture, educational institutions, and mental health practice worldwide.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-14" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-16" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 16 -->
-<article class="chapter" id="ch16">
+<article class="chapter" id="chapter-16">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 16 · Men, Masculinity &amp; Inner Work</div>
     <h2 class="chapter-title">Atlas of the Heart</h2>
@@ -1138,10 +1446,16 @@ blockquote cite {
   <div class="why-box">
     <p>Brown's atlas is unique in combining rigorous research with accessible prose and a genuine love of language. In a culture that has progressively narrowed its emotional vocabulary to emoji-level simplicity, this book is a deliberate act of restoration — an invitation to inhabit the full complexity of emotional experience rather than flattening it into three or four categories. As both reference and narrative, it earns its place on the shelf next to any serious treatment of emotional intelligence.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-15" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-17" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 17 -->
-<article class="chapter" id="ch17">
+<article class="chapter" id="chapter-17">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 17 · Men, Masculinity &amp; Inner Work</div>
     <h2 class="chapter-title">The Way of the Superior Man</h2>
@@ -1169,10 +1483,16 @@ blockquote cite {
   <div class="why-box">
     <p>Deida's work is controversial precisely because it reintroduces polarity and difference into conversations about partnership that had largely moved toward sameness as an ideal. Readers either find it profoundly clarifying or deeply uncomfortable — often both simultaneously. Whatever one thinks of its specific prescriptions, the book asks men genuinely difficult questions about purpose, presence, and what it means to love with full commitment rather than managed safety.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-16" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-18" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 18 -->
-<article class="chapter" id="ch18">
+<article class="chapter" id="chapter-18">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 18 · Men, Masculinity &amp; Inner Work</div>
     <h2 class="chapter-title">Adult Children of Emotionally Immature Parents</h2>
@@ -1196,10 +1516,16 @@ blockquote cite {
   <div class="why-box">
     <p>Gibson provides language and conceptual tools for an experience that is enormously common but rarely named — the quiet deprivation of emotional neglect, which leaves no visible bruises but shapes the self as deeply as any more dramatic wound. The book is validating without being inflammatory toward parents, and practical without minimizing the depth of the healing work required. It is among the most recommended self-help books by therapists working with adults on childhood attachment wounds.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-17" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-19" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 19 -->
-<article class="chapter" id="ch19">
+<article class="chapter" id="chapter-19">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 19 · Men, Masculinity &amp; Inner Work</div>
     <h2 class="chapter-title">The Masculine in Relationship</h2>
@@ -1222,6 +1548,12 @@ blockquote cite {
   <div class="why-box">
     <p>Youngblood addresses a specific and widespread relational dynamic — the passive, agreeable man who cannot understand why his partner is unhappy despite his genuine efforts to please — with more precision and less cultural baggage than most books in this space. His framework gives well-meaning men who have tried harder without effect a different question to ask: not "what should I do differently?" but "who am I being in this relationship?"</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-18" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-20" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- ── SUBSECTION D ─────────────────────────────────── -->
@@ -1231,7 +1563,7 @@ blockquote cite {
 </div>
 
 <!-- CH 20 -->
-<article class="chapter" id="ch20">
+<article class="chapter" id="chapter-20">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 20 · Consciousness &amp; Self-Awareness</div>
     <h2 class="chapter-title">The Body Keeps the Score</h2>
@@ -1260,10 +1592,16 @@ blockquote cite {
   <div class="why-box">
     <p>This book fundamentally changed the landscape of trauma treatment and public health understanding. It is not primarily a self-help book but a work of science and clinical narrative that makes accessible decades of research with enormous implications — not only for trauma survivors but for anyone interested in how the body and the self interact, how early experience shapes adult life, and what genuine healing actually requires.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-19" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-21" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 21 -->
-<article class="chapter" id="ch21">
+<article class="chapter" id="chapter-21">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 21 · Consciousness &amp; Self-Awareness</div>
     <h2 class="chapter-title">Awareness</h2>
@@ -1291,10 +1629,16 @@ blockquote cite {
   <div class="why-box">
     <p>De Mello's book is in a different register from most in this collection — less a self-help guide than a direct transmission from a mind that had genuinely worked through these questions and arrived somewhere worth pointing to. It is challenging because it asks you to question not just your habits but your deepest assumptions about what you are and what you need. For readers ready for that challenge, it is among the most transformative books in the spiritual and psychological literature of the twentieth century.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-20" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-22" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 22 -->
-<article class="chapter" id="ch22">
+<article class="chapter" id="chapter-22">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 22 · Consciousness &amp; Self-Awareness</div>
     <h2 class="chapter-title">Maybe You Should Talk to Someone</h2>
@@ -1317,10 +1661,16 @@ blockquote cite {
   <div class="why-box">
     <p>Gottlieb's book demystifies therapy in the best possible way — not by reducing it but by showing it in action, in all its messy, surprising, sometimes funny, and genuinely moving reality. It is an argument for the value of professional psychological support written by someone with full insider knowledge, and it is likely the most effective single book for helping someone decide to seek therapy who has been hesitating.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-21" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-23" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 23 -->
-<article class="chapter" id="ch23">
+<article class="chapter" id="chapter-23">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 23 · Consciousness &amp; Self-Awareness</div>
     <h2 class="chapter-title">Self-Compassion</h2>
@@ -1349,10 +1699,16 @@ blockquote cite {
   <div class="why-box">
     <p>Neff built the empirical case for a practice that most Western psychology — with its emphasis on self-esteem, achievement, and performance — had largely ignored. The book is both a scientific argument and a personal invitation, and it arrives at a moment when self-criticism is epidemic in high-pressure cultures. For the enormous number of people who would never think to apply to themselves the same kindness they readily offer others, this book is a revelation.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-22" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-24" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 24 -->
-<article class="chapter" id="ch24">
+<article class="chapter" id="chapter-24">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 24 · Consciousness &amp; Self-Awareness</div>
     <h2 class="chapter-title">How Emotions Are Made</h2>
@@ -1380,10 +1736,16 @@ blockquote cite {
   <div class="why-box">
     <p>Barrett's work is the most rigorous scientific account in this collection — a dense but ultimately accessible argument for a paradigm shift in how we understand emotional life. Its practical implications are enormous: if emotions are constructed rather than triggered, then building richer emotional concepts, improving sleep and nutrition, curating one's physical environments, and expanding cultural and imaginative experience are not peripheral wellness practices but direct interventions in the quality of one's emotional life.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-23" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-25" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 25 -->
-<article class="chapter" id="ch25">
+<article class="chapter" id="chapter-25">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 25 · Consciousness &amp; Self-Awareness</div>
     <h2 class="chapter-title">The Genius of Empathy</h2>
@@ -1406,10 +1768,16 @@ blockquote cite {
   <div class="why-box">
     <p>Orloff writes for an audience that has rarely felt understood — people whose sensitivity has been pathologized or dismissed rather than named as a real and valuable form of intelligence. The book reframes what many highly sensitive people experience as a weakness or disability into something that, with appropriate understanding and skill development, becomes one of their greatest assets. It is both a validation and a practical guide for a significant portion of the population that other resources overlook.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-24" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-26" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 26 -->
-<article class="chapter" id="ch26">
+<article class="chapter" id="chapter-26">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 26 · Consciousness &amp; Self-Awareness</div>
     <h2 class="chapter-title">Hope for Cynics</h2>
@@ -1432,10 +1800,16 @@ blockquote cite {
   <div class="why-box">
     <p>Zaki's work is timely in a moment when trust in institutions, in neighbors, and in strangers has reached historically low levels in many societies. He makes the empirical case not for naive optimism but for what he calls "hopeful skepticism" — the practice of taking human goodness as seriously as human selfishness, and of investing in the relational and social practices that activate the better part of human nature rather than confirming the worst.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-25" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-27" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- CH 27 -->
-<article class="chapter" id="ch27">
+<article class="chapter" id="chapter-27">
   <div class="chapter-header">
     <div class="chapter-num">Chapter 27 · Consciousness &amp; Self-Awareness</div>
     <h2 class="chapter-title">Shift</h2>
@@ -1459,19 +1833,25 @@ blockquote cite {
   <div class="why-box">
     <p>Kross synthesizes some of the most practically useful research in affective science into a coherent and immediately applicable toolkit. Unlike many popular psychology books, the strategies he describes are grounded in rigorous experimental evidence rather than clinical intuition or philosophical argument. For anyone who wants to manage their inner life more effectively — not by suppressing it but by working with it skillfully — this book provides one of the most evidence-dense guides available.</p>
   </div>
+
+<div class="ch-nav">
+  <a href="#chapter-26" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-28" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- ═══════════════════════════════════════════════════════
      PART II: TED TALKS
 ═══════════════════════════════════════════════════════ -->
-<section class="part-divider" id="part2">
+<section class="part-divider" id="part-2">
   <div class="part-label">Part II</div>
   <h2 class="part-title">TED Talks</h2>
   <p class="part-desc">Nine landmark talks on desire, vulnerability, shame, compassion, stress, and mindfulness — presented as detailed narrative overviews for readers who want the substance of each talk without watching the video.</p>
 </section>
 
 <!-- TALK 1 -->
-<article class="chapter" id="talk1">
+<article class="chapter" id="chapter-28">
   <div class="chapter-header">
     <div class="chapter-num">Talk 01</div>
     <h2 class="chapter-title">The Secret to Desire in a Long-Term Relationship</h2>
@@ -1507,10 +1887,16 @@ blockquote cite {
     <p>"In desire, we don't just want to possess — we want to want."</p>
     <cite>Esther Perel</cite>
   </blockquote>
+
+<div class="ch-nav">
+  <a href="#chapter-27" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-29" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- TALK 2 -->
-<article class="chapter" id="talk2">
+<article class="chapter" id="chapter-29">
   <div class="chapter-header">
     <div class="chapter-num">Talk 02</div>
     <h2 class="chapter-title">Rethinking Infidelity</h2>
@@ -1546,10 +1932,16 @@ blockquote cite {
     <p>"Seldom is an affair about wanting someone else. It's about wanting to be someone else."</p>
     <cite>Esther Perel</cite>
   </blockquote>
+
+<div class="ch-nav">
+  <a href="#chapter-28" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-30" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- TALK 3 -->
-<article class="chapter" id="talk3">
+<article class="chapter" id="chapter-30">
   <div class="chapter-header">
     <div class="chapter-num">Talk 03</div>
     <h2 class="chapter-title">The Power of Vulnerability</h2>
@@ -1587,10 +1979,16 @@ blockquote cite {
     <p>"Vulnerability is not winning or losing; it's having the courage to show up and be seen when we have no control over the outcome."</p>
     <cite>Brené Brown</cite>
   </blockquote>
+
+<div class="ch-nav">
+  <a href="#chapter-29" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-31" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- TALK 4 -->
-<article class="chapter" id="talk4">
+<article class="chapter" id="chapter-31">
   <div class="chapter-header">
     <div class="chapter-num">Talk 04</div>
     <h2 class="chapter-title">Listening to Shame</h2>
@@ -1626,10 +2024,16 @@ blockquote cite {
     <p>"Shame is the swampland of the soul. If you put it in a Petri dish, it needs three things to grow exponentially: secrecy, silence, and judgment."</p>
     <cite>Brené Brown</cite>
   </blockquote>
+
+<div class="ch-nav">
+  <a href="#chapter-30" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-32" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- TALK 5 -->
-<article class="chapter" id="talk5">
+<article class="chapter" id="chapter-32">
   <div class="chapter-header">
     <div class="chapter-num">Talk 05</div>
     <h2 class="chapter-title">The Gift and Power of Emotional Courage</h2>
@@ -1665,10 +2069,16 @@ blockquote cite {
     <p>"Discomfort is the price of admission to a meaningful life."</p>
     <cite>Susan David</cite>
   </blockquote>
+
+<div class="ch-nav">
+  <a href="#chapter-31" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-33" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- TALK 6 -->
-<article class="chapter" id="talk6">
+<article class="chapter" id="chapter-33">
   <div class="chapter-header">
     <div class="chapter-num">Talk 06</div>
     <h2 class="chapter-title">Why Aren't We More Compassionate?</h2>
@@ -1702,10 +2112,16 @@ blockquote cite {
     <p>"The very nature of compassion is to feel with another person — but first, you have to notice them."</p>
     <cite>Daniel Goleman</cite>
   </blockquote>
+
+<div class="ch-nav">
+  <a href="#chapter-32" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-34" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- TALK 7 -->
-<article class="chapter" id="talk7">
+<article class="chapter" id="chapter-34">
   <div class="chapter-header">
     <div class="chapter-num">Talk 07</div>
     <h2 class="chapter-title">What Makes a Good Life?</h2>
@@ -1741,10 +2157,16 @@ blockquote cite {
     <p>"The clearest message that we get from this 75-year study is this: Good relationships keep us happier and healthier. Period."</p>
     <cite>Robert Waldinger</cite>
   </blockquote>
+
+<div class="ch-nav">
+  <a href="#chapter-33" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-35" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- TALK 8 -->
-<article class="chapter" id="talk8">
+<article class="chapter" id="chapter-35">
   <div class="chapter-header">
     <div class="chapter-num">Talk 08</div>
     <h2 class="chapter-title">How to Make Stress Your Friend</h2>
@@ -1780,10 +2202,16 @@ blockquote cite {
     <p>"When you choose to view your stress response as helpful, you create the biology of courage."</p>
     <cite>Kelly McGonigal</cite>
   </blockquote>
+
+<div class="ch-nav">
+  <a href="#chapter-34" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <a href="#chapter-36" class="ch-next">Next →</a>
+</div>
 </article>
 
 <!-- TALK 9 -->
-<article class="chapter" id="talk9">
+<article class="chapter" id="chapter-36">
   <div class="chapter-header">
     <div class="chapter-num">Talk 09</div>
     <h2 class="chapter-title">All It Takes Is 10 Mindful Minutes</h2>
@@ -1819,12 +2247,18 @@ blockquote cite {
     <p>"We can't change every little thing that happens to us in life, but we can change the way that we experience it."</p>
     <cite>Andy Puddicombe</cite>
   </blockquote>
+
+<div class="ch-nav">
+  <a href="#chapter-35" class="ch-prev">← Previous</a>
+  <a href="#toc" class="ch-toc">Contents</a>
+  <span class="ch-nav-placeholder"></span>
+</div>
 </article>
 
 <!-- ═══════════════════════════════════════════════════════
      PART III: REFERENCE GUIDE
 ═══════════════════════════════════════════════════════ -->
-<section class="part-divider" id="part3">
+<section class="part-divider" id="part-3">
   <div class="part-label">Part III</div>
   <h2 class="part-title">Reference Guide</h2>
   <p class="part-desc">A curated directory of podcasts, online courses, key authors, websites, YouTube channels, and apps for continued learning in emotional intelligence, relationships, and personal growth.</p>
@@ -2218,6 +2652,166 @@ blockquote cite {
 <script>
 // Print button is handled by onclick="window.print()" in the nav bar
 // No additional JS required for functionality
+
+
+<script>
+// ── Reading progress bar ────────────────────────────────
+const progressBar = document.getElementById('progress-bar');
+const backTop = document.getElementById('back-top');
+
+window.addEventListener('scroll', function() {
+  const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+  const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+  progressBar.style.width = pct + '%';
+
+  // Back to top visibility
+  if (scrollTop > 300) {
+    backTop.classList.add('visible');
+  } else {
+    backTop.classList.remove('visible');
+  }
+}, { passive: true });
+
+// ── Font size controls ──────────────────────────────────
+const fontSizes = [15, 16, 17, 18, 19, 20];
+let fontIdx = fontSizes.indexOf(17); // default index
+
+function applyFontSize(idx) {
+  idx = Math.max(0, Math.min(fontSizes.length - 1, idx));
+  fontIdx = idx;
+  document.documentElement.style.setProperty('--reading-size', fontSizes[idx] + 'px');
+  localStorage.setItem('eq-font-idx', idx);
+}
+
+document.getElementById('font-dec').addEventListener('click', function() {
+  applyFontSize(fontIdx - 1);
+});
+document.getElementById('font-inc').addEventListener('click', function() {
+  applyFontSize(fontIdx + 1);
+});
+
+// Restore font size
+(function() {
+  const saved = localStorage.getItem('eq-font-idx');
+  if (saved !== null) applyFontSize(parseInt(saved, 10));
+})();
+
+// ── Dark/Light theme toggle ─────────────────────────────
+const themeBtn = document.getElementById('theme-toggle');
+let isLight = false;
+
+function applyTheme(light) {
+  isLight = light;
+  document.body.classList.toggle('light-mode', light);
+  themeBtn.textContent = light ? '☾' : '☀';
+  localStorage.setItem('eq-light-mode', light ? '1' : '0');
+}
+
+themeBtn.addEventListener('click', function() {
+  applyTheme(!isLight);
+});
+
+// Restore theme
+(function() {
+  const saved = localStorage.getItem('eq-light-mode');
+  if (saved === '1') applyTheme(true);
+})();
+
+// ── Current chapter tracker (IntersectionObserver) ──────
+const navTitle = document.getElementById('nav-title');
+const bookTitle = 'Emotional Intelligence, Relationships & Personal Growth';
+
+const chapterHeadings = document.querySelectorAll('.chapter h2.chapter-title');
+let currentTitle = bookTitle;
+
+if ('IntersectionObserver' in window && chapterHeadings.length) {
+  const obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        let t = entry.target.textContent.trim();
+        if (t.length > 40) t = t.slice(0, 40) + '…';
+        currentTitle = t;
+        navTitle.textContent = currentTitle;
+      }
+    });
+  }, { rootMargin: '-10px 0px -80% 0px', threshold: 0 });
+
+  chapterHeadings.forEach(function(h) { obs.observe(h); });
+
+  // Also observe title-page / toc to restore book title
+  const topSections = document.querySelectorAll('.title-page, .toc');
+  const topObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navTitle.textContent = bookTitle;
+      }
+    });
+  }, { rootMargin: '0px 0px -60% 0px', threshold: 0 });
+  topSections.forEach(function(s) { topObs.observe(s); });
+}
+
+// ── Copy quote buttons ──────────────────────────────────
+document.querySelectorAll('blockquote').forEach(function(bq) {
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = '📋';
+  btn.setAttribute('aria-label', 'Copy quote');
+
+  const tip = document.createElement('span');
+  tip.className = 'copy-tooltip';
+  tip.textContent = 'Copied!';
+
+  bq.style.position = 'relative';
+  bq.appendChild(tip);
+  bq.appendChild(btn);
+
+  btn.addEventListener('click', function() {
+    const pText = bq.querySelector('p') ? bq.querySelector('p').textContent.trim() : '';
+    const citeText = bq.querySelector('cite') ? ' — ' + bq.querySelector('cite').textContent.trim() : '';
+    navigator.clipboard.writeText(pText + citeText).then(function() {
+      tip.classList.add('show');
+      setTimeout(function() { tip.classList.remove('show'); }, 1500);
+    }).catch(function() {});
+  });
+});
+
+// ── Keyboard navigation ─────────────────────────────────
+document.addEventListener('keydown', function(e) {
+  if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return;
+  if (e.key === 't' || e.key === 'T') {
+    const toc = document.getElementById('toc');
+    if (toc) toc.scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+  // Find current chapter by scroll position
+  const chapters = Array.from(document.querySelectorAll('article.chapter'));
+  if (!chapters.length) return;
+  const scrollMid = window.scrollY + window.innerHeight / 2;
+  let currentIdx = 0;
+  for (let i = 0; i < chapters.length; i++) {
+    const rect = chapters[i].getBoundingClientRect();
+    const top = rect.top + window.scrollY;
+    if (top <= scrollMid) currentIdx = i;
+  }
+  if (e.key === 'ArrowRight') {
+    const next = chapters[currentIdx + 1];
+    if (next) next.scrollIntoView({ behavior: 'smooth' });
+  } else if (e.key === 'ArrowLeft') {
+    const prev = chapters[currentIdx - 1];
+    if (prev) prev.scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+// ── Scroll restoration ──────────────────────────────────
+(function() {
+  if (location.hash) {
+    setTimeout(function() {
+      const el = document.querySelector(location.hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  }
+})();
 </script>
 
 </body>
