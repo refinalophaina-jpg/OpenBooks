@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenBooks</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="header">
+    <h1>Open<span>Books</span></h1>
+    <p>Multi-source open book &amp; paper finder — 12 sources</p>
+  </header>
+
+  <div class="card">
+    <!-- search row -->
+    <div class="search-row">
+      <input
+        class="sinput"
+        id="q"
+        type="text"
+        placeholder="Title, author, ISBN, DOI…"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button class="btn-go" id="btn-go" onclick="doSearch()">Search</button>
+    </div>
+
+    <!-- source pills -->
+    <div class="src-row" id="src-row">
+      <!-- populated by JS -->
+    </div>
+
+    <!-- format filter row -->
+    <div class="fmt-row" id="fmt-row">
+      <span class="fmt-label">Format:</span>
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <!-- results -->
+  <div class="results" id="results"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
