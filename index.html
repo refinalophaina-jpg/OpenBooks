@@ -8,271 +8,584 @@
 <title>OpenBooks</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 <style>
+/* ════════════════════════════════════════════════════════════════
+   TOKENS
+   ════════════════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
   --bg:      #0e0e10;
   --bg2:     #16161a;
   --bg3:     #1e1e24;
+  --bg4:     #24242c;
   --bdr:     #2a2a32;
   --bdr2:    #333340;
   --text:    #f0f0f5;
   --t2:      #a0a0b8;
   --t3:      #606078;
+  --t4:      #40404e;
   --accent:  #b8f000;
   --adim:    rgba(184,240,0,.12);
   --aborder: rgba(184,240,0,.35);
+  --warn:    #f0a500;
+  --err:     #f04050;
+  --ok:      #50c878;
   --r:       8px;
+  --rs:      6px;
+  --rl:      14px;
 }
-
 body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Syne', sans-serif;
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 0 16px 72px;
+  padding: 0 16px 80px;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── header ── */
-.header {
-  text-align: center;
-  padding: 52px 0 34px;
-  user-select: none;
-}
-.header h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -.5px;
-}
+/* ════════════════════════════════════════════════════════════════
+   HEADER
+   ════════════════════════════════════════════════════════════════ */
+.header { text-align: center; padding: 44px 0 28px; user-select: none; }
+.header h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: -.5px; }
 .header h1 span { color: var(--accent); }
 .header p {
-  color: var(--t3);
-  font-size: .82rem;
-  margin-top: 6px;
-  font-family: 'JetBrains Mono', monospace;
-  letter-spacing: .02em;
+  color: var(--t3); font-size: .78rem; margin-top: 5px;
+  font-family: 'JetBrains Mono', monospace; letter-spacing: .02em;
 }
 
-/* ── search card ── */
+/* ════════════════════════════════════════════════════════════════
+   CARD
+   ════════════════════════════════════════════════════════════════ */
 .card {
-  max-width: 720px;
-  margin: 0 auto;
-  background: var(--bg2);
-  border: 1px solid var(--bdr);
-  border-radius: 14px;
-  padding: 22px 18px 18px;
+  max-width: 760px; margin: 0 auto;
+  background: var(--bg2); border: 1px solid var(--bdr);
+  border-radius: var(--rl); padding: 18px 18px 16px;
 }
 
-/* ── search row ── */
-.search-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
+/* ── tabs ───────────────────────────────────────────────────── */
+.tabs {
+  display: flex; gap: 4px; margin-bottom: 14px;
+  background: var(--bg3); border-radius: var(--r); padding: 4px;
+}
+.tab {
+  flex: 1; padding: 9px 12px; background: none; border: none;
+  border-radius: var(--rs); color: var(--t2);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  font-weight: 500; letter-spacing: .04em; text-transform: uppercase;
+  cursor: pointer; transition: all .15s; -webkit-appearance: none;
+}
+.tab.on { background: var(--bg4); color: var(--text); }
+.tab .badge {
+  display: inline-block; margin-left: 6px; padding: 1px 6px;
+  background: var(--adim); color: var(--accent);
+  border-radius: 10px; font-size: 9px; font-weight: 600;
 }
 
+/* ── search inputs ──────────────────────────────────────────── */
+.search-row { display: flex; gap: 8px; margin-bottom: 10px; }
 .sinput {
-  flex: 1;
-  padding: 11px 14px;
-  background: var(--bg3);
-  border: 1px solid var(--bdr2);
-  border-radius: var(--r);
-  font-size: .95rem;
-  font-family: 'Syne', sans-serif;
-  color: var(--text);
-  outline: none;
-  -webkit-appearance: none;
-  transition: border-color .2s;
-  min-width: 0;
+  flex: 1; padding: 11px 14px; background: var(--bg3);
+  border: 1px solid var(--bdr2); border-radius: var(--r);
+  font-size: .95rem; font-family: 'Syne', sans-serif;
+  color: var(--text); outline: none; -webkit-appearance: none;
+  transition: border-color .2s; min-width: 0;
 }
-.sinput:focus        { border-color: var(--accent); }
+.sinput:focus { border-color: var(--accent); }
 .sinput::placeholder { color: var(--t3); }
 
+textarea.sinput {
+  width: 100%; min-height: 160px; resize: vertical;
+  font-family: 'JetBrains Mono', monospace; font-size: .82rem;
+  line-height: 1.55; padding: 12px 14px;
+}
+
 .btn-go {
-  padding: 11px 18px;
-  background: var(--accent);
-  color: #000;
-  border-radius: var(--r);
-  font-size: .88rem;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-  font-family: 'Syne', sans-serif;
-  -webkit-appearance: none;
-  flex-shrink: 0;
-  transition: opacity .15s;
+  padding: 11px 18px; background: var(--accent); color: #000;
+  border-radius: var(--r); font-size: .88rem; font-weight: 700;
+  border: none; cursor: pointer; white-space: nowrap;
+  font-family: 'Syne', sans-serif; -webkit-appearance: none;
+  flex-shrink: 0; transition: opacity .15s;
 }
 .btn-go:hover    { opacity: .88; }
 .btn-go:active   { opacity: .7; }
 .btn-go:disabled { opacity: .4; cursor: default; }
 
-/* ── section label ── */
-.row-label {
-  font-size: 10px;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--t3);
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  margin-bottom: 8px;
-  margin-top: 16px;
-}
-
-/* ── source pills ── */
-.src-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 4px;
-}
-
-.spill {
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 500;
-  border: 1px solid var(--bdr2);
-  color: var(--t2);
-  background: none;
-  cursor: pointer;
-  font-family: 'JetBrains Mono', monospace;
-  -webkit-appearance: none;
+.btn-ghost {
+  padding: 8px 14px; background: none; color: var(--t2);
+  border: 1px solid var(--bdr2); border-radius: var(--r);
+  font-size: .82rem; font-weight: 500; cursor: pointer;
+  font-family: 'JetBrains Mono', monospace; -webkit-appearance: none;
   transition: all .15s;
-  line-height: 1.4;
-  touch-action: manipulation;
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--t3); }
+
+.batch-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.batch-actions .grow { flex: 1; }
+
+/* ── section labels ─────────────────────────────────────────── */
+.row-label {
+  font-size: 10px; font-family: 'JetBrains Mono', monospace;
+  color: var(--t3); text-transform: uppercase; letter-spacing: .1em;
+  margin-bottom: 8px; margin-top: 16px;
+}
+.divider {
+  border: none; border-top: 1px solid var(--bdr); margin: 14px 0 0;
+}
+
+/* ── pills ──────────────────────────────────────────────────── */
+.src-row, .fmt-row {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px;
+}
+.spill {
+  padding: 5px 12px; border-radius: 20px; font-size: 11px;
+  font-weight: 500; border: 1px solid var(--bdr2);
+  color: var(--t2); background: none; cursor: pointer;
+  font-family: 'JetBrains Mono', monospace; -webkit-appearance: none;
+  transition: all .15s; line-height: 1.4; touch-action: manipulation;
 }
 .spill:hover { border-color: var(--t2); color: var(--text); }
 .spill.on {
-  background: var(--adim);
-  border-color: var(--aborder);
-  color: var(--accent);
+  background: var(--adim); border-color: var(--aborder); color: var(--accent);
 }
 
-/* ── format row ── */
-.fmt-row {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-wrap: wrap;
+/* ── collapsible ────────────────────────────────────────────── */
+.adv-toggle {
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; user-select: none; margin-top: 14px;
+  padding: 8px 0; color: var(--t2);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  text-transform: uppercase; letter-spacing: .08em;
 }
+.adv-toggle:hover { color: var(--text); }
+.adv-toggle .chev { transition: transform .2s; }
+.adv-toggle.open .chev { transform: rotate(90deg); }
+.adv-body { display: none; padding-top: 6px; }
+.adv-body.open { display: block; }
 
-/* ── divider ── */
-.divider {
-  border: none;
-  border-top: 1px solid var(--bdr);
-  margin: 16px 0 0;
+/* ════════════════════════════════════════════════════════════════
+   PARSE PREVIEW
+   ════════════════════════════════════════════════════════════════ */
+.preview {
+  max-width: 760px; margin: 18px auto 0;
+  background: var(--bg2); border: 1px solid var(--bdr);
+  border-radius: var(--rl); padding: 18px;
 }
-
-/* ── results ── */
-.results {
-  max-width: 720px;
-  margin: 16px auto 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.preview-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
 }
-
-.result-item {
-  background: var(--bg2);
-  border: 1px solid var(--bdr);
-  border-radius: 10px;
-  padding: 15px 16px;
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  transition: border-color .15s;
-  cursor: default;
+.preview-title {
+  font-size: 1rem; font-weight: 600;
 }
-.result-item:hover { border-color: var(--bdr2); }
-
-.ri-body { flex: 1; min-width: 0; }
-
-.ri-title {
-  font-family: 'Lora', serif;
-  font-size: .95rem;
-  font-weight: 400;
-  margin-bottom: 5px;
-  line-height: 1.35;
-  color: var(--text);
-}
-.ri-title em {
-  font-style: italic;
+.preview-stats {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
   color: var(--t2);
 }
+.preview-stats span { color: var(--accent); font-weight: 600; }
 
-.ri-meta {
-  font-size: .75rem;
-  color: var(--t3);
+/* outline tree */
+.outline { font-family: 'JetBrains Mono', monospace; font-size: .8rem; }
+.tree-sec {
+  background: var(--bg3); border-radius: var(--r);
+  margin-bottom: 6px; overflow: hidden;
+  border: 1px solid var(--bdr);
+}
+.tree-sec-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 12px; cursor: pointer; user-select: none;
+  color: var(--text); font-weight: 600; font-size: .82rem;
+  transition: background .15s;
+}
+.tree-sec-head:hover { background: var(--bg4); }
+.tree-sec-head .chev {
+  color: var(--t3); transition: transform .15s; flex-shrink: 0;
+}
+.tree-sec.open > .tree-sec-head .chev { transform: rotate(90deg); }
+.tree-sec-name { flex: 1; }
+.tree-sec-count {
+  color: var(--t3); font-weight: 500; font-size: .72rem;
+}
+.tree-sec-body { display: none; padding: 0 10px 8px; }
+.tree-sec.open > .tree-sec-body { display: block; }
+
+.tree-sub {
+  margin: 6px 0; padding-left: 8px;
+  border-left: 1px solid var(--bdr2);
+}
+.tree-sub-head {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px; cursor: pointer; user-select: none;
+  color: var(--t2); font-size: .72rem; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.tree-sub-head:hover { color: var(--text); }
+.tree-sub-head .chev { color: var(--t4); transition: transform .15s; }
+.tree-sub.open > .tree-sub-head .chev { transform: rotate(90deg); }
+.tree-sub-body { display: none; padding-left: 12px; }
+.tree-sub.open > .tree-sub-body { display: block; }
+
+.tree-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 5px 6px; border-radius: 4px;
+  transition: background .15s;
+}
+.tree-item:hover { background: var(--bg4); }
+.tree-item .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--t4); flex-shrink: 0;
+  margin-top: 6px; transition: background .2s;
+}
+.tree-item.searching .dot {
+  background: var(--warn); animation: pulse 1s ease-in-out infinite;
+}
+.tree-item.done    .dot { background: var(--ok); }
+.tree-item.empty   .dot { background: var(--err); }
+.tree-item-body { flex: 1; min-width: 0; }
+.tree-item-title {
+  font-family: 'Lora', serif; font-size: .82rem;
+  color: var(--text); line-height: 1.3;
+}
+.tree-item-title em { color: var(--t2); font-style: italic; }
+.tree-item-meta {
+  font-size: .68rem; color: var(--t3); margin-top: 2px;
+}
+.tree-item-meta .lnk { color: var(--t2); }
+
+@keyframes pulse {
+  0%,100% { opacity: 1; } 50% { opacity: .35; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   RESULTS
+   ════════════════════════════════════════════════════════════════ */
+.results {
+  max-width: 760px; margin: 18px auto 0;
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+/* toolbar */
+.toolbar {
+  display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+  background: var(--bg2); border: 1px solid var(--bdr);
+  border-radius: var(--r); padding: 8px 10px; margin-bottom: 4px;
+}
+.toolbar-label {
+  font-size: 10px; font-family: 'JetBrains Mono', monospace;
+  color: var(--t3); text-transform: uppercase; letter-spacing: .08em;
+  margin-right: 4px;
+}
+.toolbar select {
+  background: var(--bg3); color: var(--text);
+  border: 1px solid var(--bdr2); border-radius: var(--rs);
+  padding: 5px 8px; font-size: .72rem;
   font-family: 'JetBrains Mono', monospace;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  -webkit-appearance: none; cursor: pointer; outline: none;
 }
-
-.ri-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
-.ri-src {
-  font-size: 10px;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--accent);
-  background: var(--adim);
-  border: 1px solid var(--aborder);
-  border-radius: 4px;
-  padding: 2px 7px;
-  white-space: nowrap;
-}
-
-.ri-fmt {
-  font-size: 10px;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--t3);
-  border: 1px solid var(--bdr2);
-  border-radius: 4px;
-  padding: 2px 7px;
-  white-space: nowrap;
-}
-
-/* ── states ── */
-.state-msg {
-  text-align: center;
-  padding: 48px 0;
-}
-.state-msg p {
-  color: var(--t3);
-  font-size: .85rem;
+.toolbar .grow { flex: 1; }
+.toolbar .stats {
+  font-size: .72rem; color: var(--t2);
   font-family: 'JetBrains Mono', monospace;
 }
-.state-msg .big {
-  font-size: 1.6rem;
-  margin-bottom: 8px;
+.toolbar .stats span { color: var(--accent); }
+
+/* section group */
+.rsec {
+  background: var(--bg2); border: 1px solid var(--bdr);
+  border-radius: var(--rl); overflow: hidden;
+}
+.rsec-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; background: var(--bg3);
+  cursor: pointer; user-select: none;
+  border-bottom: 1px solid var(--bdr);
+}
+.rsec-head .chev { color: var(--t3); transition: transform .15s; }
+.rsec.open .rsec-head .chev { transform: rotate(90deg); }
+.rsec-name {
+  flex: 1; font-weight: 700; font-size: .9rem;
+  letter-spacing: .02em;
+}
+.rsec-count {
+  font-family: 'JetBrains Mono', monospace; font-size: .7rem;
   color: var(--t3);
 }
+.rsec.open .rsec-body { display: block; }
+.rsec-body { display: none; padding: 8px; }
 
-/* ── spinner ── */
+.rsub {
+  padding: 4px 8px 12px;
+}
+.rsub-name {
+  font-family: 'JetBrains Mono', monospace; font-size: .68rem;
+  color: var(--t3); text-transform: uppercase; letter-spacing: .1em;
+  margin: 12px 4px 8px;
+}
+
+/* item card */
+.icard {
+  background: var(--bg3); border: 1px solid var(--bdr);
+  border-radius: var(--r); padding: 12px 14px;
+  margin-bottom: 6px;
+}
+.icard-row1 {
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.icard-title {
+  flex: 1; min-width: 0; font-family: 'Lora', serif;
+  font-size: .95rem; line-height: 1.35; color: var(--text);
+}
+.icard-title em { color: var(--t2); font-style: italic; font-size: .88rem; }
+.icard-year {
+  font-family: 'JetBrains Mono', monospace; font-size: .7rem;
+  color: var(--t3); flex-shrink: 0;
+}
+
+.icard-row2 {
+  display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px;
+}
+.tag {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  padding: 2px 6px; border-radius: 3px; line-height: 1.5;
+  border: 1px solid var(--bdr2); color: var(--t2);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.tag.type { background: var(--bg4); }
+.tag.found { color: var(--accent); border-color: var(--aborder); background: var(--adim); }
+.tag.missing { color: var(--t3); }
+
+.icard-row3 {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;
+}
+.lpill {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  padding: 3px 8px; border-radius: 4px;
+  background: var(--bg4); color: var(--t2);
+  text-decoration: none; transition: all .15s;
+  border: 1px solid transparent;
+}
+.lpill:hover { color: var(--text); border-color: var(--bdr2); }
+.lpill.open {
+  background: var(--adim); color: var(--accent);
+  border-color: var(--aborder);
+}
+.lpill .kind {
+  font-size: 8px; color: var(--t3); text-transform: uppercase;
+}
+
+.icard-collapse {
+  margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--bdr);
+  cursor: pointer; user-select: none; font-size: 11px;
+  font-family: 'JetBrains Mono', monospace; color: var(--t3);
+}
+.icard-collapse:hover { color: var(--text); }
+.icard-extra { display: none; padding-top: 8px; }
+.icard.expanded .icard-extra { display: block; }
+.icard.expanded .icard-collapse .chev { transform: rotate(90deg); }
+.icard-collapse .chev { display: inline-block; transition: transform .15s; }
+
+/* state */
+.state-msg { text-align: center; padding: 48px 0; }
+.state-msg p { color: var(--t3); font-size: .85rem; font-family: 'JetBrains Mono', monospace; }
+.state-msg .big { font-size: 1.6rem; margin-bottom: 8px; color: var(--t3); }
+
+/* spinner */
 @keyframes spin { to { transform: rotate(360deg); } }
 .spinner {
-  width: 20px; height: 20px;
-  border: 2px solid var(--bdr2);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin .7s linear infinite;
-  margin: 0 auto 12px;
+  width: 20px; height: 20px; border: 2px solid var(--bdr2);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin .7s linear infinite; margin: 0 auto 12px;
 }
 
-/* ── mobile tweaks ── */
-@media (max-width: 480px) {
-  body { padding: 0 12px 80px; }
-  .header { padding: 36px 0 24px; }
-  .header h1 { font-size: 1.7rem; }
-  .card { padding: 18px 14px 14px; border-radius: 12px; }
-  .btn-go { padding: 11px 14px; font-size: .85rem; }
+/* progress bar */
+.progress {
+  height: 3px; background: var(--bg3); border-radius: 2px;
+  overflow: hidden; margin-top: 10px;
+}
+.progress-fill {
+  height: 100%; background: var(--accent);
+  width: 0%; transition: width .25s ease-out;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   READER OVERLAY (book-style view + print → PDF)
+   ════════════════════════════════════════════════════════════════ */
+.reader-fab {
+  position: fixed; right: 16px; bottom: 16px; z-index: 40;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.fab-btn {
+  background: var(--accent); color: #000;
+  border: none; border-radius: 24px;
+  padding: 12px 18px; font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: .85rem; cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0,0,0,.5);
+  -webkit-appearance: none; display: inline-flex; align-items: center; gap: 8px;
+  transition: opacity .15s;
+}
+.fab-btn:hover { opacity: .9; }
+.fab-btn.ghost {
+  background: var(--bg3); color: var(--text);
+  border: 1px solid var(--bdr2);
+}
+
+.read-btn {
+  background: none; border: 1px solid var(--bdr2);
+  color: var(--t2); border-radius: 4px;
+  padding: 3px 8px; font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; cursor: pointer; -webkit-appearance: none;
+  transition: all .15s;
+}
+.read-btn:hover { color: var(--accent); border-color: var(--aborder); }
+
+.reader {
+  position: fixed; inset: 0; z-index: 100;
+  background: #f7f3ea; color: #1a1a1a;
+  overflow-y: auto; display: none;
+}
+.reader.open { display: block; }
+.reader-bar {
+  position: sticky; top: 0; z-index: 2;
+  background: rgba(247,243,234,.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #d8d2c1;
+  padding: 10px 16px; display: flex; gap: 8px;
+  align-items: center; justify-content: space-between;
+}
+.reader-bar-l, .reader-bar-r { display: flex; gap: 6px; align-items: center; }
+.reader-bar button {
+  padding: 7px 12px; border: 1px solid #c8c0a8;
+  background: #fff; color: #1a1a1a; border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  font-weight: 500; cursor: pointer; -webkit-appearance: none;
+  transition: all .15s;
+}
+.reader-bar button:hover { background: #f0ebd9; }
+.reader-bar button.primary {
+  background: #1a1a1a; color: #fff; border-color: #1a1a1a;
+}
+.reader-bar button.primary:hover { background: #333; }
+
+.book {
+  max-width: 640px; margin: 0 auto; padding: 64px 40px 80px;
+  font-family: 'Lora', serif; font-size: 17px; line-height: 1.75;
+}
+.book .title-page {
+  text-align: center; padding: 80px 0 100px;
+  border-bottom: 1px solid #d8d2c1; margin-bottom: 60px;
+  page-break-after: always;
+}
+.book .title-page h1 {
+  font-family: 'Lora', serif; font-style: italic;
+  font-weight: 400; font-size: 2.4rem; line-height: 1.2;
+  margin-bottom: 24px;
+}
+.book .title-page .author {
+  font-family: 'Syne', sans-serif; font-size: .95rem;
+  letter-spacing: .15em; text-transform: uppercase; color: #555;
+}
+.book .title-page .imprint {
+  margin-top: 80px; font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem; color: #888; letter-spacing: .1em;
+}
+
+.book .toc {
+  margin-bottom: 60px; padding-bottom: 40px;
+  border-bottom: 1px solid #d8d2c1;
+  page-break-after: always;
+}
+.book .toc h2 {
+  font-family: 'Syne', sans-serif; font-size: .85rem;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: #555; margin-bottom: 30px; text-align: center; font-weight: 600;
+}
+.book .toc-section {
+  font-family: 'Syne', sans-serif; font-size: .75rem;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: #888; margin: 24px 0 8px;
+}
+.book .toc-entry {
+  display: flex; gap: 8px; padding: 4px 0;
+  border-bottom: 1px dotted #d8d2c1;
+  font-size: .95rem;
+}
+.book .toc-entry .t { flex: 1; }
+.book .toc-entry .p { color: #888; font-family: 'JetBrains Mono', monospace; font-size: .8rem; }
+
+.book .chapter {
+  page-break-before: always; padding-top: 40px;
+  margin-bottom: 60px;
+}
+.book .chapter-num {
+  font-family: 'JetBrains Mono', monospace; font-size: .75rem;
+  letter-spacing: .2em; color: #888; text-align: center;
+  margin-bottom: 12px; text-transform: uppercase;
+}
+.book .chapter h2 {
+  font-family: 'Lora', serif; font-style: italic;
+  font-weight: 400; font-size: 1.7rem; line-height: 1.25;
+  text-align: center; margin-bottom: 8px;
+}
+.book .chapter .byline {
+  text-align: center; font-family: 'Syne', sans-serif;
+  font-size: .8rem; letter-spacing: .12em; text-transform: uppercase;
+  color: #777; margin-bottom: 48px;
+}
+.book .chapter .meta-row {
+  text-align: center; font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem; color: #999; margin-bottom: 40px;
+  letter-spacing: .08em;
+}
+.book .chapter p { margin-bottom: 1em; text-align: justify; hyphens: auto; }
+.book .chapter p:first-of-type::first-letter {
+  font-family: 'Lora', serif; font-size: 3.2em; float: left;
+  line-height: 1; padding: 4px 8px 0 0; color: #1a1a1a;
+}
+.book .chapter .pullquote {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 1.15rem; line-height: 1.55; text-align: center;
+  margin: 32px 40px; color: #444;
+  border-top: 1px solid #d8d2c1; border-bottom: 1px solid #d8d2c1;
+  padding: 20px 0;
+}
+.book .chapter .src-note {
+  margin-top: 36px; padding-top: 16px;
+  border-top: 1px solid #d8d2c1;
+  font-family: 'JetBrains Mono', monospace; font-size: .68rem;
+  color: #888; line-height: 1.6;
+}
+.book .chapter .src-note a { color: #555; text-decoration: underline; }
+
+/* ── print stylesheet (browser → Save as PDF) ── */
+@media print {
+  @page {
+    size: A5;
+    margin: 18mm 16mm 20mm;
+    @bottom-center { content: counter(page); font-family: 'JetBrains Mono', monospace; font-size: 9pt; color: #888; }
+  }
+  body { background: #fff !important; padding: 0 !important; }
+  .header, .card, .preview, .results, .reader-bar, .reader-fab { display: none !important; }
+  .reader { position: static !important; background: #fff !important; }
+  .book { padding: 0 !important; max-width: 100% !important; font-size: 11pt; line-height: 1.55; }
+  .book .title-page { padding: 40mm 0 30mm; }
+  .book .chapter { page-break-before: always; padding-top: 10mm; }
+  .book .chapter p { orphans: 3; widows: 3; }
+  a { color: inherit; text-decoration: none; }
+}
+
+/* mobile */
+@media (max-width: 520px) {
+  body { padding: 0 12px 90px; }
+  .header { padding: 32px 0 22px; }
+  .header h1 { font-size: 1.6rem; }
+  .card, .preview { padding: 14px; border-radius: 12px; }
+  .btn-go { padding: 11px 14px; font-size: .82rem; }
+  .icard { padding: 11px 12px; }
+  .icard-title { font-size: .88rem; }
+  .book { padding: 40px 24px 60px; font-size: 16px; }
+  .book .title-page h1 { font-size: 1.8rem; }
+  .book .chapter h2 { font-size: 1.4rem; }
 }
 </style>
 </head>
@@ -280,137 +593,918 @@ body {
 
 <header class="header">
   <h1>Open<span>Books</span></h1>
-  <p>12 sources · books, papers &amp; more</p>
+  <p>parse · search · organize · 12 sources</p>
 </header>
 
+<!-- ── INPUT CARD ───────────────────────────────────────────── -->
 <div class="card">
-  <div class="search-row">
-    <input
-      class="sinput"
-      id="q"
-      type="search"
-      placeholder="Title, author, ISBN, DOI…"
-      autocomplete="off"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck="false"
-      enterkeyhint="search"
-    />
-    <button class="btn-go" id="btn-go">Search</button>
+
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-mode="single">Single</button>
+    <button class="tab" data-mode="batch">Batch <span class="badge" id="batch-badge" hidden></span></button>
   </div>
 
-  <hr class="divider">
+  <!-- SINGLE MODE -->
+  <div id="mode-single">
+    <div class="search-row">
+      <input class="sinput" id="q" type="search"
+        placeholder="Title, author, ISBN, DOI…"
+        autocomplete="off" autocorrect="off" autocapitalize="off"
+        spellcheck="false" enterkeyhint="search" />
+      <button class="btn-go" id="btn-go">Search</button>
+    </div>
+  </div>
 
-  <p class="row-label" style="margin-top:14px">Sources</p>
-  <div class="src-row" id="src-row"></div>
+  <!-- BATCH MODE -->
+  <div id="mode-batch" hidden>
+    <textarea class="sinput" id="qb"
+      placeholder="Paste a reading list, bibliography, DOIs, ISBNs, arXiv IDs, or any structured resource list…
 
-  <p class="row-label">Format</p>
-  <div class="fmt-row" id="fmt-row"></div>
+Examples:
+• 10.1038/nature12373
+• arXiv:1706.03762
+• Emotional Intelligence — Daniel Goleman (1995)
+• A pasted multi-section resource list with SECTION headers"></textarea>
+    <div class="batch-actions">
+      <button class="btn-go" id="btn-parse">Parse</button>
+      <button class="btn-ghost grow" id="btn-clear">Clear</button>
+    </div>
+  </div>
+
+  <!-- ADVANCED (sources + format) -->
+  <div class="adv-toggle" id="adv-toggle">
+    <span>Sources &amp; Filters</span>
+    <span class="chev">›</span>
+  </div>
+  <div class="adv-body" id="adv-body">
+    <p class="row-label" style="margin-top:6px">Sources</p>
+    <div class="src-row" id="src-row"></div>
+
+    <p class="row-label">Format</p>
+    <div class="fmt-row" id="fmt-row"></div>
+
+    <p class="row-label">Type</p>
+    <div class="fmt-row" id="type-row"></div>
+  </div>
 </div>
 
+<!-- ── PARSE PREVIEW ────────────────────────────────────────── -->
+<div class="preview" id="preview" hidden>
+  <div class="preview-head">
+    <div class="preview-title">Detected structure</div>
+    <div class="preview-stats" id="preview-stats"></div>
+  </div>
+  <div class="outline" id="outline"></div>
+  <div class="batch-actions" style="margin-top:14px">
+    <button class="btn-go grow" id="btn-search-all">Search All Items</button>
+    <button class="btn-ghost" id="btn-cancel" hidden>Cancel</button>
+  </div>
+  <div class="progress" id="progress" hidden><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<!-- ── FLOATING ACTIONS ─────────────────────────────────────── -->
+<div class="reader-fab" id="fab" hidden>
+  <button class="fab-btn" id="btn-book">📕 Build Book PDF</button>
+</div>
+
+<!-- ── READER OVERLAY ───────────────────────────────────────── -->
+<div class="reader" id="reader" aria-hidden="true">
+  <div class="reader-bar">
+    <div class="reader-bar-l">
+      <button id="r-close">← Close</button>
+    </div>
+    <div class="reader-bar-r">
+      <button id="r-fetch">⟳ Fetch transcripts</button>
+      <button id="r-print" class="primary">⬇ Save as PDF</button>
+    </div>
+  </div>
+  <div class="book" id="book"></div>
+</div>
+
+<!-- ── RESULTS ──────────────────────────────────────────────── -->
 <div class="results" id="results">
   <div class="state-msg">
     <p class="big">📖</p>
-    <p>Enter a title, author, ISBN or DOI to search.</p>
+    <p>Search a single query, or paste a list in Batch mode.</p>
   </div>
 </div>
 
 <script>
+/* ════════════════════════════════════════════════════════════════
+   CONSTANTS
+   ════════════════════════════════════════════════════════════════ */
 const SOURCES = [
   'LibGen','Sci-Hub','OpenAlex','Semantic Scholar',
   'arXiv','PubMed','DOAJ','Project Gutenberg',
   'Internet Archive','Open Library','CORE','Unpaywall',
 ];
-const FORMATS = ['PDF','EPUB','DJVU','MOBI','HTML'];
+const FORMATS = ['PDF','EPUB','DJVU','MOBI','HTML','AUDIO'];
+const TYPES   = ['Book','Paper','Preprint','Podcast','Course','Video','Website','Talk'];
 
-const activeSources = new Set(SOURCES);
-const activeFormats = new Set();
+/* link-label → kind classifier */
+const LINK_KIND = {
+  amazon:'retailer', barnes:'retailer', bookshop:'retailer',
+  goodreads:'review', storygraph:'review',
+  spotify:'audio', apple:'audio', 'apple podcasts':'audio', stitcher:'audio',
+  youtube:'video', vimeo:'video', ted:'video',
+  coursera:'course', edx:'course', udemy:'course', linkedin:'course',
+  website:'web', 'author site':'web', site:'web',
+  doi:'doi', arxiv:'paper', pubmed:'paper', 'open access':'oa',
+  libgen:'oa', 'sci-hub':'oa', 'internet archive':'oa', 'open library':'oa',
+  gutenberg:'oa', pdf:'file',
+};
 
-function initPills() {
-  const srcRow = document.getElementById('src-row');
-  SOURCES.forEach(src => {
-    const b = document.createElement('button');
-    b.className = 'spill on';
-    b.textContent = src;
-    b.addEventListener('click', () => {
-      activeSources.has(src) ? activeSources.delete(src) : activeSources.add(src);
-      b.classList.toggle('on', activeSources.has(src));
-    });
-    srcRow.appendChild(b);
-  });
+/* ════════════════════════════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════════════════════════════ */
+const state = {
+  mode: 'single',
+  activeSources: new Set(SOURCES),
+  activeFormats: new Set(),
+  activeTypes:   new Set(),
+  parsed: null,           // { items, sections, stats }
+  searching: false,
+  cancelled: false,
+  resultsSort: 'original',
+  resultsFilter: 'all',
+};
 
-  const fmtRow = document.getElementById('fmt-row');
-  FORMATS.forEach(fmt => {
-    const b = document.createElement('button');
-    b.className = 'spill';
-    b.textContent = fmt;
-    b.addEventListener('click', () => {
-      activeFormats.has(fmt) ? activeFormats.delete(fmt) : activeFormats.add(fmt);
-      b.classList.toggle('on', activeFormats.has(fmt));
-    });
-    fmtRow.appendChild(b);
-  });
+/* ════════════════════════════════════════════════════════════════
+   PARSER
+   ════════════════════════════════════════════════════════════════
+   Strategy: detect format first, then parse.
+   Three input shapes supported:
+     1. Structured resource list (sections, items, labeled links)
+     2. Identifier list (DOIs, ISBNs, arXiv IDs — one per line)
+     3. Plain title list (fallback — one title per line)
+   ════════════════════════════════════════════════════════════════ */
+
+const RE_DOI       = /\b(10\.\d{4,9}\/[-._;()\/:A-Za-z0-9]+)/;
+const RE_ARXIV     = /\b(?:arxiv:\s*)?(\d{4}\.\d{4,5})(?:v\d+)?\b/i;
+const RE_ISBN13    = /\b(97[89])[- ]?\d[- ]?\d{2}[- ]?\d{5}[- ]?\d\b/;
+const RE_ISBN10    = /\b\d[- ]?\d{2}[- ]?\d{5}[- ]?[\dX]\b/;
+const RE_PMID      = /\b(?:pmid|PMID):?\s*(\d+)/;
+const RE_URL       = /https?:\/\/[^\s)]+/;
+const RE_DIVIDER   = /^[=─-]{3,}\s*$/;
+const RE_SECTION   = /^SECTION\s+\d+\s*:\s*(.+?)\s*$/i;
+const RE_SUBSECTION= /^[A-Z][A-Z0-9 ,&'’\-\/]{3,}$/;          // ALL CAPS line (with allowed chars)
+const RE_ITEM_DASH = /^(.+?)\s+[—–-]\s+(.+?)(?:\s*\((\d{4})\))?\s*$/;
+const RE_LINK_LINE = /^([A-Za-z][A-Za-z0-9 &'-]{1,40}?):\s*(https?:\/\/\S+)/;
+const RE_BING_TAIL = /\s*\([^)]*\bin Bing\b[^)]*\)\s*$/i;
+
+let nextId = 0;
+const uid = () => `i${++nextId}`;
+
+function detectShape(lines) {
+  const nonBlank = lines.filter(l => l.trim());
+  if (!nonBlank.length) return 'empty';
+
+  const idHits  = nonBlank.filter(l => RE_DOI.test(l) || RE_ARXIV.test(l) || RE_ISBN13.test(l) || RE_PMID.test(l)).length;
+  const secHits = nonBlank.filter(l => RE_SECTION.test(l) || RE_DIVIDER.test(l)).length;
+  const linkHits= nonBlank.filter(l => RE_LINK_LINE.test(l)).length;
+
+  if (secHits >= 1 || linkHits >= 3) return 'structured';
+  if (idHits / nonBlank.length > 0.4) return 'ids';
+  return 'plain';
 }
 
-function doSearch() {
-  const q = document.getElementById('q').value.trim();
-  if (!q) return;
+function parseInput(raw) {
+  const lines = raw.split(/\r?\n/);
+  const shape = detectShape(lines);
 
-  const btn = document.getElementById('btn-go');
-  const results = document.getElementById('results');
-
-  btn.disabled = true;
-  results.innerHTML = '<div class="state-msg"><div class="spinner"></div><p>Searching ' + activeSources.size + ' sources…</p></div>';
-
-  // Replace this timeout with real parallel fetch calls per source
-  setTimeout(() => {
-    btn.disabled = false;
-    renderResults(q);
-  }, 900);
+  if (shape === 'empty')      return { items: [], sections: [], shape, stats: emptyStats() };
+  if (shape === 'structured') return parseStructured(lines);
+  if (shape === 'ids')        return parseIds(lines);
+  return parsePlain(lines);
 }
 
-function renderResults(q) {
-  const results = document.getElementById('results');
-  const srcs = [...activeSources];
+function emptyStats() {
+  return { items: 0, sections: 0, subsections: 0, withLinks: 0, withYear: 0 };
+}
 
-  if (!srcs.length) {
-    results.innerHTML = '<div class="state-msg"><p>No sources selected — toggle some above.</p></div>';
-    return;
+/* ── structured resource list parser ─────────────────────────── */
+function parseStructured(lines) {
+  const sections = [];
+  let curSec = null, curSub = null, curItem = null;
+
+  const ensureSec = (name) => {
+    curSec = { name: name || 'Uncategorized', subs: [], items: [] };
+    sections.push(curSec); curSub = null;
+  };
+  const ensureSub = (name) => {
+    if (!curSec) ensureSec(null);
+    curSub = { name, items: [] };
+    curSec.subs.push(curSub);
+  };
+  const pushItem = (it) => {
+    if (!curSec) ensureSec(null);
+    (curSub ? curSub.items : curSec.items).push(it);
+  };
+  const finalize = () => { curItem = null; };
+
+  for (let raw of lines) {
+    const line = raw.replace(/ /g,' ').replace(/\s+$/,'').replace(RE_BING_TAIL,'');
+    const trim = line.trim();
+
+    if (!trim || RE_DIVIDER.test(trim)) { finalize(); continue; }
+
+    // SECTION header
+    const mSec = trim.match(RE_SECTION);
+    if (mSec) { finalize(); ensureSec(mSec[1].trim()); continue; }
+
+    // labeled link → attach to current item if any
+    const mLink = trim.match(RE_LINK_LINE);
+    if (mLink && curItem) {
+      let url = mLink[2].replace(/[)\].,]+$/,'');
+      curItem.links.push({
+        label: mLink[1].trim(),
+        url,
+        kind: classifyLink(mLink[1], url),
+      });
+      continue;
+    }
+
+    // standalone URL → attach as "Website"
+    if (RE_URL.test(trim) && curItem && !RE_LINK_LINE.test(trim)) {
+      const m = trim.match(RE_URL);
+      curItem.links.push({ label:'Website', url:m[0], kind:'web' });
+      continue;
+    }
+
+    // ALL-CAPS subsection
+    if (RE_SUBSECTION.test(trim) && !trim.includes(':')) {
+      finalize();
+      ensureSub(toTitle(trim));
+      continue;
+    }
+
+    // item line: "Title — Author (Year)" or "Title — Author"
+    const mItem = trim.match(RE_ITEM_DASH);
+    if (mItem && curSec) {
+      finalize();
+      const title  = mItem[1].trim();
+      const author = mItem[2].trim();
+      const year   = mItem[3] ? parseInt(mItem[3],10) : null;
+      curItem = mkItem({ title, author, year });
+      pushItem(curItem);
+      continue;
+    }
+
+    // Bare title line (no dash) — accept if next line is a labeled link
+    if (curSec && trim.length > 2 && /[A-Za-z]/.test(trim)) {
+      finalize();
+      curItem = mkItem({ title: trim, author: null, year: null });
+      pushItem(curItem);
+      continue;
+    }
   }
 
-  const fmts = ['PDF','EPUB','DJVU','MOBI','HTML'];
-  const demo = srcs.slice(0, 8).map((src, i) => ({
-    title: q,
-    author: 'Author ' + (i + 1),
-    year: 2015 + (i % 10),
-    fmt: fmts[i % fmts.length],
-    source: src,
-  }));
+  // Strip empty sections / subs
+  for (const s of sections) {
+    s.subs = s.subs.filter(sub => sub.items.length);
+  }
+  const cleanSecs = sections.filter(s => s.items.length || s.subs.length);
 
-  results.innerHTML = demo.map(r => `
-    <div class="result-item">
-      <div class="ri-body">
-        <div class="ri-title">${esc(r.title)} <em>— ${esc(r.author)}</em></div>
-        <div class="ri-meta">${esc(r.source)} · ${r.year}</div>
+  return {
+    items: collectItems(cleanSecs),
+    sections: cleanSecs,
+    shape: 'structured',
+    stats: computeStats(cleanSecs),
+  };
+}
+
+function mkItem({ title, author, year, type=null }) {
+  return {
+    id: uid(), title, author, year,
+    type: type || inferType(title, author),
+    section: null, subsection: null,
+    links: [], searchResults: [], status: 'pending',
+  };
+}
+
+function inferType(title, author) {
+  const t = (title||'').toLowerCase();
+  if (/\bpodcast\b/.test(t)) return 'Podcast';
+  if (/\bted talk\b/.test(t)) return 'Talk';
+  if (/\bcourse\b/.test(t)) return 'Course';
+  return null;
+}
+
+function collectItems(sections) {
+  const out = [];
+  for (const s of sections) {
+    for (const it of s.items) { it.section = s.name; out.push(it); }
+    for (const sub of s.subs) {
+      for (const it of sub.items) { it.section = s.name; it.subsection = sub.name; out.push(it); }
+    }
+  }
+  return out;
+}
+
+function computeStats(sections) {
+  let items = 0, subs = 0, withLinks = 0, withYear = 0;
+  for (const s of sections) {
+    items += s.items.length;
+    for (const it of s.items) { if (it.links.length) withLinks++; if (it.year) withYear++; }
+    subs += s.subs.length;
+    for (const sub of s.subs) {
+      items += sub.items.length;
+      for (const it of sub.items) { if (it.links.length) withLinks++; if (it.year) withYear++; }
+    }
+  }
+  return { items, sections: sections.length, subsections: subs, withLinks, withYear };
+}
+
+/* ── identifier list parser ──────────────────────────────────── */
+function parseIds(lines) {
+  const items = [];
+  for (const raw of lines) {
+    const line = raw.replace(RE_BING_TAIL,'').trim();
+    if (!line) continue;
+    let it = null;
+    if (RE_DOI.test(line))         it = mkItem({ title: line.match(RE_DOI)[1], author: null, year: null, type: 'Paper' });
+    else if (RE_ARXIV.test(line))  it = mkItem({ title: 'arXiv:' + line.match(RE_ARXIV)[1], author: null, year: null, type: 'Preprint' });
+    else if (RE_ISBN13.test(line)) it = mkItem({ title: 'ISBN ' + line.match(RE_ISBN13)[0], author: null, year: null, type: 'Book' });
+    else if (RE_ISBN10.test(line)) it = mkItem({ title: 'ISBN ' + line.match(RE_ISBN10)[0], author: null, year: null, type: 'Book' });
+    else if (RE_PMID.test(line))   it = mkItem({ title: 'PMID:' + line.match(RE_PMID)[1], author: null, year: null, type: 'Paper' });
+    else if (line.length > 2)      it = mkItem({ title: line, author: null, year: null });
+    if (it) { it.section = 'Identifiers'; items.push(it); }
+  }
+  const sections = [{ name: 'Identifiers', subs: [], items }];
+  return { items, sections, shape: 'ids', stats: computeStats(sections) };
+}
+
+/* ── plain (one title per line) parser ───────────────────────── */
+function parsePlain(lines) {
+  const items = lines
+    .map(l => l.replace(RE_BING_TAIL,'').trim())
+    .filter(l => l.length > 2 && !RE_DIVIDER.test(l))
+    .map(l => {
+      const m = l.match(RE_ITEM_DASH);
+      const it = m
+        ? mkItem({ title: m[1].trim(), author: m[2].trim(), year: m[3]?parseInt(m[3],10):null })
+        : mkItem({ title: l, author: null, year: null });
+      it.section = 'Queries';
+      return it;
+    });
+  const sections = [{ name: 'Queries', subs: [], items }];
+  return { items, sections, shape: 'plain', stats: computeStats(sections) };
+}
+
+/* ── helpers ─────────────────────────────────────────────────── */
+function classifyLink(label, url) {
+  const l = label.toLowerCase();
+  if (LINK_KIND[l]) return LINK_KIND[l];
+  for (const k of Object.keys(LINK_KIND)) if (l.includes(k)) return LINK_KIND[k];
+  if (/arxiv|doi|sci-hub|libgen|gutenberg|archive\.org/.test(url)) return 'oa';
+  if (/youtube|vimeo|ted\.com/.test(url)) return 'video';
+  if (/spotify|podcasts\.apple/.test(url)) return 'audio';
+  if (/amazon|bookshop|barnes/.test(url)) return 'retailer';
+  return 'web';
+}
+function toTitle(s) {
+  return s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()).replace(/&/g,'&');
+}
+
+/* ════════════════════════════════════════════════════════════════
+   UI: PILLS / TABS / ADVANCED
+   ════════════════════════════════════════════════════════════════ */
+function initPills() {
+  const mk = (host, list, set, onByDefault) => {
+    list.forEach(v => {
+      const b = document.createElement('button');
+      b.className = 'spill' + (onByDefault ? ' on' : '');
+      b.textContent = v;
+      if (onByDefault) set.add(v);
+      b.addEventListener('click', () => {
+        set.has(v) ? set.delete(v) : set.add(v);
+        b.classList.toggle('on', set.has(v));
+      });
+      host.appendChild(b);
+    });
+  };
+  mk(document.getElementById('src-row'),  SOURCES, state.activeSources, true);
+  mk(document.getElementById('fmt-row'),  FORMATS, state.activeFormats, false);
+  mk(document.getElementById('type-row'), TYPES,   state.activeTypes,   false);
+}
+
+function initTabs() {
+  document.querySelectorAll('#tabs .tab').forEach(t => {
+    t.addEventListener('click', () => {
+      const mode = t.dataset.mode;
+      state.mode = mode;
+      document.querySelectorAll('#tabs .tab').forEach(x => x.classList.toggle('on', x === t));
+      document.getElementById('mode-single').hidden = mode !== 'single';
+      document.getElementById('mode-batch').hidden  = mode !== 'batch';
+    });
+  });
+}
+
+function initAdv() {
+  const t = document.getElementById('adv-toggle');
+  const b = document.getElementById('adv-body');
+  t.addEventListener('click', () => {
+    t.classList.toggle('open');
+    b.classList.toggle('open');
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PARSE PREVIEW (outline tree)
+   ════════════════════════════════════════════════════════════════ */
+function renderPreview() {
+  const wrap = document.getElementById('preview');
+  const out  = document.getElementById('outline');
+  const stats= document.getElementById('preview-stats');
+  if (!state.parsed || !state.parsed.items.length) { wrap.hidden = true; return; }
+
+  wrap.hidden = false;
+  const s = state.parsed.stats;
+  stats.innerHTML = `<span>${s.items}</span> items · <span>${s.sections}</span> sections · <span>${s.subsections}</span> subsections · <span>${s.withLinks}</span> with links`;
+
+  out.innerHTML = state.parsed.sections.map((sec, si) => `
+    <div class="tree-sec ${si === 0 ? 'open' : ''}" data-sec="${si}">
+      <div class="tree-sec-head">
+        <span class="chev">›</span>
+        <span class="tree-sec-name">${esc(sec.name)}</span>
+        <span class="tree-sec-count">${sec.items.length + sec.subs.reduce((n,sub)=>n+sub.items.length,0)} items</span>
       </div>
-      <div class="ri-right">
-        <span class="ri-src">${esc(r.source)}</span>
-        <span class="ri-fmt">${r.fmt}</span>
+      <div class="tree-sec-body">
+        ${sec.items.map(it => itemRow(it)).join('')}
+        ${sec.subs.map((sub, idx) => `
+          <div class="tree-sub ${idx === 0 ? 'open' : ''}">
+            <div class="tree-sub-head">
+              <span class="chev">›</span>
+              <span>${esc(sub.name)}</span>
+              <span class="tree-sec-count">· ${sub.items.length}</span>
+            </div>
+            <div class="tree-sub-body">
+              ${sub.items.map(it => itemRow(it)).join('')}
+            </div>
+          </div>
+        `).join('')}
       </div>
     </div>
   `).join('');
+
+  // wire collapsibles
+  out.querySelectorAll('.tree-sec-head').forEach(h => {
+    h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
+  });
+  out.querySelectorAll('.tree-sub-head').forEach(h => {
+    h.addEventListener('click', e => { e.stopPropagation(); h.parentElement.classList.toggle('open'); });
+  });
+
+  // batch tab badge
+  const badge = document.getElementById('batch-badge');
+  badge.hidden = false; badge.textContent = s.items;
 }
 
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function itemRow(it) {
+  const yr = it.year ? `${it.year} · ` : '';
+  const auth = it.author ? `<em>— ${esc(it.author)}</em>` : '';
+  const links = it.links.length ? `<span class="lnk">${it.links.length} link${it.links.length>1?'s':''}</span>` : '';
+  return `
+    <div class="tree-item ${it.status}" data-id="${it.id}">
+      <div class="dot"></div>
+      <div class="tree-item-body">
+        <div class="tree-item-title">${esc(it.title)} ${auth}</div>
+        <div class="tree-item-meta">${yr}${esc(it.type||'')}${links?' · '+links:''}</div>
+      </div>
+    </div>
+  `;
 }
 
-document.getElementById('q').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doSearch();
-});
-document.getElementById('btn-go').addEventListener('click', doSearch);
+/* ════════════════════════════════════════════════════════════════
+   MOCK SEARCH (UI scaffolding — replace doSearchItem with real fetches)
+   ════════════════════════════════════════════════════════════════ */
+async function doSearchAll() {
+  if (state.searching || !state.parsed) return;
+  state.searching = true; state.cancelled = false;
 
-initPills();
+  const items = state.parsed.items;
+  const btn = document.getElementById('btn-search-all');
+  const cancel = document.getElementById('btn-cancel');
+  const prog = document.getElementById('progress');
+  const fill = document.getElementById('progress-fill');
+
+  btn.disabled = true; cancel.hidden = false; prog.hidden = false;
+  fill.style.width = '0%';
+
+  const total = items.length; let done = 0;
+  const limit = 4;
+  let cursor = 0;
+
+  async function worker() {
+    while (cursor < items.length && !state.cancelled) {
+      const it = items[cursor++];
+      it.status = 'searching'; refreshItemRow(it);
+      await doSearchItem(it);
+      it.status = it.searchResults.length ? 'done' : 'empty';
+      refreshItemRow(it);
+      done++; fill.style.width = (done/total*100).toFixed(1) + '%';
+    }
+  }
+  await Promise.all(Array.from({length: limit}, worker));
+
+  state.searching = false;
+  btn.disabled = false; cancel.hidden = true;
+  setTimeout(() => prog.hidden = true, 400);
+  renderResults();
+}
+
+/* Stub: simulate per-source results.
+   Replace body with: Promise.all(sources.map(s => fetchFromSource(s, it))) */
+async function doSearchItem(it) {
+  await sleep(180 + Math.random()*600);
+  if (state.cancelled) return;
+  const srcs = [...state.activeSources];
+  const hits = [];
+  for (const src of srcs) {
+    if (Math.random() < 0.55) {
+      hits.push({
+        source: src,
+        format: pick(['PDF','EPUB','HTML']),
+        size:   `${(0.5 + Math.random()*8).toFixed(1)}MB`,
+        year:   it.year || (2000 + Math.floor(Math.random()*25)),
+        url:    `https://example.com/${encodeURIComponent(src)}/${encodeURIComponent(it.title.slice(0,40))}`,
+      });
+    }
+  }
+  it.searchResults = hits;
+}
+
+function refreshItemRow(it) {
+  const row = document.querySelector(`.tree-item[data-id="${it.id}"]`);
+  if (!row) return;
+  row.className = `tree-item ${it.status}`;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   RESULTS RENDER (structured outline + filter/sort toolbar)
+   ════════════════════════════════════════════════════════════════ */
+function renderResults() {
+  const wrap = document.getElementById('results');
+  if (!state.parsed) return;
+
+  const all = state.parsed.items;
+  const found = all.filter(i => i.searchResults.length).length;
+
+  wrap.innerHTML = `
+    <div class="toolbar">
+      <span class="toolbar-label">View</span>
+      <select id="rfilter">
+        <option value="all">All items</option>
+        <option value="found">With results only</option>
+        <option value="missing">Missing only</option>
+      </select>
+      <span class="toolbar-label" style="margin-left:8px">Sort</span>
+      <select id="rsort">
+        <option value="original">Original order</option>
+        <option value="title">Title A→Z</option>
+        <option value="year">Year newest</option>
+        <option value="results">Most results</option>
+      </select>
+      <span class="grow"></span>
+      <span class="stats"><span>${found}</span>/${all.length} found</span>
+    </div>
+    ${state.parsed.sections.map(sec => sectionBlock(sec)).join('')}
+  `;
+
+  document.getElementById('rfilter').value = state.resultsFilter;
+  document.getElementById('rsort').value   = state.resultsSort;
+  document.getElementById('rfilter').addEventListener('change', e => { state.resultsFilter = e.target.value; renderResults(); });
+  document.getElementById('rsort').addEventListener('change',   e => { state.resultsSort   = e.target.value; renderResults(); });
+
+  // wire collapsibles
+  wrap.querySelectorAll('.rsec-head').forEach(h => h.addEventListener('click', () => h.parentElement.classList.toggle('open')));
+  wrap.querySelectorAll('.icard-collapse').forEach(h => h.addEventListener('click', () => h.closest('.icard').classList.toggle('expanded')));
+  // wire Read buttons
+  wrap.querySelectorAll('[data-read]').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation();
+    const it = state.parsed.items.find(x => x.id === b.dataset.read);
+    if (it) openReader([it], it.title);
+  }));
+
+  // show "Build Book" FAB whenever there are items
+  document.getElementById('fab').hidden = !(state.parsed && state.parsed.items.length);
+}
+
+function sectionBlock(sec) {
+  const items = filterSort(sec.items);
+  const subBlocks = sec.subs.map(sub => {
+    const subItems = filterSort(sub.items);
+    if (!subItems.length) return '';
+    return `<div class="rsub">
+      <div class="rsub-name">${esc(sub.name)} · ${subItems.length}</div>
+      ${subItems.map(itemCard).join('')}
+    </div>`;
+  }).join('');
+  if (!items.length && !subBlocks) return '';
+  return `<div class="rsec open">
+    <div class="rsec-head">
+      <span class="chev">›</span>
+      <span class="rsec-name">${esc(sec.name)}</span>
+      <span class="rsec-count">${countSec(sec)} items</span>
+    </div>
+    <div class="rsec-body">
+      ${items.map(itemCard).join('')}
+      ${subBlocks}
+    </div>
+  </div>`;
+}
+
+function countSec(sec) {
+  return sec.items.length + sec.subs.reduce((n,s)=>n+s.items.length,0);
+}
+
+function filterSort(items) {
+  let out = items.slice();
+  if (state.resultsFilter === 'found')   out = out.filter(i => i.searchResults.length);
+  if (state.resultsFilter === 'missing') out = out.filter(i => !i.searchResults.length);
+  if (state.activeTypes.size)            out = out.filter(i => !i.type || state.activeTypes.has(i.type));
+
+  if (state.resultsSort === 'title')   out.sort((a,b) => a.title.localeCompare(b.title));
+  if (state.resultsSort === 'year')    out.sort((a,b) => (b.year||0) - (a.year||0));
+  if (state.resultsSort === 'results') out.sort((a,b) => b.searchResults.length - a.searchResults.length);
+  return out;
+}
+
+function itemCard(it) {
+  const found  = it.searchResults.length;
+  const yr     = it.year ? `<div class="icard-year">${it.year}</div>` : '';
+  const author = it.author ? `<em>— ${esc(it.author)}</em>` : '';
+
+  const tags = [
+    it.type ? `<span class="tag type">${esc(it.type)}</span>` : '',
+    found ? `<span class="tag found">${found} open</span>` : `<span class="tag missing">none found</span>`,
+    it.status === 'searching' ? `<span class="tag">searching…</span>` : '',
+    `<button class="read-btn" data-read="${it.id}">📖 Read</button>`,
+  ].join('');
+
+  const existing = it.links.map(l => `
+    <a class="lpill" href="${esc(l.url)}" target="_blank" rel="noopener">
+      <span class="kind">${esc(l.kind)}</span>${esc(l.label)}
+    </a>`).join('');
+
+  const top3 = it.searchResults.slice(0,3).map(r => `
+    <a class="lpill open" href="${esc(r.url)}" target="_blank" rel="noopener">
+      <span class="kind">${esc(r.source)}</span>${r.format} · ${r.size}
+    </a>`).join('');
+
+  const rest = it.searchResults.slice(3);
+  const restRows = rest.length ? `
+    <div class="icard-collapse">
+      <span class="chev">›</span> ${rest.length} more open versions
+    </div>
+    <div class="icard-extra">
+      ${rest.map(r => `
+        <a class="lpill open" href="${esc(r.url)}" target="_blank" rel="noopener" style="margin:2px">
+          <span class="kind">${esc(r.source)}</span>${r.format} · ${r.size}
+        </a>
+      `).join('')}
+    </div>` : '';
+
+  return `<div class="icard">
+    <div class="icard-row1">
+      <div class="icard-title">${esc(it.title)} ${author}</div>
+      ${yr}
+    </div>
+    <div class="icard-row2">${tags}</div>
+    ${(existing || top3) ? `<div class="icard-row3">${existing}${top3}</div>` : ''}
+    ${restRows}
+  </div>`;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SINGLE-QUERY SEARCH
+   ════════════════════════════════════════════════════════════════ */
+async function doSingleSearch() {
+  const q = document.getElementById('q').value.trim();
+  if (!q) return;
+
+  // wrap single query as a one-item batch so everything shares the same renderer
+  const items = [mkItem({ title: q, author: null, year: null })];
+  items[0].section = 'Query';
+  state.parsed = {
+    items,
+    sections: [{ name: 'Query', subs: [], items }],
+    shape: 'single',
+    stats: computeStats([{ items, subs: [] }]),
+  };
+
+  const wrap = document.getElementById('results');
+  wrap.innerHTML = '<div class="state-msg"><div class="spinner"></div><p>Searching ' + state.activeSources.size + ' sources…</p></div>';
+
+  await doSearchItem(items[0]);
+  items[0].status = items[0].searchResults.length ? 'done' : 'empty';
+  renderResults();
+}
+
+/* ════════════════════════════════════════════════════════════════
+   TRANSCRIPT FETCHER (UI scaffolding stub)
+   ════════════════════════════════════════════════════════════════
+   Real implementation needs a server-side proxy due to CORS:
+     YouTube  → youtube-transcript-api / yt-dlp --write-auto-sub
+     TED      → fetch ted.com/talks/<slug>/transcript HTML
+     Apple PC → no public API; use Whisper STT on audio enclosure
+     Spotify  → no public API; use Whisper STT
+     arXiv    → fetch /pdf and extract text (pdf.js)
+     LibGen   → download + extract
+   Replace the body below with: POST /api/transcript with {item, urls}
+   ════════════════════════════════════════════════════════════════ */
+async function fetchTranscript(item) {
+  // simulate latency
+  await sleep(400 + Math.random()*900);
+  if (item.transcript) return item.transcript;
+
+  // pick a "source" url to attribute the transcript to
+  const src = item.links.find(l => l.kind === 'video' || l.kind === 'audio')
+           || item.searchResults[0]
+           || item.links[0];
+
+  // mock transcript body — replace with real fetch
+  const seedTopic = (item.title || '').toLowerCase().replace(/[^a-z ]/g,'').split(' ').filter(w=>w.length>3).slice(0,3).join(', ') || 'this topic';
+  const author = item.author || 'the author';
+
+  const paragraphs = [
+    `This is a generated preview transcript for "${item.title}"${item.author ? ' by ' + item.author : ''}. In the full version, OpenBooks fetches the actual transcript from ${src ? src.label || src.source : 'the source'} and reflows it into book-style typography you can read offline or print as a PDF.`,
+    `${author} opens by framing ${seedTopic} as something that deserves more careful attention than it usually gets. The argument unfolds slowly, returning to the same handful of examples from different angles, each pass revealing a little more of the underlying structure.`,
+    `Midway through, the focus shifts from description to method — practical steps, common pitfalls, and the small daily practices that compound over time. The transitions feel intentional rather than tidy: ideas double back on themselves, and the listener is invited to sit with the discomfort of not-quite-finished thoughts.`,
+    `Toward the end, the tone softens. There is room for doubt, for partial answers, for the acknowledgement that this is one perspective among many. The closing is less a summary than an invitation: to notice, to try, to revise.`,
+    `A few quotes worth holding onto are scattered throughout — those have been pulled into the margin for easier rereading.`,
+  ];
+
+  item.transcript = {
+    paragraphs,
+    pullquote: `“The work is mostly remembering what you already know.”`,
+    source: src ? { label: src.label || src.source, url: src.url } : null,
+    fetched: new Date().toISOString(),
+    mock: true,
+  };
+  return item.transcript;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   READER + PDF
+   ════════════════════════════════════════════════════════════════ */
+let readerItems = [];
+let readerTitle = '';
+
+function openReader(items, title) {
+  readerItems = items.slice();
+  readerTitle = title || (state.parsed && state.parsed.sections[0]?.name) || 'OpenBooks Reader';
+  renderBook();
+  const r = document.getElementById('reader');
+  r.classList.add('open'); r.setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
+  window.scrollTo(0,0);
+}
+
+function closeReader() {
+  const r = document.getElementById('reader');
+  r.classList.remove('open'); r.setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
+}
+
+function renderBook() {
+  const isMulti = readerItems.length > 1;
+  const subtitle = isMulti
+    ? `${readerItems.length} entries · compiled ${new Date().toLocaleDateString()}`
+    : (readerItems[0]?.author ? readerItems[0].author : '');
+
+  const toc = isMulti ? buildToc(readerItems) : '';
+
+  const chapters = readerItems.map((it, idx) => chapterHtml(it, idx + 1)).join('');
+
+  document.getElementById('book').innerHTML = `
+    <div class="title-page">
+      <h1>${esc(readerTitle)}</h1>
+      <div class="author">${esc(subtitle)}</div>
+      <div class="imprint">OpenBooks · ${new Date().getFullYear()}</div>
+    </div>
+    ${toc}
+    ${chapters}
+  `;
+}
+
+function buildToc(items) {
+  // group by section for the TOC
+  const groups = {};
+  items.forEach((it, i) => {
+    const key = it.section || 'Entries';
+    (groups[key] = groups[key] || []).push({ it, num: i + 1 });
+  });
+  const rows = Object.entries(groups).map(([sec, list]) => `
+    <div class="toc-section">${esc(sec)}</div>
+    ${list.map(({it, num}) => `
+      <div class="toc-entry">
+        <span class="t">${esc(it.title)}${it.author ? ' — ' + esc(it.author) : ''}</span>
+        <span class="p">${num}</span>
+      </div>`).join('')}
+  `).join('');
+  return `<div class="toc"><h2>Contents</h2>${rows}</div>`;
+}
+
+function chapterHtml(it, n) {
+  const tr = it.transcript;
+  const body = tr ? tr.paragraphs.map(p => `<p>${esc(p)}</p>`).join('')
+                  : `<p><em>Transcript not yet fetched. Click “Fetch transcripts” in the bar above to retrieve the full text.</em></p>
+                     <p>This chapter will then expand into a readable, book-styled version of the source material — whether that source is a podcast episode, a TED talk, a YouTube video, an arXiv paper, or an open-access book.</p>`;
+  const pullquote = tr?.pullquote ? `<div class="pullquote">${esc(tr.pullquote)}</div>` : '';
+  const links = it.links.concat(it.searchResults||[]).slice(0,6);
+  const noteLinks = links.length
+    ? `<div class="src-note">Sources: ${links.map(l => `<a href="${esc(l.url)}">${esc(l.label || l.source || 'link')}</a>`).join(' · ')}</div>`
+    : '';
+  const meta = [
+    it.type, it.year, it.section, it.subsection,
+    tr?.mock ? 'preview transcript' : null,
+  ].filter(Boolean).map(esc).join(' · ');
+
+  return `
+    <div class="chapter">
+      <div class="chapter-num">Chapter ${n}</div>
+      <h2>${esc(it.title)}</h2>
+      ${it.author ? `<div class="byline">${esc(it.author)}${it.year ? ' · ' + it.year : ''}</div>` : ''}
+      ${meta ? `<div class="meta-row">${meta}</div>` : ''}
+      ${body}
+      ${pullquote}
+      ${noteLinks}
+    </div>`;
+}
+
+async function fetchAllReaderTranscripts() {
+  const btn = document.getElementById('r-fetch');
+  btn.disabled = true; btn.textContent = '⟳ Fetching…';
+  const total = readerItems.length; let done = 0;
+  await Promise.all(readerItems.map(async it => {
+    await fetchTranscript(it);
+    done++;
+    btn.textContent = `⟳ Fetching… ${done}/${total}`;
+  }));
+  btn.disabled = false; btn.textContent = '⟳ Re-fetch';
+  renderBook();
+}
+
+async function buildBookFromBatch() {
+  if (!state.parsed || !state.parsed.items.length) return;
+  const items = state.parsed.items;
+  const title = state.parsed.shape === 'structured'
+    ? (state.parsed.sections[0]?.name + ' & More')
+    : 'OpenBooks Compilation';
+  openReader(items, title);
+  // auto-fetch transcripts so the book is immediately readable
+  await fetchAllReaderTranscripts();
+}
+
+function savePdf() { window.print(); }
+
+/* ════════════════════════════════════════════════════════════════
+   WIRING
+   ════════════════════════════════════════════════════════════════ */
+function init() {
+  initPills(); initTabs(); initAdv();
+
+  document.getElementById('btn-go').addEventListener('click', doSingleSearch);
+  document.getElementById('q').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSingleSearch();
+  });
+
+  document.getElementById('btn-parse').addEventListener('click', () => {
+    const raw = document.getElementById('qb').value;
+    nextId = 0;
+    state.parsed = parseInput(raw);
+    renderPreview();
+    document.getElementById('results').innerHTML = '';
+  });
+
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    document.getElementById('qb').value = '';
+    document.getElementById('preview').hidden = true;
+    document.getElementById('batch-badge').hidden = true;
+    state.parsed = null;
+    document.getElementById('results').innerHTML = '<div class="state-msg"><p class="big">📖</p><p>Search a single query, or paste a list in Batch mode.</p></div>';
+  });
+
+  document.getElementById('btn-search-all').addEventListener('click', doSearchAll);
+  document.getElementById('btn-cancel').addEventListener('click', () => { state.cancelled = true; });
+
+  // reader / book PDF
+  document.getElementById('btn-book').addEventListener('click', buildBookFromBatch);
+  document.getElementById('r-close').addEventListener('click', closeReader);
+  document.getElementById('r-fetch').addEventListener('click', fetchAllReaderTranscripts);
+  document.getElementById('r-print').addEventListener('click', savePdf);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('reader').classList.contains('open')) closeReader();
+  });
+}
+
+/* ── utils ────────────────────────────────────────────────── */
+function esc(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function pick(a) { return a[Math.floor(Math.random()*a.length)]; }
+
+init();
 </script>
 </body>
 </html>
