@@ -594,6 +594,7 @@ textarea.sinput {
 <header class="header">
   <h1>Open<span>Books</span></h1>
   <p>parse · search · organize · 12 sources</p>
+  <div id="ds-banner" style="margin-top:10px;font-size:.72rem;font-family:'JetBrains Mono',monospace;color:var(--t3);letter-spacing:.02em;">Loading dataset…</div>
 </header>
 
 <!-- ── INPUT CARD ───────────────────────────────────────────── -->
@@ -684,8 +685,8 @@ Examples:
 <!-- ── RESULTS ──────────────────────────────────────────────── -->
 <div class="results" id="results">
   <div class="state-msg">
-    <p class="big">📖</p>
-    <p>Search a single query, or paste a list in Batch mode.</p>
+    <div class="spinner"></div>
+    <p>Loading 102-item dataset…</p>
   </div>
 </div>
 
@@ -1460,10 +1461,94 @@ async function buildBookFromBatch() {
 function savePdf() { window.print(); }
 
 /* ════════════════════════════════════════════════════════════════
+   DATASET LOADER  (data/crawl-results.json → state.parsed)
+   ════════════════════════════════════════════════════════════════ */
+async function loadDataset() {
+  const banner = document.getElementById('ds-banner');
+  if (banner) banner.textContent = 'Loading dataset…';
+
+  let data;
+  try {
+    const r = await fetch('data/crawl-results.json');
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    data = await r.json();
+  } catch (e) {
+    if (banner) banner.textContent = '⚠ Dataset not found — use Batch mode or run crawl.js';
+    return;
+  }
+
+  // Convert crawl-results.json structure to state.parsed
+  let idCtr = 0;
+  const convertItem = (it) => ({
+    id: it.id || `ds-${++idCtr}`,
+    title: it.title,
+    author: it.author,
+    year: it.year,
+    type: it.type,
+    section: it.section,
+    subsection: it.subsection || null,
+    links: it.links || [],
+    searchResults: buildSearchResults(it),
+    status: (it.openLibrary?.found || it.archive?.found || it.openAlex?.oa_url) ? 'done' : 'pending',
+    openLibrary: it.openLibrary,
+    archive: it.archive,
+    openAlex: it.openAlex,
+    transcript: it.transcript ? it.transcript : null,
+  });
+
+  const sections = data.sections.map(sec => ({
+    name: sec.name,
+    items: (sec.items || []).map(convertItem),
+    subs: (sec.subsections || []).map(sub => ({
+      name: sub.name,
+      items: (sub.items || []).map(convertItem),
+    })),
+  }));
+
+  const items = [];
+  for (const s of sections) {
+    items.push(...s.items);
+    for (const sub of s.subs) items.push(...sub.items);
+  }
+
+  state.parsed = { items, sections, shape: 'structured', stats: {
+    items: items.length, sections: sections.length,
+    subsections: sections.reduce((n,s) => n + s.subs.length, 0),
+    withLinks: items.filter(i => i.links.length).length,
+    withYear: items.filter(i => i.year).length,
+  }};
+
+  if (banner) {
+    const m = data.meta;
+    banner.innerHTML = `<strong>Dataset loaded</strong> — ${items.length} items · ${m.title ?? ''} · <em>Run crawl.js locally to fill open-access fields</em>`;
+  }
+
+  renderPreview();
+  renderResults();
+  document.getElementById('fab').hidden = false;
+}
+
+function buildSearchResults(it) {
+  const r = [];
+  if (it.openLibrary?.found && it.openLibrary.borrow_url)
+    r.push({ source: 'Open Library', format: 'Web', size: '', url: it.openLibrary.borrow_url });
+  if (it.archive?.found && it.archive.url)
+    r.push({ source: 'Internet Archive', format: it.archive.access === 'open' ? 'Open' : 'Borrow', size: '', url: it.archive.url });
+  if (it.openAlex?.oa_url)
+    r.push({ source: 'OpenAlex', format: 'PDF', size: '', url: it.openAlex.oa_url });
+  if (it.openAlex?.pdf_url && it.openAlex.pdf_url !== it.openAlex.oa_url)
+    r.push({ source: 'OpenAlex PDF', format: 'PDF', size: '', url: it.openAlex.pdf_url });
+  return r;
+}
+
+/* ════════════════════════════════════════════════════════════════
    WIRING
    ════════════════════════════════════════════════════════════════ */
 function init() {
   initPills(); initTabs(); initAdv();
+
+  // auto-load the dataset if it's available
+  loadDataset();
 
   document.getElementById('btn-go').addEventListener('click', doSingleSearch);
   document.getElementById('q').addEventListener('keydown', e => {
