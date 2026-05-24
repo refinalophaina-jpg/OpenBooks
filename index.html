@@ -482,6 +482,11 @@ textarea.sinput {
   background: var(--adim); color: var(--accent);
   border-color: var(--aborder);
 }
+.lpill.search-link {
+  background: transparent; color: var(--t2);
+  border-color: var(--bdr); opacity: .75;
+}
+.lpill.search-link:hover { opacity: 1; color: var(--text); }
 .lpill .kind {
   font-size: 8px; color: var(--t3); text-transform: uppercase;
 }
@@ -1342,25 +1347,79 @@ async function doSearchAll() {
   renderResults();
 }
 
-/* Stub: simulate per-source results.
-   Replace body with: Promise.all(sources.map(s => fetchFromSource(s, it))) */
+// Real search URL generator for each source.
+// Browser can't call these APIs directly (CORS), so we generate
+// proper search links the user can click to open in a new tab.
+function sourceSearchUrl(source, it) {
+  const q  = encodeURIComponent([it.title, it.author].filter(Boolean).join(' '));
+  const qt = encodeURIComponent(it.title || '');
+  const qd = it.doi ? encodeURIComponent(it.doi) : null;
+
+  switch (source) {
+    case 'LibGen':
+      return `https://libgen.is/search.php?req=${q}&res=25&view=simple&phrase=1&column=def`;
+    case "Anna's Archive":
+      return `https://annas-archive.org/search?q=${q}&ext=pdf&content=book_any`;
+    case 'Sci-Hub':
+      return qd
+        ? `https://sci-hub.se/${qd}`
+        : `https://sci-hub.se/${qt}`;
+    case 'Internet Archive':
+      return `https://archive.org/search?query=${q}&and[]=mediatype%3Atexts`;
+    case 'Open Library':
+      return `https://openlibrary.org/search?q=${q}`;
+    case 'Project Gutenberg':
+      return `https://www.gutenberg.org/ebooks/search/?query=${qt}`;
+    case 'OpenAlex':
+      return `https://openalex.org/works?filter=title.search:${qt}`;
+    case 'Semantic Scholar':
+      return `https://www.semanticscholar.org/search?q=${q}&sort=Relevance`;
+    case 'arXiv':
+      return `https://arxiv.org/search/?query=${q}&searchtype=all`;
+    case 'PubMed':
+      return `https://pubmed.ncbi.nlm.nih.gov/?term=${q}`;
+    case 'DOAJ':
+      return `https://doaj.org/search/articles?query=${q}`;
+    case 'CORE':
+      return `https://core.ac.uk/search?q=${q}`;
+    case 'Unpaywall':
+      return qd
+        ? `https://unpaywall.org/${qd}`
+        : `https://scholar.google.com/scholar?q=${q}`;
+    default:
+      return null;
+  }
+}
+
 async function doSearchItem(it) {
-  await sleep(180 + Math.random()*600);
+  await sleep(80 + Math.random()*120);
   if (state.cancelled) return;
+
   const srcs = [...state.activeSources];
   const hits = [];
-  for (const src of srcs) {
-    if (Math.random() < 0.55) {
-      hits.push({
-        source: src,
-        format: pick(['PDF','EPUB','HTML']),
-        size:   `${(0.5 + Math.random()*8).toFixed(1)}MB`,
-        year:   it.year || (2000 + Math.floor(Math.random()*25)),
-        url:    `https://example.com/${encodeURIComponent(src)}/${encodeURIComponent((it.title||'').slice(0,40))}`,
-      });
+
+  // Add any links already stored from the crawler dataset
+  for (const l of (it.links || [])) {
+    if (l.url && l.url !== '#') {
+      hits.push({ source: l.label || 'Dataset', format: 'Web', size: '', url: l.url, fromDataset: true });
     }
   }
+  // Add crawler-populated searchResults (OL, IA, OpenAlex)
+  for (const r of (it._datasetResults || [])) {
+    hits.push(r);
+  }
+
+  // Generate real search URLs for each active source
+  for (const src of srcs) {
+    const url = sourceSearchUrl(src, it);
+    if (!url) continue;
+    // Skip duplicates (same source already in dataset hits)
+    if (hits.some(h => h.source === src)) continue;
+    hits.push({ source: src, format: 'Search', size: '', url, isSearchLink: true });
+  }
+
   it.searchResults = hits;
+  it.status = hits.length ? 'done' : 'missing';
 }
 
 function refreshItemRow(it) {
@@ -1495,22 +1554,28 @@ function itemCard(it) {
       <span class="kind">${esc(l.kind)}</span>${esc(l.label)}
     </a>`).join('');
 
-  const top3 = it.searchResults.slice(0,3).map(r => `
-    <a class="lpill open" href="${encodeURI(r.url)}" target="_blank" rel="noopener">
-      <span class="kind">${esc(r.source)}</span>${esc(r.format)} · ${esc(r.size)}
-    </a>`).join('');
+  // Separate real download/access links from search links
+  const directHits = it.searchResults.filter(r => !r.isSearchLink);
+  const searchHits = it.searchResults.filter(r => r.isSearchLink);
 
-  const rest = it.searchResults.slice(3);
+  const renderPill = r => {
+    const cls = r.isSearchLink ? 'lpill search-link' : 'lpill open';
+    const label = r.isSearchLink
+      ? `<span class="kind">${esc(r.source)}</span>Search ↗`
+      : `<span class="kind">${esc(r.source)}</span>${esc(r.format)}${r.size ? ' · ' + esc(r.size) : ''}`;
+    return `<a class="${cls}" href="${encodeURI(r.url)}" target="_blank" rel="noopener">${label}</a>`;
+  };
+
+  const topResults = [...directHits, ...searchHits].slice(0, 4);
+  const top3 = topResults.map(renderPill).join('');
+
+  const rest = [...directHits, ...searchHits].slice(4);
   const restRows = rest.length ? `
     <div class="icard-collapse">
-      <span class="chev">›</span> ${rest.length} more open versions
+      <span class="chev">›</span> ${rest.length} more sources
     </div>
     <div class="icard-extra">
-      ${rest.map(r => `
-        <a class="lpill open" href="${encodeURI(r.url)}" target="_blank" rel="noopener" style="margin:2px">
-          <span class="kind">${esc(r.source)}</span>${esc(r.format)} · ${esc(r.size)}
-        </a>
-      `).join('')}
+      ${rest.map(r => renderPill(r) ).join('')}
     </div>` : '';
 
   return `<div class="icard">
@@ -1911,22 +1976,28 @@ async function loadDataset() {
 
   // Convert crawl-results.json structure to state.parsed
   let idCtr = 0;
-  const convertItem = (it) => ({
-    id: it.id || `ds-${Date.now()}-${++idCtr}`,
-    title: it.title || null,
-    author: it.author || null,
-    year: it.year || null,
-    type: it.type || null,
-    section: it.section || null,
-    subsection: it.subsection || null,
-    links: it.links || [],
-    searchResults: buildSearchResults(it),
-    status: (it.openLibrary && it.openLibrary.found || it.archive && it.archive.found || it.openAlex && it.openAlex.oa_url) ? 'done' : 'pending',
-    openLibrary: it.openLibrary || null,
-    archive: it.archive || null,
-    openAlex: it.openAlex || null,
-    transcript: it.transcript ? it.transcript : null,
-  });
+  const convertItem = (it) => {
+    const datasetResults = buildSearchResults(it);
+    const hasData = datasetResults.length > 0 || (it.links && it.links.some(l => l.url));
+    return {
+      id: it.id || `ds-${Date.now()}-${++idCtr}`,
+      title: it.title || null,
+      author: it.author || null,
+      year: it.year || null,
+      type: it.type || null,
+      section: it.section || null,
+      subsection: it.subsection || null,
+      links: it.links || [],
+      searchResults: datasetResults,
+      _datasetResults: datasetResults,
+      status: hasData ? 'done' : 'pending',
+      openLibrary: it.openLibrary || null,
+      archive: it.archive || null,
+      openAlex: it.openAlex || null,
+      libgen: it.libgen || null,
+      transcript: it.transcript ? it.transcript : null,
+    };
+  };
 
   const sections = data.sections.map(sec => ({
     name: sec.name || 'Unnamed Section',
@@ -1967,13 +2038,15 @@ async function loadDataset() {
 function buildSearchResults(it) {
   const r = [];
   if (it.openLibrary && it.openLibrary.found && it.openLibrary.borrow_url)
-    r.push({ source: 'Open Library', format: 'Web', size: '', url: it.openLibrary.borrow_url });
+    r.push({ source: 'Open Library', format: it.openLibrary.availability === 'borrow' ? 'Borrow' : 'Web', size: '', url: it.openLibrary.borrow_url });
   if (it.archive && it.archive.found && it.archive.url)
     r.push({ source: 'Internet Archive', format: it.archive.access === 'open' ? 'Open' : 'Borrow', size: '', url: it.archive.url });
   if (it.openAlex && it.openAlex.oa_url)
     r.push({ source: 'OpenAlex', format: 'PDF', size: '', url: it.openAlex.oa_url });
   if (it.openAlex && it.openAlex.pdf_url && it.openAlex.pdf_url !== it.openAlex.oa_url)
     r.push({ source: 'OpenAlex PDF', format: 'PDF', size: '', url: it.openAlex.pdf_url });
+  if (it.libgen && it.libgen.found && it.libgen.download_url)
+    r.push({ source: 'LibGen', format: it.libgen.format || 'PDF', size: it.libgen.size || '', url: it.libgen.download_url });
   return r;
 }
 

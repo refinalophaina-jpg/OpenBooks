@@ -444,7 +444,89 @@ async function queryOpenAlex(item) {
   }
 }
 
-// ── main crawler ────────────────────────────────────────────────
+// ── LibGen ─────────────────────────────────────────────────────
+// Searches Library Genesis for books and returns direct download links.
+// LibGen API: search → parse HTML for IDs → JSON metadata → library.lol link
+async function queryLibGen(item) {
+  if (item.type !== 'Book') return null;
+
+  const q = [item.title, item.author].filter(Boolean).join(' ');
+
+  // Step 1: search page → extract row IDs
+  const searchUrl = `https://libgen.is/search.php?req=${enc(q)}&res=5&view=simple&phrase=1&column=def`;
+  let html;
+  try {
+    const r = await get(searchUrl, { json: false, timeout: 14000 });
+    if (r.status !== 200 || !r.data) return { found: false, error: `HTTP ${r.status}` };
+    html = r.data;
+  } catch (e) {
+    return { found: false, error: e.message };
+  }
+
+  // Extract IDs from table: <a href="book/index.php?md5=..."> or row IDs
+  const ids = [];
+  const idRe = /\/book\/index\.php\?md5=[a-f0-9]{32}|<tr[^>]*>\s*<td[^>]*>(\d{5,9})<\/td>/gi;
+  const md5Re = /md5=([a-f0-9]{32})/gi;
+  let m;
+  while ((m = md5Re.exec(html)) !== null && ids.length < 3) {
+    if (!ids.includes(m[1])) ids.push(m[1]);
+  }
+
+  // Also try extracting numeric IDs from the results table
+  const numIds = [];
+  const rowRe = /<tr[^>]*>[\s\S]*?<td[^>]*>(\d{5,9})<\/td>/g;
+  while ((m = rowRe.exec(html)) !== null && numIds.length < 3) {
+    numIds.push(m[1]);
+  }
+
+  if (!ids.length && !numIds.length) return { found: false, error: 'no results parsed' };
+
+  // Step 2: if we have MD5s directly, build download links
+  if (ids.length) {
+    const md5 = ids[0];
+    return {
+      found: true,
+      md5,
+      download_url: `https://library.lol/main/${md5}`,
+      search_url: searchUrl,
+      mirror_url: `https://libgen.lc/ads.php?md5=${md5}`,
+      format: null,
+      size: null,
+    };
+  }
+
+  // Step 3: use numeric IDs to get JSON metadata
+  try {
+    const jsonUrl = `https://libgen.is/json.php?ids=${numIds.join(',')}&fields=id,title,author,md5,extension,filesize,year`;
+    const { data } = await get(jsonUrl, { json: true, timeout: 10000 });
+    if (!Array.isArray(data) || !data.length) return { found: false, error: 'no JSON results' };
+    const best = data[0];
+    const md5  = best.md5?.toLowerCase();
+    if (!md5) return { found: false, error: 'no MD5 in result' };
+    return {
+      found:        true,
+      md5,
+      title:        best.title,
+      author:       best.author,
+      year:         best.year,
+      format:       best.extension?.toUpperCase() || null,
+      size_bytes:   parseInt(best.filesize) || null,
+      size:         best.filesize ? `${(parseInt(best.filesize)/1024/1024).toFixed(1)}MB` : null,
+      download_url: `https://library.lol/main/${md5}`,
+      mirror_url:   `https://libgen.lc/ads.php?md5=${md5}`,
+      search_url:   searchUrl,
+    };
+  } catch (e) {
+    return { found: false, error: e.message };
+  }
+}
+
+// ── Anna's Archive search URL (browser link, not API) ──────────
+function annaSearchUrl(item) {
+  const q = [item.title, item.author].filter(Boolean).join(' ');
+  return `https://annas-archive.org/search?q=${enc(q)}&ext=pdf&content=book_any`;
+}
+
 async function main() {
   console.log('OpenBooks crawler starting…\n');
   const sections = parse(RESOURCE_LIST);
@@ -459,27 +541,38 @@ async function main() {
 
   // ── BOOKS ────────────────────────────────────────────────────
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('QUERYING: Open Library + Internet Archive + OpenAlex');
+  console.log('QUERYING: Open Library + Internet Archive + OpenAlex + LibGen');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
   for (const book of books) {
-    process.stdout.write(`  [BOOK] ${trim(book.title, 50).padEnd(52)}`);
-    const [ol, ia, oa] = await Promise.all([
+    process.stdout.write(`  [BOOK] ${trim(book.title, 48).padEnd(50)}`);
+    const [ol, ia, oa, lg] = await Promise.all([
       queryOpenLibrary(book),
       queryArchive(book),
       queryOpenAlex(book),
+      queryLibGen(book),
     ]);
     book.openLibrary = ol;
     book.archive     = ia;
     book.openAlex    = oa;
+    book.libgen      = lg;
+
+    // Add Anna's Archive search link to the item's links array
+    book.links.push({ label: "Anna's Archive", url: annaSearchUrl(book), kind: 'oa' });
+    if (lg?.found && lg.download_url) {
+      book.links.push({ label: 'LibGen Download', url: lg.download_url, kind: 'oa' });
+    } else if (lg?.search_url) {
+      book.links.push({ label: 'LibGen Search', url: lg.search_url, kind: 'oa' });
+    }
 
     const flags = [
       ol?.found ? `OL:${ol.availability ?? '?'}` : 'OL:—',
       ia?.found ? `IA:${ia.access ?? '?'}` : 'IA:—',
       oa?.found && oa.oa ? 'OA:✓' : 'OA:—',
+      lg?.found ? `LG:✓ ${lg.format ?? ''}` : 'LG:—',
     ].join('  ');
     console.log(flags);
-    await sleep(350); // be polite to APIs
+    await sleep(500); // be polite
   }
 
   // ── TED TALKS ────────────────────────────────────────────────
@@ -543,11 +636,12 @@ async function main() {
   console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('SUMMARY');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log(`Total items catalogued:     ${items.length}`);
-  console.log(`Books found on Open Library:  ${books.filter(b => b.openLibrary?.found).length}/${books.length}`);
+  console.log(`Total items catalogued:        ${items.length}`);
+  console.log(`Books found on Open Library:   ${books.filter(b => b.openLibrary?.found).length}/${books.length}`);
   console.log(`Books found on Internet Archive: ${books.filter(b => b.archive?.found).length}/${books.length}`);
-  console.log(`Books borrowable (IA/OL):   ${books.filter(b => b.archive?.found || b.openLibrary?.availability === 'borrow').length}/${books.length}`);
-  console.log(`TED transcripts retrieved:  ${talks.filter(t => t.transcript?.paragraphs?.length > 0).length}/${talks.length}`);
+  console.log(`Books found on LibGen:         ${books.filter(b => b.libgen?.found).length}/${books.length}`);
+  console.log(`Books with download link:      ${books.filter(b => b.libgen?.download_url).length}/${books.length}`);
+  console.log(`TED transcripts retrieved:     ${talks.filter(t => t.transcript?.paragraphs?.length > 0).length}/${talks.length}`);
   console.log(`\nResults saved → ${outPath}`);
 }
 
@@ -564,6 +658,7 @@ function clean(it) {
     openLibrary:  it.openLibrary,
     archive:      it.archive,
     openAlex:     it.openAlex,
+    libgen:       it.libgen || null,
     transcript:   it.transcript ? {
       source:     it.transcript.source,
       url:        it.transcript.url,
