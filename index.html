@@ -816,6 +816,7 @@ Examples:
 
 <!-- ── FLOATING ACTIONS ─────────────────────────────────────── -->
 <div class="reader-fab" id="fab" hidden>
+  <button class="fab-btn ghost" id="btn-download-all">⬇ Download All</button>
   <button class="fab-btn" id="btn-book">📕 Build Book PDF</button>
 </div>
 
@@ -1575,31 +1576,92 @@ async function doSingleSearch() {
    Replace the body below with: POST /api/transcript with {item, urls}
    ════════════════════════════════════════════════════════════════ */
 async function fetchTranscript(item) {
-  // simulate latency
-  await sleep(400 + Math.random()*900);
-  if (item.transcript) return item.transcript;
+  await sleep(120 + Math.random()*200);
+  if (item.transcript && !item.transcript.mock) return item.transcript;
 
-  // pick a "source" url to attribute the transcript to
-  const src = item.links.find(l => l.kind === 'video' || l.kind === 'audio')
-           || item.searchResults[0]
-           || item.links[0];
+  // 1. Real abstract from OpenAlex (papers)
+  if (item.openAlex && item.openAlex.abstract) {
+    const src = item.openAlex.oa_url || item.openAlex.pdf_url || '';
+    item.transcript = {
+      paragraphs: [item.openAlex.abstract],
+      pullquote: null,
+      source: src ? { label: 'OpenAlex', url: src } : null,
+      fetched: new Date().toISOString(),
+      mock: false,
+    };
+    return item.transcript;
+  }
 
-  // mock transcript body — replace with real fetch
-  const seedTopic = (item.title || '').toLowerCase().replace(/[^a-z ]/g,'').split(' ').filter(w=>w.length>3).slice(0,3).join(', ') || 'this topic';
-  const author = item.author || 'the author';
+  // 2. Real description from Open Library (books)
+  if (item.openLibrary && item.openLibrary.found && item.openLibrary.description) {
+    const raw = item.openLibrary.description;
+    const text = typeof raw === 'object' ? (raw.value || '') : String(raw);
+    if (text.length > 30) {
+      item.transcript = {
+        paragraphs: text.split(/\n+/).filter(Boolean),
+        pullquote: null,
+        source: item.openLibrary.borrow_url
+          ? { label: 'Open Library', url: item.openLibrary.borrow_url }
+          : null,
+        fetched: new Date().toISOString(),
+        mock: false,
+      };
+      return item.transcript;
+    }
+  }
 
-  const paragraphs = [
-    `This is a generated preview transcript for "${item.title || '(untitled)'}"${item.author ? ' by ' + item.author : ''}. In the full version, OpenBooks fetches the actual transcript from ${src ? src.label || src.source : 'the source'} and reflows it into book-style typography you can read offline or print as a PDF.`,
-    `${author} opens by framing ${seedTopic} as something that deserves more careful attention than it usually gets. The argument unfolds slowly, returning to the same handful of examples from different angles, each pass revealing a little more of the underlying structure.`,
-    `Midway through, the focus shifts from description to method — practical steps, common pitfalls, and the small daily practices that compound over time. The transitions feel intentional rather than tidy: ideas double back on themselves, and the listener is invited to sit with the discomfort of not-quite-finished thoughts.`,
-    `Toward the end, the tone softens. There is room for doubt, for partial answers, for the acknowledgement that this is one perspective among many. The closing is less a summary than an invitation: to notice, to try, to revise.`,
-    `A few quotes worth holding onto are scattered throughout — those have been pulled into the margin for easier rereading.`,
-  ];
+  // 3. TED transcript stored by crawler
+  if (item.transcript && item.transcript.paragraphs && item.transcript.paragraphs.length && !item.transcript.mock) {
+    return item.transcript;
+  }
+
+  // 4. Informative placeholder — honest about what's available
+  const type = (item.type || '').toLowerCase();
+  const isBook = /book|textbook/i.test(type);
+  const isTed  = item.links && item.links.some(l => l.url && l.url.includes('ted.com'));
+  const isPod  = /podcast/i.test(type);
+  const isVid  = /youtube|video/i.test(type);
+  const isCourse = /course/i.test(type);
+  const isApp  = /app/i.test(type);
+
+  const readLink = (item.searchResults || []).concat(item.links || []).find(l => l.url);
+
+  let paras;
+  if (isBook) {
+    paras = [
+      `"${item.title || 'This book'}"${item.author ? ' by ' + item.author : ''}${item.year ? ' (' + item.year + ')' : ''} is a commercially published work. Full text isn't freely available, but you can borrow a digital copy through Internet Archive's controlled lending, access it at your local library, or find excerpts on Google Books.`,
+      `After running the crawler (node crawl.js), Open Library will populate a description and a borrow link here. Look for the blue "Open Library" or "Internet Archive" links in the Sources section below.`,
+    ];
+  } else if (isTed) {
+    paras = [
+      `This TED talk's transcript can be fetched automatically. Run the crawler (node crawl.js) to download the full transcript, or click the TED link in Sources to read it on ted.com.`,
+    ];
+  } else if (isPod) {
+    paras = [
+      `Podcast transcripts vary by episode. Many shows publish them on their website or through services like Spotify, Podchaser, or Listen Notes. The show's RSS feed sometimes includes full episode notes and transcripts.`,
+    ];
+  } else if (isVid) {
+    paras = [
+      `YouTube auto-captions and channel-published transcripts are available on the video page — click "More → Transcript" below the video player. The crawler can save these locally once extended with yt-dlp support.`,
+    ];
+  } else if (isCourse) {
+    paras = [
+      `Online course materials (slides, transcripts, notes) are typically available to enrolled students. Check the course platform directly for downloadable resources.`,
+    ];
+  } else if (isApp) {
+    paras = [
+      `This is an application rather than a document. Visit the app's website or app store listing for documentation and guides.`,
+    ];
+  } else {
+    paras = [
+      `No full text is currently available for "${item.title || 'this resource'}". After the crawler runs, Open Library descriptions and open-access links will appear here. Check the Sources links below to access this resource directly.`,
+    ];
+  }
 
   item.transcript = {
-    paragraphs,
-    pullquote: `"The work is mostly remembering what you already know."`,
-    source: src ? { label: src.label || src.source, url: src.url } : null,
+    paragraphs: paras,
+    pullquote: null,
+    source: readLink ? { label: readLink.label || readLink.source || 'Source', url: readLink.url } : null,
     fetched: new Date().toISOString(),
     mock: true,
   };
@@ -1674,9 +1736,15 @@ function buildToc(items) {
 
 function chapterHtml(it, n) {
   const tr = it.transcript;
-  const body = tr ? tr.paragraphs.map(p => `<p>${esc(p)}</p>`).join('')
-                  : `<p><em>Transcript not yet fetched. Click "Fetch transcripts" in the bar above to retrieve the full text.</em></p>
-                     <p>This chapter will then expand into a readable, book-styled version of the source material — whether that source is a podcast episode, a TED talk, a YouTube video, an arXiv paper, or an open-access book.</p>`;
+  let body;
+  if (tr && tr.paragraphs && tr.paragraphs.length) {
+    const label = tr.mock
+      ? `<p class="meta-row" style="margin-bottom:.8em;opacity:.7">ℹ ${esc(tr.paragraphs[0])}</p>`
+      : tr.paragraphs.map(p => `<p>${esc(p)}</p>`).join('');
+    body = tr.mock ? label : tr.paragraphs.map(p => `<p>${esc(p)}</p>`).join('');
+  } else {
+    body = `<p><em>Click "Fetch transcripts" in the bar above to load available content for this item.</em></p>`;
+  }
   const pullquote = tr && tr.pullquote ? `<div class="pullquote">${esc(tr.pullquote)}</div>` : '';
   const links = it.links.concat(it.searchResults||[]).slice(0,6);
   /* #23 — use encodeURI for href, esc for display text */
@@ -1730,6 +1798,90 @@ async function buildBookFromBatch() {
 }
 
 function savePdf() { window.print(); }
+
+/* ── batch download ──────────────────────────────────────────── */
+function downloadAll() {
+  if (!state.parsed || !state.parsed.items.length) {
+    showToast('No dataset loaded yet.');
+    return;
+  }
+  const items = state.parsed.items;
+  const meta = state.parsed;
+  const now = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+  // Build a single Markdown file with all items organized by section
+  const sectionMap = {};
+  items.forEach(it => {
+    const sec = it.section || 'Other';
+    const sub = it.subsection || '';
+    const key = sub ? `${sec} — ${sub}` : sec;
+    (sectionMap[key] = sectionMap[key] || []).push(it);
+  });
+
+  let md = `# OpenBooks — Full Resource List\n\nExported ${now}\n\n---\n\n`;
+
+  for (const [section, list] of Object.entries(sectionMap)) {
+    md += `## ${section}\n\n`;
+    list.forEach(it => {
+      const title = it.title || '(untitled)';
+      const by    = it.author ? ` — ${it.author}` : '';
+      const yr    = it.year   ? ` (${it.year})` : '';
+      const type  = it.type   ? ` [${it.type}]` : '';
+      md += `### ${title}${by}${yr}${type}\n\n`;
+
+      const allLinks = (it.searchResults || []).concat(it.links || []).filter(l => l.url);
+      if (allLinks.length) {
+        allLinks.forEach(l => {
+          md += `- [${l.label || l.source || 'Link'}](${l.url})\n`;
+        });
+        md += '\n';
+      }
+
+      if (it.transcript && !it.transcript.mock && it.transcript.paragraphs) {
+        it.transcript.paragraphs.forEach(p => { md += `${p}\n\n`; });
+      }
+    });
+  }
+
+  // Also append all TED transcripts in full
+  const withTranscripts = items.filter(it => it.transcript && !it.transcript.mock && it.transcript.paragraphs && it.transcript.paragraphs.length > 1);
+  if (withTranscripts.length) {
+    md += `\n---\n\n# Full Transcripts (${withTranscripts.length})\n\n`;
+    withTranscripts.forEach(it => {
+      md += `## ${it.title || '(untitled)'}${it.author ? ' — ' + it.author : ''}\n\n`;
+      it.transcript.paragraphs.forEach(p => { md += `${p}\n\n`; });
+      md += '---\n\n';
+    });
+  }
+
+  const blob = new Blob([md], { type: 'text/markdown; charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = 'openbooks-resources.md';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+  showToast(`Downloaded ${items.length} items as Markdown`);
+
+  // Also download individual transcript files if any real ones exist
+  if (withTranscripts.length) {
+    setTimeout(() => {
+      withTranscripts.forEach((it, i) => {
+        setTimeout(() => {
+          const fname = (it.title || 'transcript').toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40) + '.txt';
+          const content = it.transcript.paragraphs.join('\n\n');
+          const b2 = new Blob([content], { type: 'text/plain; charset=utf-8' });
+          const u2 = URL.createObjectURL(b2);
+          const a2 = document.createElement('a');
+          a2.href = u2; a2.download = fname;
+          document.body.appendChild(a2); a2.click();
+          setTimeout(() => { URL.revokeObjectURL(u2); a2.remove(); }, 1000);
+        }, i * 400);
+      });
+    }, 800);
+  }
+}
 
 /* ════════════════════════════════════════════════════════════════
    DATASET LOADER  (data/crawl-results.json → state.parsed)
@@ -1897,6 +2049,7 @@ function init() {
 
   // reader / book PDF
   document.getElementById('btn-book').addEventListener('click', buildBookFromBatch);
+  document.getElementById('btn-download-all').addEventListener('click', downloadAll);
   document.getElementById('r-close').addEventListener('click', closeReader);
   document.getElementById('r-fetch').addEventListener('click', fetchAllReaderTranscripts);
   document.getElementById('r-print').addEventListener('click', savePdf);
