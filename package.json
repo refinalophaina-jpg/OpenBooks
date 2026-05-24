@@ -1,0 +1,29 @@
+{
+  "name": "openbooks",
+  "version": "1.0.0",
+  "description": "Multi-source open book & paper finder — search 12+ sources, batch-parse resource lists, and generate book-like PDF readers.",
+  "main": "server.js",
+  "bin": {
+    "openbooks": "./cli.js"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "crawl": "node crawl.js",
+    "dev": "node server.js --open"
+  },
+  "keywords": [
+    "books",
+    "open-access",
+    "search",
+    "library",
+    "open-library",
+    "internet-archive",
+    "openalex",
+    "pwa"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
