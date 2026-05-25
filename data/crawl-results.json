@@ -1,0 +1,1685 @@
+{
+  "meta": {
+    "generated": "2026-05-23T04:01:18.045Z",
+    "title": "Emotional Intelligence, Relationships & Personal Growth",
+    "purpose": "Compiled resource list with open-access metadata",
+    "items_total": 102,
+    "books_found_ol": 0,
+    "books_found_ia": 0,
+    "talks_with_transcript": 0
+  },
+  "sections": [
+    {
+      "name": "BOOKS",
+      "items": [],
+      "subsections": [
+        {
+          "name": "Foundational Eq",
+          "items": [
+            {
+              "id": "item-1",
+              "title": "Emotional Intelligence: Why It Can Matter More Than IQ",
+              "author": "Daniel Goleman",
+              "year": 1995,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Foundational Eq",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-2",
+              "title": "Emotional Intelligence 2.0",
+              "author": "Travis Bradberry & Jean Greaves",
+              "year": 2009,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Foundational Eq",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-3",
+              "title": "Permission to Feel",
+              "author": "Marc Brackett",
+              "year": 2019,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Foundational Eq",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-4",
+              "title": "Emotional Agility",
+              "author": "Susan David",
+              "year": 2016,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Foundational Eq",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-5",
+              "title": "Working with Emotional Intelligence",
+              "author": "Daniel Goleman",
+              "year": 1998,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Foundational Eq",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            }
+          ]
+        },
+        {
+          "name": "Relationships & Communication",
+          "items": [
+            {
+              "id": "item-6",
+              "title": "The Seven Principles for Making Marriage Work",
+              "author": "John Gottman & Nan Silver",
+              "year": 1999,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Relationships & Communication",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-7",
+              "title": "Nonviolent Communication: A Language of Life",
+              "author": "Marshall B. Rosenberg",
+              "year": 1999,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Relationships & Communication",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-8",
+              "title": "Attached",
+              "author": "Amir Levine & Rachel Heller",
+              "year": 2010,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Relationships & Communication",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-9",
+              "title": "Mating in Captivity",
+              "author": "Esther Perel",
+              "year": 2006,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Relationships & Communication",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-10",
+              "title": "The State of Affairs",
+              "author": "Esther Perel",
+              "year": 2017,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Relationships & Communication",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-11",
+              "title": "Us",
+              "author": "Terrence Real",
+              "year": 2022,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Relationships & Communication",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-12",
+              "title": "How to Win Friends and Influence People",
+              "author": "Dale Carnegie",
+              "year": 1936,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Relationships & Communication",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-13",
+              "title": "The Language of Emotional Intelligence",
+              "author": "Jeanne Segal",
+              "year": null,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Relationships & Communication",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            }
+          ]
+        },
+        {
+          "name": "Men, Masculinity & Inner Work",
+          "items": [
+            {
+              "id": "item-14",
+              "title": "I Don't Want to Talk About It",
+              "author": "Terrence Real",
+              "year": 1997,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Men, Masculinity & Inner Work",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-15",
+              "title": "Daring Greatly",
+              "author": "Brené Brown",
+              "year": 2012,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Men, Masculinity & Inner Work",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-16",
+              "title": "Atlas of the Heart",
+              "author": "Brené Brown",
+              "year": 2021,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Men, Masculinity & Inner Work",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-17",
+              "title": "The Way of the Superior Man",
+              "author": "David Deida",
+              "year": 1997,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Men, Masculinity & Inner Work",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-18",
+              "title": "Adult Children of Emotionally Immature Parents",
+              "author": "Lindsay C. Gibson",
+              "year": 2015,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Men, Masculinity & Inner Work",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-19",
+              "title": "The Masculine in Relationship",
+              "author": "G.S. Youngblood",
+              "year": null,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Men, Masculinity & Inner Work",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            }
+          ]
+        },
+        {
+          "name": "Consciousness & Self-Awareness",
+          "items": [
+            {
+              "id": "item-20",
+              "title": "The Body Keeps the Score",
+              "author": "Bessel van der Kolk",
+              "year": 2014,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Consciousness & Self-Awareness",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-21",
+              "title": "Awareness",
+              "author": "Anthony de Mello",
+              "year": 1990,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Consciousness & Self-Awareness",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-22",
+              "title": "Maybe You Should Talk to Someone",
+              "author": "Lori Gottlieb",
+              "year": 2019,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Consciousness & Self-Awareness",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-23",
+              "title": "Self-Compassion",
+              "author": "Kristin Neff",
+              "year": 2011,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Consciousness & Self-Awareness",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-24",
+              "title": "How Emotions Are Made",
+              "author": "Lisa Feldman Barrett",
+              "year": 2017,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Consciousness & Self-Awareness",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-25",
+              "title": "The Genius of Empathy",
+              "author": "Judith Orloff",
+              "year": 2024,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Consciousness & Self-Awareness",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-26",
+              "title": "Hope for Cynics",
+              "author": "Jamil Zaki",
+              "year": 2024,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Consciousness & Self-Awareness",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            },
+            {
+              "id": "item-27",
+              "title": "Shift",
+              "author": "Ethan Kross",
+              "year": 2025,
+              "type": "Book",
+              "section": "BOOKS",
+              "subsection": "Consciousness & Self-Awareness",
+              "links": [],
+              "openLibrary": {
+                "found": false
+              },
+              "archive": {
+                "found": false
+              },
+              "openAlex": {
+                "found": false
+              },
+              "transcript": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PODCASTS",
+      "items": [],
+      "subsections": [
+        {
+          "name": "For Men Specifically",
+          "items": [
+            {
+              "id": "item-28",
+              "title": "Mindfully Masculine",
+              "author": "Charles & Dan",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "For Men Specifically",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-29",
+              "title": "Man Enough",
+              "author": "Justin Baldoni",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "For Men Specifically",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-30",
+              "title": "The Art of Manliness",
+              "author": "Brett McKay",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "For Men Specifically",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-31",
+              "title": "The New Man Podcast",
+              "author": "Tripp Lanier",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "For Men Specifically",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-32",
+              "title": "Order of Man",
+              "author": "Ryan Michler",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "For Men Specifically",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            }
+          ]
+        },
+        {
+          "name": "Eq & Relationships",
+          "items": [
+            {
+              "id": "item-33",
+              "title": "Where Should We Begin?",
+              "author": "Esther Perel",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "Eq & Relationships",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-34",
+              "title": "Pulling the Thread",
+              "author": "Elise Loehnen",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "Eq & Relationships",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-35",
+              "title": "On Being",
+              "author": "Krista Tippett",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "Eq & Relationships",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-36",
+              "title": "Hidden Brain",
+              "author": "Shankar Vedantam",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "Eq & Relationships",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-37",
+              "title": "10% Happier",
+              "author": "Dan Harris",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "Eq & Relationships",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-38",
+              "title": "On Purpose",
+              "author": "Jay Shetty",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "Eq & Relationships",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-39",
+              "title": "The Overwhelmed Brain",
+              "author": "Paul Colaianni",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "Eq & Relationships",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-40",
+              "title": "EQuipped Podcast",
+              "author": null,
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "Eq & Relationships",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-41",
+              "title": "The Jordan Harbinger Show",
+              "author": "Jordan Harbinger",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "Eq & Relationships",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            },
+            {
+              "id": "item-42",
+              "title": "Diary of a CEO",
+              "author": "Steven Bartlett",
+              "year": null,
+              "type": "Podcast",
+              "section": "PODCASTS",
+              "subsection": "Eq & Relationships",
+              "links": [],
+              "openLibrary": null,
+              "archive": null,
+              "openAlex": null,
+              "transcript": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ONLINE COURSES",
+      "items": [
+        {
+          "id": "item-43",
+          "title": "Daniel Goleman's Emotional Intelligence Courses",
+          "author": null,
+          "year": null,
+          "type": "Course",
+          "section": "ONLINE COURSES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-44",
+          "title": "Emotional Intelligence for Leadership",
+          "author": "Coursera",
+          "year": null,
+          "type": "Course",
+          "section": "ONLINE COURSES",
+          "subsection": null,
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-45",
+          "title": "Managing Emotions in Times of Uncertainty & Stress",
+          "author": "Yale",
+          "year": null,
+          "type": "Course",
+          "section": "ONLINE COURSES",
+          "subsection": null,
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-46",
+          "title": "Build Authentic Relationships Using Emotional Intelligence",
+          "author": "Udemy",
+          "year": null,
+          "type": "Course",
+          "section": "ONLINE COURSES",
+          "subsection": null,
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-47",
+          "title": "Emotional Intelligence at Work",
+          "author": "Udemy",
+          "year": null,
+          "type": "Course",
+          "section": "ONLINE COURSES",
+          "subsection": null,
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-48",
+          "title": "Emotional Intelligence Skills",
+          "author": "LinkedIn Learning",
+          "year": null,
+          "type": "Course",
+          "section": "ONLINE COURSES",
+          "subsection": null,
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-49",
+          "title": "Foundations of Well-Being",
+          "author": "Rick Hanson",
+          "year": null,
+          "type": "Course",
+          "section": "ONLINE COURSES",
+          "subsection": null,
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-50",
+          "title": "Self-Awareness: Leading with Emotional Intelligence",
+          "author": "Dale Carnegie",
+          "year": null,
+          "type": "Course",
+          "section": "ONLINE COURSES",
+          "subsection": null,
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-51",
+          "title": "Esther Perel Sessions",
+          "author": null,
+          "year": null,
+          "type": "Course",
+          "section": "ONLINE COURSES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-52",
+          "title": "Yale Science of Well-Being",
+          "author": "Coursera",
+          "year": null,
+          "type": "Course",
+          "section": "ONLINE COURSES",
+          "subsection": null,
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        }
+      ],
+      "subsections": []
+    },
+    {
+      "name": "WEBSITES & ONLINE RESOURCES",
+      "items": [
+        {
+          "id": "item-53",
+          "title": "The Gottman Institute",
+          "author": null,
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-54",
+          "title": "Esther Perel",
+          "author": null,
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-55",
+          "title": "Terrence Real",
+          "author": null,
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-56",
+          "title": "Brené Brown",
+          "author": null,
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-57",
+          "title": "Greater Good Science Center",
+          "author": "UC Berkeley",
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "subsection": null,
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-58",
+          "title": "Positive Psychology",
+          "author": null,
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-59",
+          "title": "TalentSmartEQ",
+          "author": null,
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-60",
+          "title": "Emotician",
+          "author": null,
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-61",
+          "title": "Rick Hanson",
+          "author": null,
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-62",
+          "title": "Mindful",
+          "author": null,
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-63",
+          "title": "Psychology Today",
+          "author": null,
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-64",
+          "title": "The School of Life",
+          "author": null,
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-65",
+          "title": "A Conscious Rethink",
+          "author": null,
+          "year": null,
+          "type": "Website",
+          "section": "WEBSITES & ONLINE RESOURCES",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        }
+      ],
+      "subsections": []
+    },
+    {
+      "name": "YOUTUBE CHANNELS",
+      "items": [
+        {
+          "id": "item-66",
+          "title": "The School of Life",
+          "author": null,
+          "year": null,
+          "type": "YouTube",
+          "section": "YOUTUBE CHANNELS",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-67",
+          "title": "Psych2Go",
+          "author": null,
+          "year": null,
+          "type": "YouTube",
+          "section": "YOUTUBE CHANNELS",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-68",
+          "title": "Brené Brown",
+          "author": null,
+          "year": null,
+          "type": "YouTube",
+          "section": "YOUTUBE CHANNELS",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-69",
+          "title": "Jay Shetty",
+          "author": null,
+          "year": null,
+          "type": "YouTube",
+          "section": "YOUTUBE CHANNELS",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-70",
+          "title": "Impact Theory",
+          "author": null,
+          "year": null,
+          "type": "YouTube",
+          "section": "YOUTUBE CHANNELS",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-71",
+          "title": "Lewis Howes",
+          "author": null,
+          "year": null,
+          "type": "YouTube",
+          "section": "YOUTUBE CHANNELS",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-72",
+          "title": "Actualized.org",
+          "author": null,
+          "year": null,
+          "type": "YouTube",
+          "section": "YOUTUBE CHANNELS",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-73",
+          "title": "Tony Robbins",
+          "author": null,
+          "year": null,
+          "type": "YouTube",
+          "section": "YOUTUBE CHANNELS",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-74",
+          "title": "Jordan Harbinger",
+          "author": null,
+          "year": null,
+          "type": "YouTube",
+          "section": "YOUTUBE CHANNELS",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-75",
+          "title": "Mindfully Masculine",
+          "author": null,
+          "year": null,
+          "type": "YouTube",
+          "section": "YOUTUBE CHANNELS",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        }
+      ],
+      "subsections": []
+    },
+    {
+      "name": "KEY AUTHORS TO FOLLOW",
+      "items": [
+        {
+          "id": "item-76",
+          "title": "Daniel Goleman",
+          "author": null,
+          "year": null,
+          "type": "Author",
+          "section": "KEY AUTHORS TO FOLLOW",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-77",
+          "title": "Brené Brown",
+          "author": null,
+          "year": null,
+          "type": "Author",
+          "section": "KEY AUTHORS TO FOLLOW",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-78",
+          "title": "Esther Perel",
+          "author": null,
+          "year": null,
+          "type": "Author",
+          "section": "KEY AUTHORS TO FOLLOW",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-79",
+          "title": "Terrence Real",
+          "author": null,
+          "year": null,
+          "type": "Author",
+          "section": "KEY AUTHORS TO FOLLOW",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-80",
+          "title": "John & Julie Gottman",
+          "author": null,
+          "year": null,
+          "type": "Author",
+          "section": "KEY AUTHORS TO FOLLOW",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-81",
+          "title": "Susan David",
+          "author": null,
+          "year": null,
+          "type": "Author",
+          "section": "KEY AUTHORS TO FOLLOW",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-82",
+          "title": "Marc Brackett",
+          "author": null,
+          "year": null,
+          "type": "Author",
+          "section": "KEY AUTHORS TO FOLLOW",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-83",
+          "title": "Kristin Neff",
+          "author": null,
+          "year": null,
+          "type": "Author",
+          "section": "KEY AUTHORS TO FOLLOW",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-84",
+          "title": "Marshall Rosenberg",
+          "author": null,
+          "year": null,
+          "type": "Author",
+          "section": "KEY AUTHORS TO FOLLOW",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-85",
+          "title": "Richard Rohr",
+          "author": null,
+          "year": null,
+          "type": "Author",
+          "section": "KEY AUTHORS TO FOLLOW",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-86",
+          "title": "Bessel van der Kolk",
+          "author": null,
+          "year": null,
+          "type": "Author",
+          "section": "KEY AUTHORS TO FOLLOW",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        }
+      ],
+      "subsections": []
+    },
+    {
+      "name": "TED TALKS",
+      "items": [
+        {
+          "id": "item-87",
+          "title": "The Secret to Desire in a Long-Term Relationship",
+          "author": "Esther Perel",
+          "year": 2013,
+          "type": "Talk",
+          "section": "TED TALKS",
+          "subsection": null,
+          "links": [
+            {
+              "label": "TED",
+              "url": "https://www.ted.com/talks/esther_perel_the_secret_to_desire_in_a_long_term_relationship"
+            }
+          ],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-88",
+          "title": "Rethinking Infidelity",
+          "author": "Esther Perel",
+          "year": 2015,
+          "type": "Talk",
+          "section": "TED TALKS",
+          "subsection": null,
+          "links": [
+            {
+              "label": "TED",
+              "url": "https://www.ted.com/talks/esther_perel_rethinking_infidelity_a_talk_for_anyone_who_has_ever_loved"
+            }
+          ],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-89",
+          "title": "The Power of Vulnerability",
+          "author": "Brené Brown",
+          "year": 2010,
+          "type": "Talk",
+          "section": "TED TALKS",
+          "subsection": null,
+          "links": [
+            {
+              "label": "TED",
+              "url": "https://www.ted.com/talks/brene_brown_the_power_of_vulnerability"
+            }
+          ],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-90",
+          "title": "Listening to Shame",
+          "author": "Brené Brown",
+          "year": 2012,
+          "type": "Talk",
+          "section": "TED TALKS",
+          "subsection": null,
+          "links": [
+            {
+              "label": "TED",
+              "url": "https://www.ted.com/talks/brene_brown_listening_to_shame"
+            }
+          ],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-91",
+          "title": "The Gift and Power of Emotional Courage",
+          "author": "Susan David",
+          "year": 2017,
+          "type": "Talk",
+          "section": "TED TALKS",
+          "subsection": null,
+          "links": [
+            {
+              "label": "TED",
+              "url": "https://www.ted.com/talks/susan_david_the_gift_and_power_of_emotional_courage"
+            }
+          ],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-92",
+          "title": "Why Aren't We More Compassionate?",
+          "author": "Daniel Goleman",
+          "year": 2007,
+          "type": "Talk",
+          "section": "TED TALKS",
+          "subsection": null,
+          "links": [
+            {
+              "label": "TED",
+              "url": "https://www.ted.com/talks/daniel_goleman_why_aren_t_we_more_compassionate"
+            }
+          ],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-93",
+          "title": "What Makes a Good Life?",
+          "author": "Robert Waldinger",
+          "year": 2015,
+          "type": "Talk",
+          "section": "TED TALKS",
+          "subsection": null,
+          "links": [
+            {
+              "label": "TED",
+              "url": "https://www.ted.com/talks/robert_waldinger_what_makes_a_good_life_lessons_from_the_longest_study_on_happiness"
+            }
+          ],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-94",
+          "title": "How to Make Stress Your Friend",
+          "author": "Kelly McGonigal",
+          "year": 2013,
+          "type": "Talk",
+          "section": "TED TALKS",
+          "subsection": null,
+          "links": [
+            {
+              "label": "TED",
+              "url": "https://www.ted.com/talks/kelly_mcgonigal_how_to_make_stress_your_friend"
+            }
+          ],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-95",
+          "title": "All It Takes Is 10 Mindful Minutes",
+          "author": "Andy Puddicombe",
+          "year": 2012,
+          "type": "Talk",
+          "section": "TED TALKS",
+          "subsection": null,
+          "links": [
+            {
+              "label": "TED",
+              "url": "https://www.ted.com/talks/andy_puddicombe_all_it_takes_is_10_mindful_minutes"
+            }
+          ],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        }
+      ],
+      "subsections": []
+    },
+    {
+      "name": "APPS FOR ONGOING PRACTICE",
+      "items": [
+        {
+          "id": "item-96",
+          "title": "Headspace",
+          "author": null,
+          "year": null,
+          "type": "App",
+          "section": "APPS FOR ONGOING PRACTICE",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-97",
+          "title": "Calm",
+          "author": null,
+          "year": null,
+          "type": "App",
+          "section": "APPS FOR ONGOING PRACTICE",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-98",
+          "title": "Waking Up",
+          "author": "Sam Harris",
+          "year": null,
+          "type": "App",
+          "section": "APPS FOR ONGOING PRACTICE",
+          "subsection": null,
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-99",
+          "title": "Gottman Card Decks",
+          "author": null,
+          "year": null,
+          "type": "App",
+          "section": "APPS FOR ONGOING PRACTICE",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-100",
+          "title": "Reflectly",
+          "author": null,
+          "year": null,
+          "type": "App",
+          "section": "APPS FOR ONGOING PRACTICE",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-101",
+          "title": "Day One",
+          "author": null,
+          "year": null,
+          "type": "App",
+          "section": "APPS FOR ONGOING PRACTICE",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        },
+        {
+          "id": "item-102",
+          "title": "Notion",
+          "author": null,
+          "year": null,
+          "type": "App",
+          "section": "APPS FOR ONGOING PRACTICE",
+          "links": [],
+          "openLibrary": null,
+          "archive": null,
+          "openAlex": null,
+          "transcript": null
+        }
+      ],
+      "subsections": []
+    }
+  ]
+}

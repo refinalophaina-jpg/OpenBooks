@@ -6,273 +6,736 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>OpenBooks</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/icon-192.svg">
+<meta name="theme-color" content="#0e0e10">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 <style>
+/* ════════════════════════════════════════════════════════════════
+   TOKENS
+   ════════════════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
   --bg:      #0e0e10;
   --bg2:     #16161a;
   --bg3:     #1e1e24;
+  --bg4:     #24242c;
   --bdr:     #2a2a32;
   --bdr2:    #333340;
   --text:    #f0f0f5;
   --t2:      #a0a0b8;
   --t3:      #606078;
+  --t4:      #40404e;
   --accent:  #b8f000;
   --adim:    rgba(184,240,0,.12);
   --aborder: rgba(184,240,0,.35);
+  --warn:    #f0a500;
+  --err:     #f04050;
+  --ok:      #50c878;
   --r:       8px;
+  --rs:      6px;
+  --rl:      14px;
 }
-
+/* #10 — thin scrollbar on body */
 body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Syne', sans-serif;
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 0 16px 72px;
+  padding: 0 16px 80px;
   -webkit-font-smoothing: antialiased;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bdr2) transparent;
 }
 
-/* ── header ── */
-.header {
-  text-align: center;
-  padding: 52px 0 34px;
-  user-select: none;
-}
-.header h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -.5px;
-}
+/* ════════════════════════════════════════════════════════════════
+   HEADER
+   ════════════════════════════════════════════════════════════════ */
+.header { text-align: center; padding: 44px 0 28px; user-select: none; }
+.header h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: -.5px; }
 .header h1 span { color: var(--accent); }
 .header p {
-  color: var(--t3);
-  font-size: .82rem;
-  margin-top: 6px;
-  font-family: 'JetBrains Mono', monospace;
-  letter-spacing: .02em;
+  color: var(--t3); font-size: .78rem; margin-top: 5px;
+  font-family: 'JetBrains Mono', monospace; letter-spacing: .02em;
 }
 
-/* ── search card ── */
+/* ════════════════════════════════════════════════════════════════
+   CARD
+   ════════════════════════════════════════════════════════════════ */
 .card {
-  max-width: 720px;
-  margin: 0 auto;
-  background: var(--bg2);
-  border: 1px solid var(--bdr);
-  border-radius: 14px;
-  padding: 22px 18px 18px;
+  max-width: 760px; margin: 0 auto;
+  background: var(--bg2); border: 1px solid var(--bdr);
+  border-radius: var(--rl); padding: 18px 18px 16px;
 }
 
-/* ── search row ── */
-.search-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
+/* ── tabs ───────────────────────────────────────────────────── */
+/* #1 — sliding underline indicator */
+.tabs {
+  display: flex; gap: 4px; margin-bottom: 14px;
+  background: var(--bg3); border-radius: var(--r); padding: 4px;
+  position: relative;
+}
+.tab {
+  flex: 1; padding: 9px 12px; background: none; border: none;
+  border-radius: var(--rs); color: var(--t2);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  font-weight: 500; letter-spacing: .04em; text-transform: uppercase;
+  cursor: pointer; transition: all .15s; -webkit-appearance: none;
+  position: relative;
+}
+.tab.on { background: var(--bg4); color: var(--text); }
+.tab.on::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 20%; right: 20%;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  transform: scaleX(1);
+  transition: transform .2s ease, left .2s ease, right .2s ease;
+}
+.tab:not(.on)::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 50%; right: 50%;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transition: transform .2s ease, left .2s ease, right .2s ease;
+}
+.tab .badge {
+  display: inline-block; margin-left: 6px; padding: 1px 6px;
+  background: var(--adim); color: var(--accent);
+  border-radius: 10px; font-size: 9px; font-weight: 600;
 }
 
+/* ── search inputs ──────────────────────────────────────────── */
+.search-row { display: flex; gap: 8px; margin-bottom: 10px; }
+/* #3 — inner shadow on focus */
 .sinput {
-  flex: 1;
-  padding: 11px 14px;
-  background: var(--bg3);
-  border: 1px solid var(--bdr2);
-  border-radius: var(--r);
-  font-size: .95rem;
-  font-family: 'Syne', sans-serif;
-  color: var(--text);
-  outline: none;
-  -webkit-appearance: none;
-  transition: border-color .2s;
-  min-width: 0;
+  flex: 1; padding: 11px 14px; background: var(--bg3);
+  border: 1px solid var(--bdr2); border-radius: var(--r);
+  font-size: .95rem; font-family: 'Syne', sans-serif;
+  color: var(--text); outline: none; -webkit-appearance: none;
+  transition: border-color .2s, box-shadow .2s; min-width: 0;
 }
-.sinput:focus        { border-color: var(--accent); }
+.sinput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--adim);
+}
 .sinput::placeholder { color: var(--t3); }
 
+textarea.sinput {
+  width: 100%; min-height: 160px; resize: vertical;
+  font-family: 'JetBrains Mono', monospace; font-size: .82rem;
+  line-height: 1.55; padding: 12px 14px;
+}
+
+/* #13 / #14 — shake animation for empty guard */
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  15%     { transform: translateX(-6px); }
+  30%     { transform: translateX(6px); }
+  45%     { transform: translateX(-4px); }
+  60%     { transform: translateX(4px); }
+  75%     { transform: translateX(-2px); }
+  90%     { transform: translateX(2px); }
+}
+.shake { animation: shake .45s ease; }
+
 .btn-go {
-  padding: 11px 18px;
-  background: var(--accent);
-  color: #000;
-  border-radius: var(--r);
-  font-size: .88rem;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-  font-family: 'Syne', sans-serif;
-  -webkit-appearance: none;
-  flex-shrink: 0;
-  transition: opacity .15s;
+  padding: 11px 18px; background: var(--accent); color: #000;
+  border-radius: var(--r); font-size: .88rem; font-weight: 700;
+  border: none; cursor: pointer; white-space: nowrap;
+  font-family: 'Syne', sans-serif; -webkit-appearance: none;
+  flex-shrink: 0; transition: opacity .15s;
 }
 .btn-go:hover    { opacity: .88; }
 .btn-go:active   { opacity: .7; }
 .btn-go:disabled { opacity: .4; cursor: default; }
 
-/* ── section label ── */
-.row-label {
-  font-size: 10px;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--t3);
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  margin-bottom: 8px;
-  margin-top: 16px;
-}
-
-/* ── source pills ── */
-.src-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 4px;
-}
-
-.spill {
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 500;
-  border: 1px solid var(--bdr2);
-  color: var(--t2);
-  background: none;
-  cursor: pointer;
-  font-family: 'JetBrains Mono', monospace;
-  -webkit-appearance: none;
+.btn-ghost {
+  padding: 8px 14px; background: none; color: var(--t2);
+  border: 1px solid var(--bdr2); border-radius: var(--r);
+  font-size: .82rem; font-weight: 500; cursor: pointer;
+  font-family: 'JetBrains Mono', monospace; -webkit-appearance: none;
   transition: all .15s;
-  line-height: 1.4;
-  touch-action: manipulation;
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--t3); }
+
+.batch-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.batch-actions .grow { flex: 1; }
+
+/* ── section labels ─────────────────────────────────────────── */
+.row-label {
+  font-size: 10px; font-family: 'JetBrains Mono', monospace;
+  color: var(--t3); text-transform: uppercase; letter-spacing: .1em;
+  margin-bottom: 8px; margin-top: 16px;
+}
+.divider {
+  border: none; border-top: 1px solid var(--bdr); margin: 14px 0 0;
+}
+
+/* ── pills ──────────────────────────────────────────────────── */
+/* #11 — select-all/none row */
+.src-toggle-row {
+  display: flex; justify-content: flex-end; margin-bottom: 4px;
+}
+.src-toggle-row a {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--t3); text-decoration: none; cursor: pointer;
+  letter-spacing: .04em;
+}
+.src-toggle-row a:hover { color: var(--t2); }
+
+.src-row, .fmt-row {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px;
+}
+/* #2 — pill active scale feedback */
+.spill {
+  padding: 5px 12px; border-radius: 20px; font-size: 11px;
+  font-weight: 500; border: 1px solid var(--bdr2);
+  color: var(--t2); background: none; cursor: pointer;
+  font-family: 'JetBrains Mono', monospace; -webkit-appearance: none;
+  transition: all .15s; line-height: 1.4; touch-action: manipulation;
 }
 .spill:hover { border-color: var(--t2); color: var(--text); }
 .spill.on {
-  background: var(--adim);
-  border-color: var(--aborder);
-  color: var(--accent);
+  background: var(--adim); border-color: var(--aborder); color: var(--accent);
 }
+.spill:active { transform: scale(0.95); }
 
-/* ── format row ── */
-.fmt-row {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-wrap: wrap;
+/* ── collapsible ────────────────────────────────────────────── */
+.adv-toggle {
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; user-select: none; margin-top: 14px;
+  padding: 8px 0; color: var(--t2);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  text-transform: uppercase; letter-spacing: .08em;
 }
+.adv-toggle:hover { color: var(--text); }
+.adv-toggle .chev { transition: transform .2s; }
+.adv-toggle.open .chev { transform: rotate(90deg); }
+.adv-body { display: none; padding-top: 6px; }
+.adv-body.open { display: block; }
 
-/* ── divider ── */
-.divider {
-  border: none;
-  border-top: 1px solid var(--bdr);
-  margin: 16px 0 0;
+/* ── qb live hint ────────────────────────────────────────────── */
+/* #12 */
+#qb-hint {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--t3); margin-top: 5px; min-height: 14px;
+  letter-spacing: .02em;
 }
+#qb-hint span { color: var(--accent); }
 
-/* ── results ── */
-.results {
-  max-width: 720px;
-  margin: 16px auto 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+/* ════════════════════════════════════════════════════════════════
+   PARSE PREVIEW
+   ════════════════════════════════════════════════════════════════ */
+.preview {
+  max-width: 760px; margin: 18px auto 0;
+  background: var(--bg2); border: 1px solid var(--bdr);
+  border-radius: var(--rl); padding: 18px;
 }
-
-.result-item {
-  background: var(--bg2);
-  border: 1px solid var(--bdr);
-  border-radius: 10px;
-  padding: 15px 16px;
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  transition: border-color .15s;
-  cursor: default;
+.preview-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
 }
-.result-item:hover { border-color: var(--bdr2); }
-
-.ri-body { flex: 1; min-width: 0; }
-
-.ri-title {
-  font-family: 'Lora', serif;
-  font-size: .95rem;
-  font-weight: 400;
-  margin-bottom: 5px;
-  line-height: 1.35;
-  color: var(--text);
+.preview-title {
+  font-size: 1rem; font-weight: 600;
 }
-.ri-title em {
-  font-style: italic;
+.preview-stats {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
   color: var(--t2);
 }
+.preview-stats span { color: var(--accent); font-weight: 600; }
 
-.ri-meta {
-  font-size: .75rem;
-  color: var(--t3);
-  font-family: 'JetBrains Mono', monospace;
-  white-space: nowrap;
+/* #20 — ToC jump pills */
+.toc-jump {
+  display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px;
+}
+.toc-jump-pill {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  padding: 3px 8px; border-radius: 4px;
+  background: var(--bg4); border: 1px solid var(--bdr2);
+  color: var(--t2); cursor: pointer; -webkit-appearance: none;
+  transition: all .15s;
+}
+.toc-jump-pill:hover { color: var(--accent); border-color: var(--aborder); }
+
+/* outline tree */
+.outline { font-family: 'JetBrains Mono', monospace; font-size: .8rem; }
+.tree-sec {
+  background: var(--bg3); border-radius: var(--r);
+  margin-bottom: 6px; overflow: hidden;
+  border: 1px solid var(--bdr);
+}
+.tree-sec-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 12px; cursor: pointer; user-select: none;
+  color: var(--text); font-weight: 600; font-size: .82rem;
+  transition: background .15s;
+}
+.tree-sec-head:hover { background: var(--bg4); }
+.tree-sec-head .chev {
+  color: var(--t3); transition: transform .15s; flex-shrink: 0;
+}
+.tree-sec.open > .tree-sec-head .chev { transform: rotate(90deg); }
+.tree-sec-name { flex: 1; }
+.tree-sec-count {
+  color: var(--t3); font-weight: 500; font-size: .72rem;
+}
+.tree-sec-body { display: none; padding: 0 10px 8px; }
+.tree-sec.open > .tree-sec-body { display: block; }
+
+.tree-sub {
+  margin: 6px 0; padding-left: 8px;
+  border-left: 1px solid var(--bdr2);
+}
+.tree-sub-head {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px; cursor: pointer; user-select: none;
+  color: var(--t2); font-size: .72rem; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.tree-sub-head:hover { color: var(--text); }
+.tree-sub-head .chev { color: var(--t4); transition: transform .15s; }
+.tree-sub.open > .tree-sub-head .chev { transform: rotate(90deg); }
+.tree-sub-body { display: none; padding-left: 12px; }
+.tree-sub.open > .tree-sub-body { display: block; }
+
+.tree-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 5px 6px; border-radius: 4px;
+  transition: background .15s;
+}
+.tree-item:hover { background: var(--bg4); }
+.tree-item .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--t4); flex-shrink: 0;
+  margin-top: 6px; transition: background .2s;
+}
+.tree-item.searching .dot {
+  background: var(--warn); animation: pulse 1s ease-in-out infinite;
+}
+.tree-item.done    .dot { background: var(--ok); }
+.tree-item.empty   .dot { background: var(--err); }
+.tree-item-body { flex: 1; min-width: 0; }
+/* #9 — clamp tree-item titles to 2 lines, expand on hover */
+.tree-item-title {
+  font-family: 'Lora', serif; font-size: .82rem;
+  color: var(--text); line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+}
+.tree-item:hover .tree-item-title {
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+}
+.tree-item-title em { color: var(--t2); font-style: italic; }
+.tree-item-meta {
+  font-size: .68rem; color: var(--t3); margin-top: 2px;
+}
+.tree-item-meta .lnk { color: var(--t2); }
+
+@keyframes pulse {
+  0%,100% { opacity: 1; } 50% { opacity: .35; }
 }
 
-.ri-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-  flex-shrink: 0;
+/* ════════════════════════════════════════════════════════════════
+   RESULTS
+   ════════════════════════════════════════════════════════════════ */
+.results {
+  max-width: 760px; margin: 18px auto 0;
+  display: flex; flex-direction: column; gap: 8px;
 }
 
-.ri-src {
-  font-size: 10px;
+/* toolbar */
+.toolbar {
+  display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+  background: var(--bg2); border: 1px solid var(--bdr);
+  border-radius: var(--r); padding: 8px 10px; margin-bottom: 4px;
+}
+.toolbar-label {
+  font-size: 10px; font-family: 'JetBrains Mono', monospace;
+  color: var(--t3); text-transform: uppercase; letter-spacing: .08em;
+  margin-right: 4px;
+}
+/* #8 — custom chevron on selects */
+.toolbar select {
+  background: var(--bg3); color: var(--text);
+  border: 1px solid var(--bdr2); border-radius: var(--rs);
+  padding: 5px 28px 5px 8px; font-size: .72rem;
   font-family: 'JetBrains Mono', monospace;
-  color: var(--accent);
-  background: var(--adim);
-  border: 1px solid var(--aborder);
-  border-radius: 4px;
-  padding: 2px 7px;
+  -webkit-appearance: none; cursor: pointer; outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23606078'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+.toolbar .grow { flex: 1; }
+.toolbar .stats {
+  font-size: .72rem; color: var(--t2);
+  font-family: 'JetBrains Mono', monospace;
+}
+.toolbar .stats span { color: var(--accent); }
+
+/* #15 — Clear button in toolbar */
+.btn-clear-results {
+  padding: 4px 9px; background: none; color: var(--t3);
+  border: 1px solid var(--bdr); border-radius: var(--rs);
+  font-family: 'JetBrains Mono', monospace; font-size: .68rem;
+  cursor: pointer; -webkit-appearance: none; transition: all .15s;
   white-space: nowrap;
 }
+.btn-clear-results:hover { color: var(--err); border-color: var(--err); }
 
-.ri-fmt {
-  font-size: 10px;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--t3);
-  border: 1px solid var(--bdr2);
-  border-radius: 4px;
-  padding: 2px 7px;
-  white-space: nowrap;
+/* section group */
+.rsec {
+  background: var(--bg2); border: 1px solid var(--bdr);
+  border-radius: var(--rl); overflow: hidden;
 }
-
-/* ── states ── */
-.state-msg {
-  text-align: center;
-  padding: 48px 0;
+.rsec-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; background: var(--bg3);
+  cursor: pointer; user-select: none;
+  border-bottom: 1px solid var(--bdr);
 }
-.state-msg p {
-  color: var(--t3);
-  font-size: .85rem;
-  font-family: 'JetBrains Mono', monospace;
+.rsec-head .chev { color: var(--t3); transition: transform .15s; }
+.rsec.open .rsec-head .chev { transform: rotate(90deg); }
+.rsec-name {
+  flex: 1; font-weight: 700; font-size: .9rem;
+  letter-spacing: .02em;
 }
-.state-msg .big {
-  font-size: 1.6rem;
-  margin-bottom: 8px;
+.rsec-count {
+  font-family: 'JetBrains Mono', monospace; font-size: .7rem;
   color: var(--t3);
 }
+.rsec.open .rsec-body { display: block; }
+.rsec-body { display: none; padding: 8px; }
 
-/* ── spinner ── */
+.rsub {
+  padding: 4px 8px 12px;
+}
+.rsub-name {
+  font-family: 'JetBrains Mono', monospace; font-size: .68rem;
+  color: var(--t3); text-transform: uppercase; letter-spacing: .1em;
+  margin: 12px 4px 8px;
+}
+
+/* item card */
+/* #4 — hover border + shadow on icard */
+.icard {
+  background: var(--bg3); border: 1px solid var(--bdr);
+  border-radius: var(--r); padding: 12px 14px;
+  margin-bottom: 6px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.icard:hover {
+  border-color: var(--bdr2);
+  box-shadow: 0 2px 12px rgba(0,0,0,.25);
+}
+.icard-row1 {
+  display: flex; gap: 10px; align-items: flex-start;
+}
+/* #22 — break very long titles */
+.icard-title {
+  flex: 1; min-width: 0; font-family: 'Lora', serif;
+  font-size: .95rem; line-height: 1.35; color: var(--text);
+  overflow-wrap: break-word; word-break: break-word;
+}
+.icard-title em { color: var(--t2); font-style: italic; font-size: .88rem; }
+.icard-year {
+  font-family: 'JetBrains Mono', monospace; font-size: .7rem;
+  color: var(--t3); flex-shrink: 0;
+}
+
+.icard-row2 {
+  display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px;
+}
+.tag {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  padding: 2px 6px; border-radius: 3px; line-height: 1.5;
+  border: 1px solid var(--bdr2); color: var(--t2);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.tag.type { background: var(--bg4); }
+.tag.found { color: var(--accent); border-color: var(--aborder); background: var(--adim); }
+.tag.missing { color: var(--t3); }
+
+.icard-row3 {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;
+}
+.lpill {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  padding: 3px 8px; border-radius: 4px;
+  background: var(--bg4); color: var(--t2);
+  text-decoration: none; transition: all .15s;
+  border: 1px solid transparent;
+}
+.lpill:hover { color: var(--text); border-color: var(--bdr2); }
+.lpill.open {
+  background: var(--adim); color: var(--accent);
+  border-color: var(--aborder);
+}
+.lpill.search-link {
+  background: transparent; color: var(--t2);
+  border-color: var(--bdr); opacity: .75;
+}
+.lpill.search-link:hover { opacity: 1; color: var(--text); }
+.lpill .kind {
+  font-size: 8px; color: var(--t3); text-transform: uppercase;
+}
+
+.icard-collapse {
+  margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--bdr);
+  cursor: pointer; user-select: none; font-size: 11px;
+  font-family: 'JetBrains Mono', monospace; color: var(--t3);
+}
+.icard-collapse:hover { color: var(--text); }
+.icard-extra { display: none; padding-top: 8px; }
+.icard.expanded .icard-extra { display: block; }
+.icard.expanded .icard-collapse .chev { transform: rotate(90deg); }
+.icard-collapse .chev { display: inline-block; transition: transform .15s; }
+
+/* untitled muted style */
+.untitled { color: var(--t3); font-style: italic; }
+
+/* state */
+.state-msg { text-align: center; padding: 48px 0; }
+.state-msg p { color: var(--t3); font-size: .85rem; font-family: 'JetBrains Mono', monospace; }
+.state-msg .big { font-size: 1.6rem; margin-bottom: 8px; color: var(--t3); }
+
+/* #5 — spinner centred with flex wrapper */
 @keyframes spin { to { transform: rotate(360deg); } }
+.spinner-wrap { display: flex; justify-content: center; margin-bottom: 12px; }
 .spinner {
-  width: 20px; height: 20px;
-  border: 2px solid var(--bdr2);
-  border-top-color: var(--accent);
-  border-radius: 50%;
+  width: 20px; height: 20px; border: 2px solid var(--bdr2);
+  border-top-color: var(--accent); border-radius: 50%;
   animation: spin .7s linear infinite;
-  margin: 0 auto 12px;
 }
 
-/* ── mobile tweaks ── */
-@media (max-width: 480px) {
-  body { padding: 0 12px 80px; }
-  .header { padding: 36px 0 24px; }
-  .header h1 { font-size: 1.7rem; }
-  .card { padding: 18px 14px 14px; border-radius: 12px; }
-  .btn-go { padding: 11px 14px; font-size: .85rem; }
+/* #7 — progress bar colour animates to green at 100% */
+.progress {
+  height: 3px; background: var(--bg3); border-radius: 2px;
+  overflow: hidden; margin-top: 10px;
+}
+.progress-fill {
+  height: 100%; background: var(--accent);
+  width: 0%; transition: width .25s ease-out, background .4s ease;
+}
+.progress-fill.complete { background: var(--ok); }
+
+/* toast / inline message */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--bg4); color: var(--text); border: 1px solid var(--bdr2);
+  border-radius: var(--r); padding: 9px 18px;
+  font-family: 'JetBrains Mono', monospace; font-size: .8rem;
+  z-index: 200; pointer-events: none;
+  animation: toastIn .2s ease forwards;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   READER OVERLAY (book-style view + print → PDF)
+   ════════════════════════════════════════════════════════════════ */
+/* #6 — safe-area-inset-bottom for iPhone notch */
+.reader-fab {
+  position: fixed; right: 16px; bottom: 16px; z-index: 40;
+  display: flex; flex-direction: column; gap: 8px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.fab-btn {
+  background: var(--accent); color: #000;
+  border: none; border-radius: 24px;
+  padding: 12px 18px; font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: .85rem; cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0,0,0,.5);
+  -webkit-appearance: none; display: inline-flex; align-items: center; gap: 8px;
+  transition: opacity .15s;
+}
+.fab-btn:hover { opacity: .9; }
+.fab-btn.ghost {
+  background: var(--bg3); color: var(--text);
+  border: 1px solid var(--bdr2);
+}
+
+.read-btn {
+  background: none; border: 1px solid var(--bdr2);
+  color: var(--t2); border-radius: 4px;
+  padding: 3px 8px; font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; cursor: pointer; -webkit-appearance: none;
+  transition: all .15s;
+}
+.read-btn:hover { color: var(--accent); border-color: var(--aborder); }
+
+.reader {
+  position: fixed; inset: 0; z-index: 100;
+  background: #f7f3ea; color: #1a1a1a;
+  overflow-y: auto; display: none;
+}
+.reader.open { display: block; }
+.reader-bar {
+  position: sticky; top: 0; z-index: 2;
+  background: rgba(247,243,234,.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #d8d2c1;
+  padding: 10px 16px; display: flex; gap: 8px;
+  align-items: center; justify-content: space-between;
+}
+.reader-bar-l, .reader-bar-r { display: flex; gap: 6px; align-items: center; }
+.reader-bar button {
+  padding: 7px 12px; border: 1px solid #c8c0a8;
+  background: #fff; color: #1a1a1a; border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  font-weight: 500; cursor: pointer; -webkit-appearance: none;
+  transition: all .15s;
+}
+.reader-bar button:hover { background: #f0ebd9; }
+.reader-bar button.primary {
+  background: #1a1a1a; color: #fff; border-color: #1a1a1a;
+}
+.reader-bar button.primary:hover { background: #333; }
+
+.book {
+  max-width: 640px; margin: 0 auto; padding: 64px 40px 80px;
+  font-family: 'Lora', serif; font-size: 17px; line-height: 1.75;
+}
+.book .title-page {
+  text-align: center; padding: 80px 0 100px;
+  border-bottom: 1px solid #d8d2c1; margin-bottom: 60px;
+  page-break-after: always;
+}
+.book .title-page h1 {
+  font-family: 'Lora', serif; font-style: italic;
+  font-weight: 400; font-size: 2.4rem; line-height: 1.2;
+  margin-bottom: 24px;
+}
+.book .title-page .author {
+  font-family: 'Syne', sans-serif; font-size: .95rem;
+  letter-spacing: .15em; text-transform: uppercase; color: #555;
+}
+.book .title-page .imprint {
+  margin-top: 80px; font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem; color: #888; letter-spacing: .1em;
+}
+
+.book .toc {
+  margin-bottom: 60px; padding-bottom: 40px;
+  border-bottom: 1px solid #d8d2c1;
+  page-break-after: always;
+}
+.book .toc h2 {
+  font-family: 'Syne', sans-serif; font-size: .85rem;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: #555; margin-bottom: 30px; text-align: center; font-weight: 600;
+}
+.book .toc-section {
+  font-family: 'Syne', sans-serif; font-size: .75rem;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: #888; margin: 24px 0 8px;
+}
+.book .toc-entry {
+  display: flex; gap: 8px; padding: 4px 0;
+  border-bottom: 1px dotted #d8d2c1;
+  font-size: .95rem;
+}
+.book .toc-entry .t { flex: 1; }
+.book .toc-entry .p { color: #888; font-family: 'JetBrains Mono', monospace; font-size: .8rem; }
+
+.book .chapter {
+  page-break-before: always; padding-top: 40px;
+  margin-bottom: 60px;
+}
+.book .chapter-num {
+  font-family: 'JetBrains Mono', monospace; font-size: .75rem;
+  letter-spacing: .2em; color: #888; text-align: center;
+  margin-bottom: 12px; text-transform: uppercase;
+}
+.book .chapter h2 {
+  font-family: 'Lora', serif; font-style: italic;
+  font-weight: 400; font-size: 1.7rem; line-height: 1.25;
+  text-align: center; margin-bottom: 8px;
+}
+.book .chapter .byline {
+  text-align: center; font-family: 'Syne', sans-serif;
+  font-size: .8rem; letter-spacing: .12em; text-transform: uppercase;
+  color: #777; margin-bottom: 48px;
+}
+.book .chapter .meta-row {
+  text-align: center; font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem; color: #999; margin-bottom: 40px;
+  letter-spacing: .08em;
+}
+.book .chapter p { margin-bottom: 1em; text-align: justify; hyphens: auto; }
+.book .chapter p:first-of-type::first-letter {
+  font-family: 'Lora', serif; font-size: 3.2em; float: left;
+  line-height: 1; padding: 4px 8px 0 0; color: #1a1a1a;
+}
+.book .chapter .pullquote {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 1.15rem; line-height: 1.55; text-align: center;
+  margin: 32px 40px; color: #444;
+  border-top: 1px solid #d8d2c1; border-bottom: 1px solid #d8d2c1;
+  padding: 20px 0;
+}
+.book .chapter .src-note {
+  margin-top: 36px; padding-top: 16px;
+  border-top: 1px solid #d8d2c1;
+  font-family: 'JetBrains Mono', monospace; font-size: .68rem;
+  color: #888; line-height: 1.6;
+}
+.book .chapter .src-note a { color: #555; text-decoration: underline; }
+
+/* ── print stylesheet (browser → Save as PDF) ── */
+@media print {
+  @page {
+    size: A5;
+    margin: 18mm 16mm 20mm;
+    @bottom-center { content: counter(page); font-family: 'JetBrains Mono', monospace; font-size: 9pt; color: #888; }
+  }
+  body { background: #fff !important; padding: 0 !important; }
+  /* #29 — body.printing hides non-reader elements */
+  .header, .card, .preview, .results, .reader-bar, .reader-fab { display: none !important; }
+  .reader { position: static !important; background: #fff !important; }
+  .book { padding: 0 !important; max-width: 100% !important; font-size: 11pt; line-height: 1.55; }
+  .book .title-page { padding: 40mm 0 30mm; }
+  .book .chapter { page-break-before: always; padding-top: 10mm; }
+  .book .chapter p { orphans: 3; widows: 3; }
+  a { color: inherit; text-decoration: none; }
+}
+
+/* #29 — body.printing class (JS beforeprint/afterprint) */
+body.printing .header,
+body.printing .card,
+body.printing .preview,
+body.printing .results,
+body.printing .reader-fab {
+  display: none !important;
+}
+
+/* mobile */
+@media (max-width: 520px) {
+  body { padding: 0 12px 90px; }
+  .header { padding: 32px 0 22px; }
+  .header h1 { font-size: 1.6rem; }
+  .card, .preview { padding: 14px; border-radius: 12px; }
+  .btn-go { padding: 11px 14px; font-size: .82rem; }
+  .icard { padding: 11px 12px; }
+  .icard-title { font-size: .88rem; }
+  .book { padding: 40px 24px 60px; font-size: 16px; }
+  .book .title-page h1 { font-size: 1.8rem; }
+  .book .chapter h2 { font-size: 1.4rem; }
+  /* #30 — FAB bottom padding on mobile */
+  .results { padding-bottom: 80px; }
 }
 </style>
 </head>
@@ -280,137 +743,1414 @@ body {
 
 <header class="header">
   <h1>Open<span>Books</span></h1>
-  <p>12 sources · books, papers &amp; more</p>
+  <p>parse · search · organize · 12 sources</p>
+  <div id="ds-banner" style="margin-top:10px;font-size:.72rem;font-family:'JetBrains Mono',monospace;color:var(--t3);letter-spacing:.02em;">Loading dataset…</div>
 </header>
 
+<!-- ── INPUT CARD ───────────────────────────────────────────── -->
 <div class="card">
-  <div class="search-row">
-    <input
-      class="sinput"
-      id="q"
-      type="search"
-      placeholder="Title, author, ISBN, DOI…"
-      autocomplete="off"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck="false"
-      enterkeyhint="search"
-    />
-    <button class="btn-go" id="btn-go">Search</button>
+
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-mode="single">Single</button>
+    <button class="tab" data-mode="batch">Batch <span class="badge" id="batch-badge" hidden></span></button>
   </div>
 
-  <hr class="divider">
+  <!-- SINGLE MODE -->
+  <div id="mode-single">
+    <div class="search-row">
+      <input class="sinput" id="q" type="search"
+        placeholder="Title, author, ISBN, DOI…"
+        autocomplete="off" autocorrect="off" autocapitalize="off"
+        spellcheck="false" enterkeyhint="search" />
+      <button class="btn-go" id="btn-go" title="Search (Enter)">Search</button>
+    </div>
+  </div>
 
-  <p class="row-label" style="margin-top:14px">Sources</p>
-  <div class="src-row" id="src-row"></div>
+  <!-- BATCH MODE -->
+  <div id="mode-batch" hidden>
+    <textarea class="sinput" id="qb"
+      placeholder="Paste a reading list, bibliography, DOIs, ISBNs, arXiv IDs, or any structured resource list…
 
-  <p class="row-label">Format</p>
-  <div class="fmt-row" id="fmt-row"></div>
+Examples:
+• 10.1038/nature12373
+• arXiv:1706.03762
+• Emotional Intelligence — Daniel Goleman (1995)
+• A pasted multi-section resource list with SECTION headers"></textarea>
+    <div id="qb-hint"></div>
+    <div class="batch-actions">
+      <button class="btn-go" id="btn-parse" title="Parse batch input (Enter)">Parse</button>
+      <button class="btn-ghost grow" id="btn-clear">Clear</button>
+    </div>
+  </div>
+
+  <!-- ADVANCED (sources + format) -->
+  <div class="adv-toggle" id="adv-toggle">
+    <span>Sources &amp; Filters</span>
+    <span class="chev">›</span>
+  </div>
+  <div class="adv-body" id="adv-body">
+    <p class="row-label" style="margin-top:6px">Sources</p>
+    <!-- #11 — select all / none -->
+    <div class="src-toggle-row">
+      <a id="src-all-none" href="#">[all]</a>
+    </div>
+    <div class="src-row" id="src-row"></div>
+
+    <p class="row-label">Format</p>
+    <div class="fmt-row" id="fmt-row"></div>
+
+    <p class="row-label">Type</p>
+    <div class="fmt-row" id="type-row"></div>
+  </div>
 </div>
 
+<!-- ── PARSE PREVIEW ────────────────────────────────────────── -->
+<div class="preview" id="preview" hidden>
+  <div class="preview-head">
+    <div class="preview-title">Detected structure</div>
+    <div class="preview-stats" id="preview-stats"></div>
+  </div>
+  <div id="toc-jump-wrap"></div>
+  <div class="outline" id="outline"></div>
+  <div class="batch-actions" style="margin-top:14px">
+    <button class="btn-go grow" id="btn-search-all">Search All Items</button>
+    <button class="btn-ghost" id="btn-cancel" hidden>Cancel</button>
+  </div>
+  <div class="progress" id="progress" hidden><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<!-- ── FLOATING ACTIONS ─────────────────────────────────────── -->
+<div class="reader-fab" id="fab" hidden>
+  <button class="fab-btn ghost" id="btn-download-all">⬇ Download All</button>
+  <button class="fab-btn" id="btn-book">📕 Build Book PDF</button>
+</div>
+
+<!-- ── READER OVERLAY ───────────────────────────────────────── -->
+<div class="reader" id="reader" aria-hidden="true">
+  <div class="reader-bar">
+    <div class="reader-bar-l">
+      <button id="r-close">← Close</button>
+    </div>
+    <div class="reader-bar-r">
+      <button id="r-fetch">⟳ Fetch transcripts</button>
+      <button id="r-print" class="primary">⬇ Save as PDF</button>
+    </div>
+  </div>
+  <div class="book" id="book"></div>
+</div>
+
+<!-- ── RESULTS ──────────────────────────────────────────────── -->
 <div class="results" id="results">
   <div class="state-msg">
-    <p class="big">📖</p>
-    <p>Enter a title, author, ISBN or DOI to search.</p>
+    <div class="spinner-wrap"><div class="spinner"></div></div>
+    <p>Loading 102-item dataset…</p>
   </div>
 </div>
 
 <script>
+/* ════════════════════════════════════════════════════════════════
+   CONSTANTS
+   ════════════════════════════════════════════════════════════════ */
 const SOURCES = [
   'LibGen','Sci-Hub','OpenAlex','Semantic Scholar',
   'arXiv','PubMed','DOAJ','Project Gutenberg',
   'Internet Archive','Open Library','CORE','Unpaywall',
 ];
-const FORMATS = ['PDF','EPUB','DJVU','MOBI','HTML'];
+const FORMATS = ['PDF','EPUB','DJVU','MOBI','HTML','AUDIO'];
+const TYPES   = ['Book','Paper','Preprint','Podcast','Course','Video','Website','Talk'];
 
-const activeSources = new Set(SOURCES);
-const activeFormats = new Set();
+/* link-label → kind classifier */
+const LINK_KIND = {
+  amazon:'retailer', barnes:'retailer', bookshop:'retailer',
+  goodreads:'review', storygraph:'review',
+  spotify:'audio', apple:'audio', 'apple podcasts':'audio', stitcher:'audio',
+  youtube:'video', vimeo:'video', ted:'video',
+  coursera:'course', edx:'course', udemy:'course', linkedin:'course',
+  website:'web', 'author site':'web', site:'web',
+  doi:'doi', arxiv:'paper', pubmed:'paper', 'open access':'oa',
+  libgen:'oa', 'sci-hub':'oa', 'internet archive':'oa', 'open library':'oa',
+  gutenberg:'oa', pdf:'file',
+};
 
-function initPills() {
-  const srcRow = document.getElementById('src-row');
-  SOURCES.forEach(src => {
-    const b = document.createElement('button');
-    b.className = 'spill on';
-    b.textContent = src;
-    b.addEventListener('click', () => {
-      activeSources.has(src) ? activeSources.delete(src) : activeSources.add(src);
-      b.classList.toggle('on', activeSources.has(src));
-    });
-    srcRow.appendChild(b);
-  });
+/* ════════════════════════════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════════════════════════════ */
+const state = {
+  mode: 'single',
+  activeSources: new Set(SOURCES),
+  activeFormats: new Set(),
+  activeTypes:   new Set(),
+  parsed: null,           // { items, sections, stats }
+  searching: false,
+  cancelled: false,
+  resultsSort: 'original',
+  resultsFilter: 'all',
+};
 
-  const fmtRow = document.getElementById('fmt-row');
-  FORMATS.forEach(fmt => {
-    const b = document.createElement('button');
-    b.className = 'spill';
-    b.textContent = fmt;
-    b.addEventListener('click', () => {
-      activeFormats.has(fmt) ? activeFormats.delete(fmt) : activeFormats.add(fmt);
-      b.classList.toggle('on', activeFormats.has(fmt));
-    });
-    fmtRow.appendChild(b);
-  });
+/* ════════════════════════════════════════════════════════════════
+   PARSER
+   ════════════════════════════════════════════════════════════════
+   Strategy: detect format first, then parse.
+   Three input shapes supported:
+     1. Structured resource list (sections, items, labeled links)
+     2. Identifier list (DOIs, ISBNs, arXiv IDs — one per line)
+     3. Plain title list (fallback — one title per line)
+   ════════════════════════════════════════════════════════════════ */
+
+const RE_DOI       = /\b(10\.\d{4,9}\/[-._;()\/:A-Za-z0-9]+)/;
+const RE_ARXIV     = /\b(?:arxiv:\s*)?(\d{4}\.\d{4,5})(?:v\d+)?\b/i;
+const RE_ISBN13    = /\b(97[89])[- ]?\d[- ]?\d{2}[- ]?\d{5}[- ]?\d\b/;
+const RE_ISBN10    = /\b\d[- ]?\d{2}[- ]?\d{5}[- ]?[\dX]\b/;
+const RE_PMID      = /\b(?:pmid|PMID):?\s*(\d+)/;
+const RE_URL       = /https?:\/\/[^\s)]+/;
+const RE_DIVIDER   = /^[=─-]{3,}\s*$/;
+const RE_SECTION   = /^SECTION\s+\d+\s*:\s*(.+?)\s*$/i;
+const RE_SUBSECTION= /^[A-Z][A-Z0-9 ,&''\-\/]{3,}$/;          // ALL CAPS line (with allowed chars)
+const RE_ITEM_DASH = /^(.+?)\s+[—–-]\s+(.+?)(?:\s*\((\d{4})\))?\s*$/;
+const RE_LINK_LINE = /^([A-Za-z][A-Za-z0-9 &'-]{1,40}?):\s*(https?:\/\/\S+)/;
+const RE_BING_TAIL = /\s*\([^)]*\bin Bing\b[^)]*\)\s*$/i;
+
+/* #27 — uid uses timestamp prefix to avoid collisions across loadDataset + manual parse */
+let nextId = 0;
+const uid = () => `${Date.now()}-${++nextId}`;
+
+function detectShape(lines) {
+  const nonBlank = lines.filter(l => l.trim());
+  if (!nonBlank.length) return 'empty';
+
+  const idHits  = nonBlank.filter(l => RE_DOI.test(l) || RE_ARXIV.test(l) || RE_ISBN13.test(l) || RE_PMID.test(l)).length;
+  const secHits = nonBlank.filter(l => RE_SECTION.test(l) || RE_DIVIDER.test(l)).length;
+  const linkHits= nonBlank.filter(l => RE_LINK_LINE.test(l)).length;
+
+  if (secHits >= 1 || linkHits >= 3) return 'structured';
+  if (idHits / nonBlank.length > 0.4) return 'ids';
+  return 'plain';
 }
 
-function doSearch() {
-  const q = document.getElementById('q').value.trim();
-  if (!q) return;
+function parseInput(raw) {
+  const lines = raw.split(/\r?\n/);
+  const shape = detectShape(lines);
 
-  const btn = document.getElementById('btn-go');
-  const results = document.getElementById('results');
-
-  btn.disabled = true;
-  results.innerHTML = '<div class="state-msg"><div class="spinner"></div><p>Searching ' + activeSources.size + ' sources…</p></div>';
-
-  // Replace this timeout with real parallel fetch calls per source
-  setTimeout(() => {
-    btn.disabled = false;
-    renderResults(q);
-  }, 900);
+  if (shape === 'empty')      return { items: [], sections: [], shape, stats: emptyStats() };
+  if (shape === 'structured') return parseStructured(lines);
+  if (shape === 'ids')        return parseIds(lines);
+  return parsePlain(lines);
 }
 
-function renderResults(q) {
-  const results = document.getElementById('results');
-  const srcs = [...activeSources];
+function emptyStats() {
+  return { items: 0, sections: 0, subsections: 0, withLinks: 0, withYear: 0 };
+}
 
-  if (!srcs.length) {
-    results.innerHTML = '<div class="state-msg"><p>No sources selected — toggle some above.</p></div>';
-    return;
+/* ── structured resource list parser ─────────────────────────── */
+function parseStructured(lines) {
+  const sections = [];
+  let curSec = null, curSub = null, curItem = null;
+
+  const ensureSec = (name) => {
+    curSec = { name: name || 'Uncategorized', subs: [], items: [] };
+    sections.push(curSec); curSub = null;
+  };
+  const ensureSub = (name) => {
+    if (!curSec) ensureSec(null);
+    curSub = { name, items: [] };
+    curSec.subs.push(curSub);
+  };
+  const pushItem = (it) => {
+    if (!curSec) ensureSec(null);
+    (curSub ? curSub.items : curSec.items).push(it);
+  };
+  const finalize = () => { curItem = null; };
+
+  for (let raw of lines) {
+    const line = raw.replace(/ /g,' ').replace(/\s+$/,'').replace(RE_BING_TAIL,'');
+    const trim = line.trim();
+
+    if (!trim || RE_DIVIDER.test(trim)) { finalize(); continue; }
+
+    // SECTION header
+    const mSec = trim.match(RE_SECTION);
+    if (mSec) { finalize(); ensureSec(mSec[1].trim()); continue; }
+
+    // labeled link → attach to current item if any
+    const mLink = trim.match(RE_LINK_LINE);
+    if (mLink && curItem) {
+      let url = mLink[2].replace(/[)\].,]+$/,'');
+      curItem.links.push({
+        label: mLink[1].trim(),
+        url,
+        kind: classifyLink(mLink[1], url),
+      });
+      continue;
+    }
+
+    // standalone URL → attach as "Website"
+    if (RE_URL.test(trim) && curItem && !RE_LINK_LINE.test(trim)) {
+      const m = trim.match(RE_URL);
+      curItem.links.push({ label:'Website', url:m[0], kind:'web' });
+      continue;
+    }
+
+    // ALL-CAPS subsection
+    if (RE_SUBSECTION.test(trim) && !trim.includes(':')) {
+      finalize();
+      ensureSub(toTitle(trim));
+      continue;
+    }
+
+    // item line: "Title — Author (Year)" or "Title — Author"
+    const mItem = trim.match(RE_ITEM_DASH);
+    if (mItem && curSec) {
+      finalize();
+      const title  = mItem[1].trim();
+      const author = mItem[2].trim();
+      const year   = mItem[3] ? parseInt(mItem[3],10) : null;
+      curItem = mkItem({ title, author, year });
+      pushItem(curItem);
+      continue;
+    }
+
+    // Bare title line (no dash) — accept if next line is a labeled link
+    if (curSec && trim.length > 2 && /[A-Za-z]/.test(trim)) {
+      finalize();
+      curItem = mkItem({ title: trim, author: null, year: null });
+      pushItem(curItem);
+      continue;
+    }
   }
 
-  const fmts = ['PDF','EPUB','DJVU','MOBI','HTML'];
-  const demo = srcs.slice(0, 8).map((src, i) => ({
-    title: q,
-    author: 'Author ' + (i + 1),
-    year: 2015 + (i % 10),
-    fmt: fmts[i % fmts.length],
-    source: src,
-  }));
+  // Strip empty sections / subs
+  for (const s of sections) {
+    s.subs = s.subs.filter(sub => sub.items.length);
+  }
+  const cleanSecs = sections.filter(s => s.items.length || s.subs.length);
 
-  results.innerHTML = demo.map(r => `
-    <div class="result-item">
-      <div class="ri-body">
-        <div class="ri-title">${esc(r.title)} <em>— ${esc(r.author)}</em></div>
-        <div class="ri-meta">${esc(r.source)} · ${r.year}</div>
+  return {
+    items: collectItems(cleanSecs),
+    sections: cleanSecs,
+    shape: 'structured',
+    stats: computeStats(cleanSecs),
+  };
+}
+
+function mkItem({ title, author, year, type=null }) {
+  return {
+    id: uid(), title, author, year,
+    type: type || inferType(title, author),
+    section: null, subsection: null,
+    links: [], searchResults: [], status: 'pending',
+  };
+}
+
+function inferType(title, author) {
+  const t = (title||'').toLowerCase();
+  if (/\bpodcast\b/.test(t)) return 'Podcast';
+  if (/\bted talk\b/.test(t)) return 'Talk';
+  if (/\bcourse\b/.test(t)) return 'Course';
+  return null;
+}
+
+function collectItems(sections) {
+  const out = [];
+  for (const s of sections) {
+    for (const it of s.items) { it.section = s.name; out.push(it); }
+    for (const sub of s.subs) {
+      for (const it of sub.items) { it.section = s.name; it.subsection = sub.name; out.push(it); }
+    }
+  }
+  return out;
+}
+
+function computeStats(sections) {
+  let items = 0, subs = 0, withLinks = 0, withYear = 0;
+  for (const s of sections) {
+    items += s.items.length;
+    for (const it of s.items) { if (it.links.length) withLinks++; if (it.year) withYear++; }
+    subs += s.subs.length;
+    for (const sub of s.subs) {
+      items += sub.items.length;
+      for (const it of sub.items) { if (it.links.length) withLinks++; if (it.year) withYear++; }
+    }
+  }
+  return { items, sections: sections.length, subsections: subs, withLinks, withYear };
+}
+
+/* ── identifier list parser ──────────────────────────────────── */
+function parseIds(lines) {
+  const items = [];
+  for (const raw of lines) {
+    const line = raw.replace(RE_BING_TAIL,'').trim();
+    if (!line) continue;
+    let it = null;
+    if (RE_DOI.test(line))         it = mkItem({ title: line.match(RE_DOI)[1], author: null, year: null, type: 'Paper' });
+    else if (RE_ARXIV.test(line))  it = mkItem({ title: 'arXiv:' + line.match(RE_ARXIV)[1], author: null, year: null, type: 'Preprint' });
+    else if (RE_ISBN13.test(line)) it = mkItem({ title: 'ISBN ' + line.match(RE_ISBN13)[0], author: null, year: null, type: 'Book' });
+    else if (RE_ISBN10.test(line)) it = mkItem({ title: 'ISBN ' + line.match(RE_ISBN10)[0], author: null, year: null, type: 'Book' });
+    else if (RE_PMID.test(line))   it = mkItem({ title: 'PMID:' + line.match(RE_PMID)[1], author: null, year: null, type: 'Paper' });
+    else if (line.length > 2)      it = mkItem({ title: line, author: null, year: null });
+    if (it) { it.section = 'Identifiers'; items.push(it); }
+  }
+  const sections = [{ name: 'Identifiers', subs: [], items }];
+  return { items, sections, shape: 'ids', stats: computeStats(sections) };
+}
+
+/* ── plain (one title per line) parser ───────────────────────── */
+function parsePlain(lines) {
+  const items = lines
+    .map(l => l.replace(RE_BING_TAIL,'').trim())
+    .filter(l => l.length > 2 && !RE_DIVIDER.test(l))
+    .map(l => {
+      const m = l.match(RE_ITEM_DASH);
+      const it = m
+        ? mkItem({ title: m[1].trim(), author: m[2].trim(), year: m[3]?parseInt(m[3],10):null })
+        : mkItem({ title: l, author: null, year: null });
+      it.section = 'Queries';
+      return it;
+    });
+  const sections = [{ name: 'Queries', subs: [], items }];
+  return { items, sections, shape: 'plain', stats: computeStats(sections) };
+}
+
+/* ── helpers ─────────────────────────────────────────────────── */
+function classifyLink(label, url) {
+  const l = label.toLowerCase();
+  if (LINK_KIND[l]) return LINK_KIND[l];
+  for (const k of Object.keys(LINK_KIND)) if (l.includes(k)) return LINK_KIND[k];
+  if (/arxiv|doi|sci-hub|libgen|gutenberg|archive\.org/.test(url)) return 'oa';
+  if (/youtube|vimeo|ted\.com/.test(url)) return 'video';
+  if (/spotify|podcasts\.apple/.test(url)) return 'audio';
+  if (/amazon|bookshop|barnes/.test(url)) return 'retailer';
+  return 'web';
+}
+function toTitle(s) {
+  return s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()).replace(/&/g,'&');
+}
+
+/* ── lightweight batch hint counter ──────────────────────────── */
+/* #12 — used for live preview */
+function countBatchHint(raw) {
+  if (!raw.trim()) return null;
+  const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const dashItems  = lines.filter(l => RE_ITEM_DASH.test(l)).length;
+  const idItems    = lines.filter(l => RE_DOI.test(l) || RE_ARXIV.test(l) || RE_ISBN13.test(l) || RE_PMID.test(l)).length;
+  const secCount   = lines.filter(l => RE_SECTION.test(l)).length;
+  const total      = Math.max(dashItems + idItems, lines.filter(l => l.length > 2 && !/^[=─-]{3,}$/.test(l) && !RE_SECTION.test(l) && !RE_LINK_LINE.test(l)).length);
+  return { total, dashItems, idItems, secCount };
+}
+
+/* ════════════════════════════════════════════════════════════════
+   TOAST
+   ════════════════════════════════════════════════════════════════ */
+function showToast(msg, duration) {
+  const dur = duration || 2800;
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 320); }, dur);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   UI: PILLS / TABS / ADVANCED
+   ════════════════════════════════════════════════════════════════ */
+function initPills() {
+  const mk = (host, list, set, onByDefault) => {
+    list.forEach(v => {
+      const b = document.createElement('button');
+      b.className = 'spill' + (onByDefault ? ' on' : '');
+      b.textContent = v;
+      b.title = 'Click to toggle source';
+      if (onByDefault) set.add(v);
+      b.addEventListener('click', () => {
+        set.has(v) ? set.delete(v) : set.add(v);
+        b.classList.toggle('on', set.has(v));
+      });
+      host.appendChild(b);
+    });
+  };
+  mk(document.getElementById('src-row'),  SOURCES, state.activeSources, true);
+  mk(document.getElementById('fmt-row'),  FORMATS, state.activeFormats, false);
+  mk(document.getElementById('type-row'), TYPES,   state.activeTypes,   false);
+
+  /* #11 — all / none toggle for sources */
+  const toggleLink = document.getElementById('src-all-none');
+  let allOn = true;
+  toggleLink.addEventListener('click', e => {
+    e.preventDefault();
+    allOn = !allOn;
+    toggleLink.textContent = allOn ? '[all]' : '[none]';
+    document.querySelectorAll('#src-row .spill').forEach(b => {
+      const v = b.textContent;
+      if (allOn) { state.activeSources.add(v); b.classList.add('on'); }
+      else       { state.activeSources.delete(v); b.classList.remove('on'); }
+    });
+  });
+}
+
+function initTabs() {
+  document.querySelectorAll('#tabs .tab').forEach(t => {
+    t.addEventListener('click', () => {
+      const mode = t.dataset.mode;
+      state.mode = mode;
+      document.querySelectorAll('#tabs .tab').forEach(x => x.classList.toggle('on', x === t));
+      document.getElementById('mode-single').hidden = mode !== 'single';
+      document.getElementById('mode-batch').hidden  = mode !== 'batch';
+    });
+  });
+}
+
+function initAdv() {
+  const t = document.getElementById('adv-toggle');
+  const b = document.getElementById('adv-body');
+  t.addEventListener('click', () => {
+    t.classList.toggle('open');
+    b.classList.toggle('open');
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PARSE PREVIEW (outline tree)
+   ════════════════════════════════════════════════════════════════ */
+function renderPreview() {
+  const wrap = document.getElementById('preview');
+  const out  = document.getElementById('outline');
+  const stats= document.getElementById('preview-stats');
+  const tocWrap = document.getElementById('toc-jump-wrap');
+  if (!state.parsed || !state.parsed.items.length) { wrap.hidden = true; return; }
+
+  wrap.hidden = false;
+  const s = state.parsed.stats;
+  stats.innerHTML = `<span>${s.items}</span> items · <span>${s.sections}</span> sections · <span>${s.subsections}</span> subsections · <span>${s.withLinks}</span> with links`;
+
+  /* #20 — mini ToC jump row when sections >= 3 */
+  if (s.sections >= 3) {
+    tocWrap.innerHTML = '<div class="toc-jump" id="toc-jump">' +
+      state.parsed.sections.map((sec, si) =>
+        `<button class="toc-jump-pill" data-sec="${si}">${esc(sec.name)}</button>`
+      ).join('') +
+      '</div>';
+    tocWrap.querySelectorAll('.toc-jump-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const target = out.querySelector(`.tree-sec[data-sec="${pill.dataset.sec}"]`);
+        if (target) { target.classList.add('open'); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      });
+    });
+  } else {
+    tocWrap.innerHTML = '';
+  }
+
+  out.innerHTML = state.parsed.sections.map((sec, si) => `
+    <div class="tree-sec ${si === 0 ? 'open' : ''}" data-sec="${si}">
+      <div class="tree-sec-head">
+        <span class="chev">›</span>
+        <span class="tree-sec-name">${esc(sec.name)}</span>
+        <span class="tree-sec-count">${sec.items.length + sec.subs.reduce((n,sub)=>n+sub.items.length,0)} items</span>
       </div>
-      <div class="ri-right">
-        <span class="ri-src">${esc(r.source)}</span>
-        <span class="ri-fmt">${r.fmt}</span>
+      <div class="tree-sec-body">
+        ${sec.items.map(it => itemRow(it)).join('')}
+        ${sec.subs.map((sub, idx) => `
+          <div class="tree-sub ${idx === 0 ? 'open' : ''}">
+            <div class="tree-sub-head">
+              <span class="chev">›</span>
+              <span>${esc(sub.name)}</span>
+              <span class="tree-sec-count">· ${sub.items.length}</span>
+            </div>
+            <div class="tree-sub-body">
+              ${sub.items.map(it => itemRow(it)).join('')}
+            </div>
+          </div>
+        `).join('')}
       </div>
     </div>
   `).join('');
+
+  // wire collapsibles
+  out.querySelectorAll('.tree-sec-head').forEach(h => {
+    h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
+  });
+  out.querySelectorAll('.tree-sub-head').forEach(h => {
+    h.addEventListener('click', e => { e.stopPropagation(); h.parentElement.classList.toggle('open'); });
+  });
+
+  // batch tab badge
+  const badge = document.getElementById('batch-badge');
+  badge.hidden = false; badge.textContent = s.items;
 }
 
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+/* #21 — render "(untitled)" for missing titles */
+function titleOrUntitled(title) {
+  if (!title) return '<span class="untitled">(untitled)</span>';
+  return esc(title);
 }
 
-document.getElementById('q').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doSearch();
-});
-document.getElementById('btn-go').addEventListener('click', doSearch);
+function itemRow(it) {
+  const yr = it.year ? `${it.year} · ` : '';
+  const auth = it.author ? `<em>— ${esc(it.author)}</em>` : '';
+  const links = it.links.length ? `<span class="lnk">${it.links.length} link${it.links.length>1?'s':''}</span>` : '';
+  return `
+    <div class="tree-item ${it.status}" data-id="${it.id}">
+      <div class="dot"></div>
+      <div class="tree-item-body">
+        <div class="tree-item-title">${titleOrUntitled(it.title)} ${auth}</div>
+        <div class="tree-item-meta">${yr}${esc(it.type||'')}${links?' · '+links:''}</div>
+      </div>
+    </div>
+  `;
+}
 
-initPills();
+/* ════════════════════════════════════════════════════════════════
+   MOCK SEARCH (UI scaffolding — replace doSearchItem with real fetches)
+   ════════════════════════════════════════════════════════════════ */
+async function doSearchAll() {
+  if (state.searching || !state.parsed) return;
+
+  /* #25 — guard zero active sources */
+  if (state.activeSources.size === 0) {
+    showToast('Select at least one source');
+    return;
+  }
+
+  state.searching = true; state.cancelled = false;
+
+  const items = state.parsed.items;
+  const btn = document.getElementById('btn-search-all');
+  const cancel = document.getElementById('btn-cancel');
+  const prog = document.getElementById('progress');
+  const fill = document.getElementById('progress-fill');
+
+  btn.disabled = true; cancel.hidden = false; prog.hidden = false;
+  fill.style.width = '0%';
+  fill.classList.remove('complete');
+
+  const total = items.length; let done = 0;
+  const limit = 4;
+  let cursor = 0;
+
+  async function worker() {
+    while (cursor < items.length && !state.cancelled) {
+      const it = items[cursor++];
+      it.status = 'searching'; refreshItemRow(it);
+      await doSearchItem(it);
+      it.status = it.searchResults.length ? 'done' : 'empty';
+      refreshItemRow(it);
+      done++;
+      const pct = (done/total*100).toFixed(1);
+      fill.style.width = pct + '%';
+      /* #7 — turn green at 100% */
+      if (done === total) fill.classList.add('complete');
+    }
+  }
+  await Promise.all(Array.from({length: limit}, worker));
+
+  state.searching = false;
+  btn.disabled = false; cancel.hidden = true;
+  setTimeout(() => { prog.hidden = true; fill.classList.remove('complete'); }, 1200);
+  renderResults();
+}
+
+// Real search URL generator for each source.
+// Browser can't call these APIs directly (CORS), so we generate
+// proper search links the user can click to open in a new tab.
+function sourceSearchUrl(source, it) {
+  const q  = encodeURIComponent([it.title, it.author].filter(Boolean).join(' '));
+  const qt = encodeURIComponent(it.title || '');
+  const qd = it.doi ? encodeURIComponent(it.doi) : null;
+
+  switch (source) {
+    case 'LibGen':
+      return `https://libgen.is/search.php?req=${q}&res=25&view=simple&phrase=1&column=def`;
+    case "Anna's Archive":
+      return `https://annas-archive.org/search?q=${q}&ext=pdf&content=book_any`;
+    case 'Sci-Hub':
+      return qd
+        ? `https://sci-hub.se/${qd}`
+        : `https://sci-hub.se/${qt}`;
+    case 'Internet Archive':
+      return `https://archive.org/search?query=${q}&and[]=mediatype%3Atexts`;
+    case 'Open Library':
+      return `https://openlibrary.org/search?q=${q}`;
+    case 'Project Gutenberg':
+      return `https://www.gutenberg.org/ebooks/search/?query=${qt}`;
+    case 'OpenAlex':
+      return `https://openalex.org/works?filter=title.search:${qt}`;
+    case 'Semantic Scholar':
+      return `https://www.semanticscholar.org/search?q=${q}&sort=Relevance`;
+    case 'arXiv':
+      return `https://arxiv.org/search/?query=${q}&searchtype=all`;
+    case 'PubMed':
+      return `https://pubmed.ncbi.nlm.nih.gov/?term=${q}`;
+    case 'DOAJ':
+      return `https://doaj.org/search/articles?query=${q}`;
+    case 'CORE':
+      return `https://core.ac.uk/search?q=${q}`;
+    case 'Unpaywall':
+      return qd
+        ? `https://unpaywall.org/${qd}`
+        : `https://scholar.google.com/scholar?q=${q}`;
+    default:
+      return null;
+  }
+}
+
+async function doSearchItem(it) {
+  await sleep(80 + Math.random()*120);
+  if (state.cancelled) return;
+
+  const srcs = [...state.activeSources];
+  const hits = [];
+
+  // Add any links already stored from the crawler dataset
+  for (const l of (it.links || [])) {
+    if (l.url && l.url !== '#') {
+      hits.push({ source: l.label || 'Dataset', format: 'Web', size: '', url: l.url, fromDataset: true });
+    }
+  }
+  // Add crawler-populated searchResults (OL, IA, OpenAlex)
+  for (const r of (it._datasetResults || [])) {
+    hits.push(r);
+  }
+
+  // Generate real search URLs for each active source
+  for (const src of srcs) {
+    const url = sourceSearchUrl(src, it);
+    if (!url) continue;
+    // Skip duplicates (same source already in dataset hits)
+    if (hits.some(h => h.source === src)) continue;
+    hits.push({ source: src, format: 'Search', size: '', url, isSearchLink: true });
+  }
+
+  it.searchResults = hits;
+  it.status = hits.length ? 'done' : 'missing';
+}
+
+function refreshItemRow(it) {
+  const row = document.querySelector(`.tree-item[data-id="${it.id}"]`);
+  if (!row) return;
+  row.className = `tree-item ${it.status}`;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   RESULTS RENDER (structured outline + filter/sort toolbar)
+   ════════════════════════════════════════════════════════════════ */
+function renderResults() {
+  const wrap = document.getElementById('results');
+  if (!state.parsed) return;
+
+  const all = state.parsed.items;
+  const found = all.filter(i => i.searchResults.length).length;
+
+  /* #15 — clear results button in toolbar */
+  wrap.innerHTML = `
+    <div class="toolbar">
+      <span class="toolbar-label">View</span>
+      <select id="rfilter">
+        <option value="all">All items</option>
+        <option value="found">With results only</option>
+        <option value="missing">Missing only</option>
+      </select>
+      <span class="toolbar-label" style="margin-left:8px">Sort</span>
+      <select id="rsort">
+        <option value="original">Original order</option>
+        <option value="title">Title A→Z</option>
+        <option value="year">Year newest</option>
+        <option value="results">Most results</option>
+      </select>
+      <span class="grow"></span>
+      <span class="stats"><span>${found}</span>/${all.length} found</span>
+      <button class="btn-clear-results" id="btn-clear-results" title="Clear results">✕ Clear</button>
+    </div>
+    ${state.parsed.sections.map(sec => sectionBlock(sec)).join('')}
+  `;
+
+  document.getElementById('rfilter').value = state.resultsFilter;
+  document.getElementById('rsort').value   = state.resultsSort;
+  document.getElementById('rfilter').addEventListener('change', e => { state.resultsFilter = e.target.value; renderResults(); });
+  document.getElementById('rsort').addEventListener('change',   e => { state.resultsSort   = e.target.value; renderResults(); });
+
+  /* #15 — clear button handler */
+  document.getElementById('btn-clear-results').addEventListener('click', () => {
+    state.parsed = null;
+    document.getElementById('fab').hidden = true;
+    document.getElementById('preview').hidden = true;
+    document.getElementById('batch-badge').hidden = true;
+    wrap.innerHTML = '<div class="state-msg"><p class="big">📖</p><p>Search a single query, or paste a list in Batch mode.</p></div>';
+  });
+
+  // wire collapsibles
+  wrap.querySelectorAll('.rsec-head').forEach(h => h.addEventListener('click', () => h.parentElement.classList.toggle('open')));
+  wrap.querySelectorAll('.icard-collapse').forEach(h => h.addEventListener('click', () => h.closest('.icard').classList.toggle('expanded')));
+  // wire Read buttons
+  wrap.querySelectorAll('[data-read]').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation();
+    const it = state.parsed.items.find(x => x.id === b.dataset.read);
+    if (it) openReader([it], it.title);
+  }));
+
+  // show "Build Book" FAB whenever there are items
+  document.getElementById('fab').hidden = !(state.parsed && state.parsed.items.length);
+}
+
+/* #19 — sectionBlock skips rendering if no items after filter */
+function sectionBlock(sec) {
+  const items = filterSort(sec.items);
+  const subPairs = sec.subs.map(sub => ({ sub, subItems: filterSort(sub.items) }));
+  const hasContent = items.length || subPairs.some(p => p.subItems.length);
+  if (!hasContent) return '';
+
+  const subBlocks = subPairs.map(({ sub, subItems }) => {
+    if (!subItems.length) return '';
+    return `<div class="rsub">
+      <div class="rsub-name">${esc(sub.name)} · ${subItems.length}</div>
+      ${subItems.map(itemCard).join('')}
+    </div>`;
+  }).join('');
+
+  return `<div class="rsec open">
+    <div class="rsec-head">
+      <span class="chev">›</span>
+      <span class="rsec-name">${esc(sec.name)}</span>
+      <span class="rsec-count">${countSec(sec)} items</span>
+    </div>
+    <div class="rsec-body">
+      ${items.map(itemCard).join('')}
+      ${subBlocks}
+    </div>
+  </div>`;
+}
+
+function countSec(sec) {
+  return sec.items.length + sec.subs.reduce((n,s)=>n+s.items.length,0);
+}
+
+function filterSort(items) {
+  let out = items.slice();
+  if (state.resultsFilter === 'found')   out = out.filter(i => i.searchResults.length);
+  if (state.resultsFilter === 'missing') out = out.filter(i => !i.searchResults.length);
+  if (state.activeTypes.size)            out = out.filter(i => !i.type || state.activeTypes.has(i.type));
+
+  if (state.resultsSort === 'title')   out.sort((a,b) => (a.title||'').localeCompare(b.title||''));
+  if (state.resultsSort === 'year')    out.sort((a,b) => (b.year||0) - (a.year||0));
+  if (state.resultsSort === 'results') out.sort((a,b) => b.searchResults.length - a.searchResults.length);
+  return out;
+}
+
+/* #21 #22 #23 — itemCard with XSS guards, null title, and encodeURI for hrefs */
+function itemCard(it) {
+  const found  = it.searchResults.length;
+  const titleDisplay = it.title
+    ? `${esc(it.title)}`
+    : `<span class="untitled">(untitled)</span>`;
+  const yr     = it.year ? `<div class="icard-year">${esc(String(it.year))}</div>` : '';
+  const author = it.author ? `<em>— ${esc(it.author)}</em>` : '';
+
+  const tags = [
+    it.type ? `<span class="tag type">${esc(it.type)}</span>` : '',
+    found ? `<span class="tag found">${found} open</span>` : `<span class="tag missing">none found</span>`,
+    it.status === 'searching' ? `<span class="tag">searching…</span>` : '',
+    `<button class="read-btn" data-read="${esc(it.id)}">📖 Read</button>`,
+  ].join('');
+
+  const existing = it.links.map(l => `
+    <a class="lpill" href="${encodeURI(l.url)}" target="_blank" rel="noopener">
+      <span class="kind">${esc(l.kind)}</span>${esc(l.label)}
+    </a>`).join('');
+
+  // Separate real download/access links from search links
+  const directHits = it.searchResults.filter(r => !r.isSearchLink);
+  const searchHits = it.searchResults.filter(r => r.isSearchLink);
+
+  const renderPill = r => {
+    const cls = r.isSearchLink ? 'lpill search-link' : 'lpill open';
+    const label = r.isSearchLink
+      ? `<span class="kind">${esc(r.source)}</span>Search ↗`
+      : `<span class="kind">${esc(r.source)}</span>${esc(r.format)}${r.size ? ' · ' + esc(r.size) : ''}`;
+    return `<a class="${cls}" href="${encodeURI(r.url)}" target="_blank" rel="noopener">${label}</a>`;
+  };
+
+  const topResults = [...directHits, ...searchHits].slice(0, 4);
+  const top3 = topResults.map(renderPill).join('');
+
+  const rest = [...directHits, ...searchHits].slice(4);
+  const restRows = rest.length ? `
+    <div class="icard-collapse">
+      <span class="chev">›</span> ${rest.length} more sources
+    </div>
+    <div class="icard-extra">
+      ${rest.map(r => renderPill(r) ).join('')}
+    </div>` : '';
+
+  return `<div class="icard">
+    <div class="icard-row1">
+      <div class="icard-title">${titleDisplay} ${author}</div>
+      ${yr}
+    </div>
+    <div class="icard-row2">${tags}</div>
+    ${(existing || top3) ? `<div class="icard-row3">${existing}${top3}</div>` : ''}
+    ${restRows}
+  </div>`;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SINGLE-QUERY SEARCH
+   ════════════════════════════════════════════════════════════════ */
+async function doSingleSearch() {
+  const q = document.getElementById('q').value.trim();
+  /* #13 — shake input if empty */
+  if (!q) {
+    const inp = document.getElementById('q');
+    inp.classList.remove('shake');
+    void inp.offsetWidth; // reflow to restart animation
+    inp.classList.add('shake');
+    inp.addEventListener('animationend', () => inp.classList.remove('shake'), { once: true });
+    return;
+  }
+
+  /* #25 — guard zero active sources */
+  if (state.activeSources.size === 0) {
+    showToast('Select at least one source');
+    return;
+  }
+
+  // wrap single query as a one-item batch so everything shares the same renderer
+  const items = [mkItem({ title: q, author: null, year: null })];
+  items[0].section = 'Query';
+  state.parsed = {
+    items,
+    sections: [{ name: 'Query', subs: [], items }],
+    shape: 'single',
+    stats: computeStats([{ items, subs: [] }]),
+  };
+
+  const wrap = document.getElementById('results');
+  wrap.innerHTML = '<div class="state-msg"><div class="spinner-wrap"><div class="spinner"></div></div><p>Searching ' + esc(String(state.activeSources.size)) + ' sources…</p></div>';
+
+  await doSearchItem(items[0]);
+  items[0].status = items[0].searchResults.length ? 'done' : 'empty';
+  renderResults();
+}
+
+/* ════════════════════════════════════════════════════════════════
+   TRANSCRIPT FETCHER (UI scaffolding stub)
+   ════════════════════════════════════════════════════════════════
+   Real implementation needs a server-side proxy due to CORS:
+     YouTube  → youtube-transcript-api / yt-dlp --write-auto-sub
+     TED      → fetch ted.com/talks/<slug>/transcript HTML
+     Apple PC → no public API; use Whisper STT on audio enclosure
+     Spotify  → no public API; use Whisper STT
+     arXiv    → fetch /pdf and extract text (pdf.js)
+     LibGen   → download + extract
+   Replace the body below with: POST /api/transcript with {item, urls}
+   ════════════════════════════════════════════════════════════════ */
+async function fetchTranscript(item) {
+  await sleep(120 + Math.random()*200);
+  if (item.transcript && !item.transcript.mock) return item.transcript;
+
+  // 1. Real abstract from OpenAlex (papers)
+  if (item.openAlex && item.openAlex.abstract) {
+    const src = item.openAlex.oa_url || item.openAlex.pdf_url || '';
+    item.transcript = {
+      paragraphs: [item.openAlex.abstract],
+      pullquote: null,
+      source: src ? { label: 'OpenAlex', url: src } : null,
+      fetched: new Date().toISOString(),
+      mock: false,
+    };
+    return item.transcript;
+  }
+
+  // 2. Real description from Open Library (books)
+  if (item.openLibrary && item.openLibrary.found && item.openLibrary.description) {
+    const raw = item.openLibrary.description;
+    const text = typeof raw === 'object' ? (raw.value || '') : String(raw);
+    if (text.length > 30) {
+      item.transcript = {
+        paragraphs: text.split(/\n+/).filter(Boolean),
+        pullquote: null,
+        source: item.openLibrary.borrow_url
+          ? { label: 'Open Library', url: item.openLibrary.borrow_url }
+          : null,
+        fetched: new Date().toISOString(),
+        mock: false,
+      };
+      return item.transcript;
+    }
+  }
+
+  // 3. TED transcript stored by crawler
+  if (item.transcript && item.transcript.paragraphs && item.transcript.paragraphs.length && !item.transcript.mock) {
+    return item.transcript;
+  }
+
+  // 4. Informative placeholder — honest about what's available
+  const type = (item.type || '').toLowerCase();
+  const isBook = /book|textbook/i.test(type);
+  const isTed  = item.links && item.links.some(l => l.url && l.url.includes('ted.com'));
+  const isPod  = /podcast/i.test(type);
+  const isVid  = /youtube|video/i.test(type);
+  const isCourse = /course/i.test(type);
+  const isApp  = /app/i.test(type);
+
+  const readLink = (item.searchResults || []).concat(item.links || []).find(l => l.url);
+
+  let paras;
+  if (isBook) {
+    paras = [
+      `"${item.title || 'This book'}"${item.author ? ' by ' + item.author : ''}${item.year ? ' (' + item.year + ')' : ''} is a commercially published work. Full text isn't freely available, but you can borrow a digital copy through Internet Archive's controlled lending, access it at your local library, or find excerpts on Google Books.`,
+      `After running the crawler (node crawl.js), Open Library will populate a description and a borrow link here. Look for the blue "Open Library" or "Internet Archive" links in the Sources section below.`,
+    ];
+  } else if (isTed) {
+    paras = [
+      `This TED talk's transcript can be fetched automatically. Run the crawler (node crawl.js) to download the full transcript, or click the TED link in Sources to read it on ted.com.`,
+    ];
+  } else if (isPod) {
+    paras = [
+      `Podcast transcripts vary by episode. Many shows publish them on their website or through services like Spotify, Podchaser, or Listen Notes. The show's RSS feed sometimes includes full episode notes and transcripts.`,
+    ];
+  } else if (isVid) {
+    paras = [
+      `YouTube auto-captions and channel-published transcripts are available on the video page — click "More → Transcript" below the video player. The crawler can save these locally once extended with yt-dlp support.`,
+    ];
+  } else if (isCourse) {
+    paras = [
+      `Online course materials (slides, transcripts, notes) are typically available to enrolled students. Check the course platform directly for downloadable resources.`,
+    ];
+  } else if (isApp) {
+    paras = [
+      `This is an application rather than a document. Visit the app's website or app store listing for documentation and guides.`,
+    ];
+  } else {
+    paras = [
+      `No full text is currently available for "${item.title || 'this resource'}". After the crawler runs, Open Library descriptions and open-access links will appear here. Check the Sources links below to access this resource directly.`,
+    ];
+  }
+
+  item.transcript = {
+    paragraphs: paras,
+    pullquote: null,
+    source: readLink ? { label: readLink.label || readLink.source || 'Source', url: readLink.url } : null,
+    fetched: new Date().toISOString(),
+    mock: true,
+  };
+  return item.transcript;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   READER + PDF
+   ════════════════════════════════════════════════════════════════ */
+let readerItems = [];
+let readerTitle = '';
+
+/* #28 — guard openReader with empty items check */
+function openReader(items, title) {
+  if (!items || !items.length) {
+    showToast('Nothing to read yet — search first.');
+    return;
+  }
+  readerItems = items.slice();
+  readerTitle = title || (state.parsed && state.parsed.sections[0] && state.parsed.sections[0].name) || 'OpenBooks Reader';
+  renderBook();
+  const r = document.getElementById('reader');
+  r.classList.add('open'); r.setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
+  window.scrollTo(0,0);
+}
+
+function closeReader() {
+  const r = document.getElementById('reader');
+  r.classList.remove('open'); r.setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
+}
+
+function renderBook() {
+  const isMulti = readerItems.length > 1;
+  const subtitle = isMulti
+    ? `${readerItems.length} entries · compiled ${new Date().toLocaleDateString()}`
+    : (readerItems[0] && readerItems[0].author ? readerItems[0].author : '');
+
+  const toc = isMulti ? buildToc(readerItems) : '';
+
+  const chapters = readerItems.map((it, idx) => chapterHtml(it, idx + 1)).join('');
+
+  document.getElementById('book').innerHTML = `
+    <div class="title-page">
+      <h1>${esc(readerTitle)}</h1>
+      <div class="author">${esc(subtitle)}</div>
+      <div class="imprint">OpenBooks · ${new Date().getFullYear()}</div>
+    </div>
+    ${toc}
+    ${chapters}
+  `;
+}
+
+function buildToc(items) {
+  // group by section for the TOC
+  const groups = {};
+  items.forEach((it, i) => {
+    const key = it.section || 'Entries';
+    (groups[key] = groups[key] || []).push({ it, num: i + 1 });
+  });
+  const rows = Object.entries(groups).map(([sec, list]) => `
+    <div class="toc-section">${esc(sec)}</div>
+    ${list.map(({it, num}) => `
+      <div class="toc-entry">
+        <span class="t">${it.title ? esc(it.title) : '<em>(untitled)</em>'}${it.author ? ' — ' + esc(it.author) : ''}</span>
+        <span class="p">${num}</span>
+      </div>`).join('')}
+  `).join('');
+  return `<div class="toc"><h2>Contents</h2>${rows}</div>`;
+}
+
+function chapterHtml(it, n) {
+  const tr = it.transcript;
+  let body;
+  if (tr && tr.paragraphs && tr.paragraphs.length) {
+    const label = tr.mock
+      ? `<p class="meta-row" style="margin-bottom:.8em;opacity:.7">ℹ ${esc(tr.paragraphs[0])}</p>`
+      : tr.paragraphs.map(p => `<p>${esc(p)}</p>`).join('');
+    body = tr.mock ? label : tr.paragraphs.map(p => `<p>${esc(p)}</p>`).join('');
+  } else {
+    body = `<p><em>Click "Fetch transcripts" in the bar above to load available content for this item.</em></p>`;
+  }
+  const pullquote = tr && tr.pullquote ? `<div class="pullquote">${esc(tr.pullquote)}</div>` : '';
+  const links = it.links.concat(it.searchResults||[]).slice(0,6);
+  /* #23 — use encodeURI for href, esc for display text */
+  const noteLinks = links.length
+    ? `<div class="src-note">Sources: ${links.map(l => `<a href="${encodeURI(l.url)}">${esc(l.label || l.source || 'link')}</a>`).join(' · ')}</div>`
+    : '';
+  const meta = [
+    it.type, it.year, it.section, it.subsection,
+    tr && tr.mock ? 'preview transcript' : null,
+  ].filter(Boolean).map(v => esc(String(v))).join(' · ');
+
+  const titleDisplay = it.title ? esc(it.title) : '<em>(untitled)</em>';
+
+  return `
+    <div class="chapter">
+      <div class="chapter-num">Chapter ${n}</div>
+      <h2>${titleDisplay}</h2>
+      ${it.author ? `<div class="byline">${esc(it.author)}${it.year ? ' · ' + it.year : ''}</div>` : ''}
+      ${meta ? `<div class="meta-row">${meta}</div>` : ''}
+      ${body}
+      ${pullquote}
+      ${noteLinks}
+    </div>`;
+}
+
+async function fetchAllReaderTranscripts() {
+  const btn = document.getElementById('r-fetch');
+  btn.disabled = true; btn.textContent = '⟳ Fetching…';
+  const total = readerItems.length; let done = 0;
+  await Promise.all(readerItems.map(async it => {
+    await fetchTranscript(it);
+    done++;
+    btn.textContent = `⟳ Fetching… ${done}/${total}`;
+  }));
+  btn.disabled = false; btn.textContent = '⟳ Re-fetch';
+  renderBook();
+}
+
+async function buildBookFromBatch() {
+  if (!state.parsed || !state.parsed.items.length) {
+    showToast('Nothing to read yet — search first.');
+    return;
+  }
+  const items = state.parsed.items;
+  const title = state.parsed.shape === 'structured'
+    ? ((state.parsed.sections[0] ? state.parsed.sections[0].name : '') + ' & More')
+    : 'OpenBooks Compilation';
+  openReader(items, title);
+  // auto-fetch transcripts so the book is immediately readable
+  await fetchAllReaderTranscripts();
+}
+
+function savePdf() { window.print(); }
+
+/* ── batch download ──────────────────────────────────────────── */
+function downloadAll() {
+  if (!state.parsed || !state.parsed.items.length) {
+    showToast('No dataset loaded yet.');
+    return;
+  }
+  const items = state.parsed.items;
+  const meta = state.parsed;
+  const now = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+  // Build a single Markdown file with all items organized by section
+  const sectionMap = {};
+  items.forEach(it => {
+    const sec = it.section || 'Other';
+    const sub = it.subsection || '';
+    const key = sub ? `${sec} — ${sub}` : sec;
+    (sectionMap[key] = sectionMap[key] || []).push(it);
+  });
+
+  let md = `# OpenBooks — Full Resource List\n\nExported ${now}\n\n---\n\n`;
+
+  for (const [section, list] of Object.entries(sectionMap)) {
+    md += `## ${section}\n\n`;
+    list.forEach(it => {
+      const title = it.title || '(untitled)';
+      const by    = it.author ? ` — ${it.author}` : '';
+      const yr    = it.year   ? ` (${it.year})` : '';
+      const type  = it.type   ? ` [${it.type}]` : '';
+      md += `### ${title}${by}${yr}${type}\n\n`;
+
+      const allLinks = (it.searchResults || []).concat(it.links || []).filter(l => l.url);
+      if (allLinks.length) {
+        allLinks.forEach(l => {
+          md += `- [${l.label || l.source || 'Link'}](${l.url})\n`;
+        });
+        md += '\n';
+      }
+
+      if (it.transcript && !it.transcript.mock && it.transcript.paragraphs) {
+        it.transcript.paragraphs.forEach(p => { md += `${p}\n\n`; });
+      }
+    });
+  }
+
+  // Also append all TED transcripts in full
+  const withTranscripts = items.filter(it => it.transcript && !it.transcript.mock && it.transcript.paragraphs && it.transcript.paragraphs.length > 1);
+  if (withTranscripts.length) {
+    md += `\n---\n\n# Full Transcripts (${withTranscripts.length})\n\n`;
+    withTranscripts.forEach(it => {
+      md += `## ${it.title || '(untitled)'}${it.author ? ' — ' + it.author : ''}\n\n`;
+      it.transcript.paragraphs.forEach(p => { md += `${p}\n\n`; });
+      md += '---\n\n';
+    });
+  }
+
+  const blob = new Blob([md], { type: 'text/markdown; charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = 'openbooks-resources.md';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+  showToast(`Downloaded ${items.length} items as Markdown`);
+
+  // Also download individual transcript files if any real ones exist
+  if (withTranscripts.length) {
+    setTimeout(() => {
+      withTranscripts.forEach((it, i) => {
+        setTimeout(() => {
+          const fname = (it.title || 'transcript').toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40) + '.txt';
+          const content = it.transcript.paragraphs.join('\n\n');
+          const b2 = new Blob([content], { type: 'text/plain; charset=utf-8' });
+          const u2 = URL.createObjectURL(b2);
+          const a2 = document.createElement('a');
+          a2.href = u2; a2.download = fname;
+          document.body.appendChild(a2); a2.click();
+          setTimeout(() => { URL.revokeObjectURL(u2); a2.remove(); }, 1000);
+        }, i * 400);
+      });
+    }, 800);
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   DATASET LOADER  (data/crawl-results.json → state.parsed)
+   ════════════════════════════════════════════════════════════════ */
+async function loadDataset() {
+  const banner = document.getElementById('ds-banner');
+  if (banner) banner.textContent = 'Loading dataset…';
+
+  let data;
+  try {
+    const r = await fetch('data/crawl-results.json');
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    data = await r.json();
+  } catch (e) {
+    if (banner) banner.textContent = '⚠ Dataset not found — use Batch mode or run crawl.js';
+    /* #24 — fall back to idle state gracefully */
+    document.getElementById('results').innerHTML = '<div class="state-msg"><p class="big">📖</p><p>Search a single query, or paste a list in Batch mode.</p></div>';
+    return;
+  }
+
+  /* #24 — validate data.sections */
+  if (!data || !Array.isArray(data.sections)) {
+    if (banner) banner.innerHTML = '⚠ Dataset format error — <code>sections</code> array missing. Use Batch mode or re-run crawl.js.';
+    document.getElementById('results').innerHTML = '<div class="state-msg"><p class="big">📖</p><p>Dataset could not be loaded. Check the console.</p></div>';
+    return;
+  }
+
+  // Convert crawl-results.json structure to state.parsed
+  let idCtr = 0;
+  const convertItem = (it) => {
+    const datasetResults = buildSearchResults(it);
+    const hasData = datasetResults.length > 0 || (it.links && it.links.some(l => l.url));
+    return {
+      id: it.id || `ds-${Date.now()}-${++idCtr}`,
+      title: it.title || null,
+      author: it.author || null,
+      year: it.year || null,
+      type: it.type || null,
+      section: it.section || null,
+      subsection: it.subsection || null,
+      links: it.links || [],
+      searchResults: datasetResults,
+      _datasetResults: datasetResults,
+      status: hasData ? 'done' : 'pending',
+      openLibrary: it.openLibrary || null,
+      archive: it.archive || null,
+      openAlex: it.openAlex || null,
+      libgen: it.libgen || null,
+      transcript: it.transcript ? it.transcript : null,
+    };
+  };
+
+  const sections = data.sections.map(sec => ({
+    name: sec.name || 'Unnamed Section',
+    items: (sec.items || []).map(convertItem),
+    subs: (sec.subsections || []).map(sub => ({
+      name: sub.name || 'Unnamed',
+      items: (sub.items || []).map(convertItem),
+    })),
+  }));
+
+  const items = [];
+  for (const s of sections) {
+    items.push(...s.items);
+    for (const sub of s.subs) items.push(...sub.items);
+  }
+
+  state.parsed = { items, sections, shape: 'structured', stats: {
+    items: items.length, sections: sections.length,
+    subsections: sections.reduce((n,s) => n + s.subs.length, 0),
+    withLinks: items.filter(i => i.links.length).length,
+    withYear: items.filter(i => i.year).length,
+  }};
+
+  if (banner) {
+    const m = data.meta || {};
+    banner.innerHTML = `<strong>Dataset loaded</strong> — ${esc(String(items.length))} items · ${esc(m.title || '')} · <em>Run crawl.js locally to fill open-access fields</em>`;
+  }
+
+  renderPreview();
+  renderResults();
+  document.getElementById('fab').hidden = false;
+
+  /* #18 — auto-focus search input after dataset loads */
+  const q = document.getElementById('q');
+  if (q) q.focus();
+}
+
+function buildSearchResults(it) {
+  const r = [];
+  if (it.openLibrary && it.openLibrary.found && it.openLibrary.borrow_url)
+    r.push({ source: 'Open Library', format: it.openLibrary.availability === 'borrow' ? 'Borrow' : 'Web', size: '', url: it.openLibrary.borrow_url });
+  if (it.archive && it.archive.found && it.archive.url)
+    r.push({ source: 'Internet Archive', format: it.archive.access === 'open' ? 'Open' : 'Borrow', size: '', url: it.archive.url });
+  if (it.openAlex && it.openAlex.oa_url)
+    r.push({ source: 'OpenAlex', format: 'PDF', size: '', url: it.openAlex.oa_url });
+  if (it.openAlex && it.openAlex.pdf_url && it.openAlex.pdf_url !== it.openAlex.oa_url)
+    r.push({ source: 'OpenAlex PDF', format: 'PDF', size: '', url: it.openAlex.pdf_url });
+  if (it.libgen && it.libgen.found && it.libgen.download_url)
+    r.push({ source: 'LibGen', format: it.libgen.format || 'PDF', size: it.libgen.size || '', url: it.libgen.download_url });
+  return r;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   WIRING
+   ════════════════════════════════════════════════════════════════ */
+function init() {
+  initPills(); initTabs(); initAdv();
+
+  // auto-load the dataset if it's available
+  loadDataset();
+
+  document.getElementById('btn-go').addEventListener('click', doSingleSearch);
+  document.getElementById('q').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSingleSearch();
+    /* #17 — Escape clears the single search input when focused */
+    if (e.key === 'Escape') {
+      document.getElementById('q').value = '';
+      e.preventDefault();
+    }
+  });
+
+  /* #14 — shake textarea if empty when Parse is clicked */
+  document.getElementById('btn-parse').addEventListener('click', () => {
+    /* #26 — cancel running search before parsing */
+    if (state.searching) state.cancelled = true;
+
+    const raw = document.getElementById('qb').value;
+    if (!raw.trim()) {
+      const ta = document.getElementById('qb');
+      ta.classList.remove('shake');
+      void ta.offsetWidth;
+      ta.classList.add('shake');
+      ta.addEventListener('animationend', () => ta.classList.remove('shake'), { once: true });
+      return;
+    }
+    nextId = 0;
+    state.parsed = parseInput(raw);
+    renderPreview();
+    document.getElementById('results').innerHTML = '';
+  });
+
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    document.getElementById('qb').value = '';
+    document.getElementById('qb-hint').textContent = '';
+    document.getElementById('preview').hidden = true;
+    document.getElementById('batch-badge').hidden = true;
+    state.parsed = null;
+    document.getElementById('results').innerHTML = '<div class="state-msg"><p class="big">📖</p><p>Search a single query, or paste a list in Batch mode.</p></div>';
+  });
+
+  document.getElementById('btn-search-all').addEventListener('click', doSearchAll);
+  document.getElementById('btn-cancel').addEventListener('click', () => { state.cancelled = true; });
+
+  /* #12 — live batch hint with 400ms debounce */
+  let qbDebounce = null;
+  document.getElementById('qb').addEventListener('input', () => {
+    clearTimeout(qbDebounce);
+    qbDebounce = setTimeout(() => {
+      const raw = document.getElementById('qb').value;
+      const hint = document.getElementById('qb-hint');
+      const info = countBatchHint(raw);
+      if (!info || !info.total) { hint.textContent = ''; return; }
+      let detail = '';
+      const parts = [];
+      if (info.dashItems)  parts.push(`${info.dashItems} titled`);
+      if (info.idItems)    parts.push(`${info.idItems} identifiers`);
+      if (info.secCount)   parts.push(`${info.secCount} sections`);
+      detail = parts.length ? ' · ' + parts.join(', ') : '';
+      hint.innerHTML = `~<span>${info.total}</span> items detected${esc(detail)}`;
+    }, 400);
+  });
+
+  // reader / book PDF
+  document.getElementById('btn-book').addEventListener('click', buildBookFromBatch);
+  document.getElementById('btn-download-all').addEventListener('click', downloadAll);
+  document.getElementById('r-close').addEventListener('click', closeReader);
+  document.getElementById('r-fetch').addEventListener('click', fetchAllReaderTranscripts);
+  document.getElementById('r-print').addEventListener('click', savePdf);
+
+  /* #17 — Escape closes reader overlay (already wired) and also clears search input */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (document.getElementById('reader').classList.contains('open')) {
+        closeReader();
+      }
+    }
+  });
+
+  /* #29 — print class for body */
+  window.addEventListener('beforeprint', () => document.body.classList.add('printing'));
+  window.addEventListener('afterprint',  () => document.body.classList.remove('printing'));
+}
+
+/* ── utils ────────────────────────────────────────────────── */
+function esc(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function pick(a) { return a[Math.floor(Math.random()*a.length)]; }
+
+init();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>
