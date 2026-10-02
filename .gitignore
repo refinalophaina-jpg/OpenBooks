@@ -6,3 +6,4 @@ dist/
 .aider*
 data/mirrors.json
 data/mirror.log
+library/

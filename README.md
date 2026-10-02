@@ -66,6 +66,47 @@ After crawling, hard-refresh the browser (`Cmd+Shift+R`) to load the enriched da
 
 ---
 
+## Downloading Full Files
+
+The crawler finds links; the **downloader** pulls actual PDF/EPUB files to
+disk, organized into `library/<section>/<title>.<ext>`.
+
+```bash
+# Legal open-access only (Internet Archive open, Gutenberg)
+npm run download:open
+
+# Everything obtainable (adds LibGen — needs live mirrors)
+npm run download
+
+# Preview without downloading
+node download.js --dry-run
+
+# One section, or stop after N files
+node download.js --section BOOKS
+node download.js --limit 5
+```
+
+**Source priority per book:**
+1. **Internet Archive (open-access)** — resolved from `archive.org/metadata`,
+   always legal, no mirror needed. ~6 of the 27 books.
+2. **LibGen** — resolves the MD5 → `library.lol` GET link → file. Needs a
+   live mirror (`npm run mirrors` first). Copyrighted; for personal use.
+
+For the rest, use the **Anna's Archive** link shown on each book card in the
+app — it aggregates LibGen + Z-Library and works in the browser.
+
+**Verify matches:** the crawler sometimes fuzzy-matches the wrong edition
+(e.g. a translated or same-author different title). The downloader prints the
+source's own title and warns on a likely mismatch — check before trusting a
+file. Downloads land in `library/` (gitignored).
+
+> **Legal note:** Internet Archive open-access and Project Gutenberg files are
+> free and legal to download. LibGen and Anna's Archive host copyrighted works;
+> downloading them may infringe copyright depending on your jurisdiction. Use
+> for personal access to works you own or that are lawfully available to you.
+
+---
+
 ## Mirror Daemon (self-healing download links)
 
 LibGen and Anna's Archive domains rotate and go down constantly. The mirror
@@ -213,6 +254,7 @@ openbooks/
 ├── server.js               # Node.js HTTP server
 ├── cli.js                  # CLI entry point
 ├── crawl.js                # Resource crawler (Open Library, IA, OpenAlex, LibGen, TED)
+├── download.js             # File downloader → library/<section>/<title>.<ext>
 ├── mirrors.js              # Mirror registry + probe (LibGen / Anna's Archive)
 ├── mirror-daemon.js        # Background daemon that keeps mirrors.json fresh
 ├── sw.js                   # Service worker for offline/PWA support

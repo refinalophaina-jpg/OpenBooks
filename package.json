@@ -10,6 +10,8 @@
     "start": "node server.js",
     "crawl": "node crawl.js",
     "dev": "node server.js --open",
+    "download": "node download.js",
+    "download:open": "node download.js --open-only",
     "mirrors": "node mirrors.js",
     "mirror-daemon": "node mirror-daemon.js"
   },
