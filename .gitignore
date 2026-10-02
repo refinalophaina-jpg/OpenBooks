@@ -5,3 +5,4 @@ dist/
 .env
 .aider*
 data/mirrors.json
+data/mirror.log

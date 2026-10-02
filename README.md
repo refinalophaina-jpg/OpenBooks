@@ -91,17 +91,35 @@ node mirror-daemon.js --interval 1   # every 1 hour
 node mirror-daemon.js --once         # single check then exit (for cron)
 ```
 
-### Schedule with cron (Linux/macOS)
+### Schedule weekly (macOS, one command)
 
-Run a check every 6 hours. Edit your crontab with `crontab -e` and add:
-
-```cron
-0 */6 * * * cd /path/to/openbooks && /usr/bin/env node mirror-daemon.js --once >> data/mirror.log 2>&1
+```bash
+./setup-weekly-mirror.sh
 ```
 
-### Schedule with launchd (macOS, recommended)
+Installs a launchd job that runs a mirror check every **Sunday at 03:15**
+local time. It auto-detects the repo path and your `node` binary — no
+editing needed. Logs to `data/mirror.log`.
 
-Create `~/Library/LaunchAgents/com.openbooks.mirrors.plist`:
+```bash
+./setup-weekly-mirror.sh --uninstall   # remove it
+node mirror-daemon.js --once           # run a check right now
+```
+
+### Schedule with cron (Linux/macOS)
+
+For a weekly check via cron, edit your crontab with `crontab -e` and add:
+
+```cron
+15 3 * * 0 cd /path/to/openbooks && /usr/bin/env node mirror-daemon.js --once >> data/mirror.log 2>&1
+```
+
+(Change `* * 0` → `*/6 * *` with hour `*` for every-6-hours instead.)
+
+### Manual launchd setup
+
+If you'd rather not use the script, create
+`~/Library/LaunchAgents/com.openbooks.mirrors.plist`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -117,7 +135,12 @@ Create `~/Library/LaunchAgents/com.openbooks.mirrors.plist`:
     <string>/ABSOLUTE/PATH/TO/openbooks/mirror-daemon.js</string>
     <string>--once</string>
   </array>
-  <key>StartInterval</key>      <integer>21600</integer>  <!-- 6 hours -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key> <integer>0</integer>  <!-- Sunday -->
+    <key>Hour</key>    <integer>3</integer>
+    <key>Minute</key>  <integer>15</integer>
+  </dict>
   <key>WorkingDirectory</key>   <string>/ABSOLUTE/PATH/TO/openbooks</string>
   <key>StandardOutPath</key>    <string>/ABSOLUTE/PATH/TO/openbooks/data/mirror.log</string>
   <key>StandardErrorPath</key>  <string>/ABSOLUTE/PATH/TO/openbooks/data/mirror.log</string>
