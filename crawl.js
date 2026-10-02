@@ -9,6 +9,7 @@ const fs   = require('fs');
 const path = require('path');
 const https = require('https');
 const http  = require('http');
+const mirrors = require('./mirrors');
 
 // ── rate-limit helpers ──────────────────────────────────────────
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -445,8 +446,8 @@ async function queryOpenAlex(item) {
 }
 
 // ── LibGen ─────────────────────────────────────────────────────
-// Searches Library Genesis across multiple mirrors (domains rotate and
-// are often down) and returns a direct download link via library.lol.
+// Searches Library Genesis across live mirrors (from data/mirrors.json,
+// kept fresh by mirror-daemon.js) and returns a direct download link.
 const LIBGEN_MIRRORS = [
   'https://libgen.is',
   'https://libgen.rs',
@@ -461,8 +462,12 @@ async function queryLibGen(item) {
   const q = [item.title, item.author].filter(Boolean).join(' ');
   let html = null, usedMirror = null, lastErr = 'no mirror reachable';
 
+  // Prefer live mirrors from the registry; fall back to the static list
+  const mirrorList = mirrors.liveLibGen();
+  const dlBase = mirrors.bestLibGenDownload();
+
   // Try each mirror until one responds
-  for (const base of LIBGEN_MIRRORS) {
+  for (const base of mirrorList) {
     const searchUrl = `${base}/search.php?req=${enc(q)}&res=5&view=simple&phrase=1&column=def`;
     try {
       const r = await get(searchUrl, { json: false, timeout: 8000 });
@@ -502,9 +507,10 @@ async function queryLibGen(item) {
     return {
       found: true,
       md5,
-      download_url: `https://library.lol/main/${md5}`,
+      download_url: `${dlBase}/main/${md5}`,
       search_url: searchUrl,
       mirror_url: `https://libgen.lc/ads.php?md5=${md5}`,
+      anna_url: `https://annas-archive.org/md5/${md5}`,
       format: null,
       size: null,
     };
@@ -527,8 +533,9 @@ async function queryLibGen(item) {
       format:       best.extension?.toUpperCase() || null,
       size_bytes:   parseInt(best.filesize) || null,
       size:         best.filesize ? `${(parseInt(best.filesize)/1024/1024).toFixed(1)}MB` : null,
-      download_url: `https://library.lol/main/${md5}`,
+      download_url: `${dlBase}/main/${md5}`,
       mirror_url:   `https://libgen.lc/ads.php?md5=${md5}`,
+      anna_url:     `https://annas-archive.org/md5/${md5}`,
       search_url:   searchUrl,
     };
   } catch (e) {
@@ -539,7 +546,8 @@ async function queryLibGen(item) {
 // ── Anna's Archive search URL (browser link, not API) ──────────
 function annaSearchUrl(item) {
   const q = [item.title, item.author].filter(Boolean).join(' ');
-  return `https://annas-archive.org/search?q=${enc(q)}&ext=pdf&content=book_any`;
+  const base = mirrors.bestAnna();
+  return `${base}/search?q=${enc(q)}&ext=pdf&content=book_any`;
 }
 
 async function main() {
@@ -547,6 +555,23 @@ async function main() {
   const sections = parse(RESOURCE_LIST);
   const items    = allItems(sections);
   console.log(`Parsed: ${sections.length} sections, ${items.length} items\n`);
+
+  // Refresh the mirror registry if missing or older than 24h
+  const reg = mirrors.load();
+  const stale = !reg || (Date.now() - new Date(reg.updated).getTime() > 24*60*60*1000);
+  if (stale) {
+    process.stdout.write('Probing mirrors (registry missing or stale)… ');
+    try {
+      const data = await mirrors.checkAll();
+      mirrors.save(data);
+      console.log(`LibGen:${data.libgen.live.length} Anna:${data.anna.live.length} live`);
+    } catch (e) {
+      console.log(`skipped (${e.message})`);
+    }
+  } else {
+    console.log(`Mirror registry current (updated ${reg.updated}); LibGen:${reg.libgen.live.length} Anna:${reg.anna.live.length} live`);
+  }
+  console.log('');
 
   const books   = items.filter(i => i.type === 'Book');
   const talks   = items.filter(i => i.type === 'Talk');
@@ -576,6 +601,7 @@ async function main() {
     book.links.push({ label: "Anna's Archive", url: annaSearchUrl(book), kind: 'oa' });
     if (lg?.found && lg.download_url) {
       book.links.push({ label: 'LibGen Download', url: lg.download_url, kind: 'oa' });
+      if (lg.anna_url) book.links.push({ label: "Anna's (exact)", url: lg.anna_url, kind: 'oa' });
     } else if (lg?.search_url) {
       book.links.push({ label: 'LibGen Search', url: lg.search_url, kind: 'oa' });
     }

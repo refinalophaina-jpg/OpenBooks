@@ -9,7 +9,9 @@
   "scripts": {
     "start": "node server.js",
     "crawl": "node crawl.js",
-    "dev": "node server.js --open"
+    "dev": "node server.js --open",
+    "mirrors": "node mirrors.js",
+    "mirror-daemon": "node mirror-daemon.js"
   },
   "keywords": [
     "books",

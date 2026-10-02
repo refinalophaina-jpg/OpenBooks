@@ -66,6 +66,76 @@ After crawling, hard-refresh the browser (`Cmd+Shift+R`) to load the enriched da
 
 ---
 
+## Mirror Daemon (self-healing download links)
+
+LibGen and Anna's Archive domains rotate and go down constantly. The mirror
+daemon probes a list of candidate domains and keeps a live list in
+`data/mirrors.json`, so the crawler always uses a working domain.
+
+### One-shot check
+
+```bash
+npm run mirrors
+# or
+node mirrors.js
+```
+
+Prints a reachability report and writes `data/mirrors.json`. The crawler
+reads this file automatically (and refreshes it itself if older than 24h).
+
+### Run as a daemon
+
+```bash
+npm run mirror-daemon            # checks every 6 hours, runs until Ctrl+C
+node mirror-daemon.js --interval 1   # every 1 hour
+node mirror-daemon.js --once         # single check then exit (for cron)
+```
+
+### Schedule with cron (Linux/macOS)
+
+Run a check every 6 hours. Edit your crontab with `crontab -e` and add:
+
+```cron
+0 */6 * * * cd /path/to/openbooks && /usr/bin/env node mirror-daemon.js --once >> data/mirror.log 2>&1
+```
+
+### Schedule with launchd (macOS, recommended)
+
+Create `~/Library/LaunchAgents/com.openbooks.mirrors.plist`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>              <string>com.openbooks.mirrors</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/env</string>
+    <string>node</string>
+    <string>/ABSOLUTE/PATH/TO/openbooks/mirror-daemon.js</string>
+    <string>--once</string>
+  </array>
+  <key>StartInterval</key>      <integer>21600</integer>  <!-- 6 hours -->
+  <key>WorkingDirectory</key>   <string>/ABSOLUTE/PATH/TO/openbooks</string>
+  <key>StandardOutPath</key>    <string>/ABSOLUTE/PATH/TO/openbooks/data/mirror.log</string>
+  <key>StandardErrorPath</key>  <string>/ABSOLUTE/PATH/TO/openbooks/data/mirror.log</string>
+</dict>
+</plist>
+```
+
+Then load it:
+
+```bash
+launchctl load ~/Library/LaunchAgents/com.openbooks.mirrors.plist
+```
+
+`data/mirrors.json` is machine-specific (gitignored) — each machine keeps its
+own live list.
+
+---
+
 ## Usage
 
 ### Single Search
@@ -119,7 +189,9 @@ openbooks/
 ├── index.html              # Main app (self-contained HTML/CSS/JS)
 ├── server.js               # Node.js HTTP server
 ├── cli.js                  # CLI entry point
-├── crawl.js                # Resource crawler (Open Library, IA, OpenAlex, TED)
+├── crawl.js                # Resource crawler (Open Library, IA, OpenAlex, LibGen, TED)
+├── mirrors.js              # Mirror registry + probe (LibGen / Anna's Archive)
+├── mirror-daemon.js        # Background daemon that keeps mirrors.json fresh
 ├── sw.js                   # Service worker for offline/PWA support
 ├── manifest.webmanifest    # PWA manifest
 ├── package.json            # npm project config
@@ -128,6 +200,7 @@ openbooks/
 │   └── icon-512.svg        # App icon (512×512)
 └── data/
     ├── crawl-results.json  # Crawled resource dataset (102 items)
+    ├── mirrors.json         # Live mirror list (gitignored, per-machine)
     └── eq-complete-book.html  # Pre-built book reader (standalone)
 ```
 
