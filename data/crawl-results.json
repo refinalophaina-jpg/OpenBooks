@@ -1,11 +1,11 @@
 {
   "meta": {
-    "generated": "2026-05-23T04:01:18.045Z",
+    "generated": "2026-06-19T13:39:11.898Z",
     "title": "Emotional Intelligence, Relationships & Personal Growth",
     "purpose": "Compiled resource list with open-access metadata",
     "items_total": 102,
-    "books_found_ol": 0,
-    "books_found_ia": 0,
+    "books_found_ol": 22,
+    "books_found_ia": 19,
     "talks_with_transcript": 0
   },
   "sections": [
@@ -24,15 +24,56 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Foundational Eq",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Emotional%20Intelligence%3A%20Why%20It%20Can%20Matter%20More%20Than%20IQ%20Daniel%20Goleman&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL1878267W",
+                "title": "Emotional Intelligence",
+                "authors": "Daniel Goleman",
+                "year": 1995,
+                "pages": 368,
+                "subjects": [
+                  "Emotions and cognition",
+                  "Intellect",
+                  "Success, psychological aspects",
+                  "Self-actualization (psychology)",
+                  "Emotions"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/1359485-M.jpg",
+                "ia_identifier": "inteligenciaemoc0000gole",
+                "borrow_url": "https://archive.org/details/inteligenciaemoc0000gole",
+                "availability": "borrow_available"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "qingshang0000gole",
+                "url": "https://archive.org/details/qingshang0000gole",
+                "title": "Qing shang",
+                "creator": "Goleman, Daniel",
+                "year": 2010,
+                "downloads": 76,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W2892992943",
+                "title": "What is Emotional Intelligence?",
+                "year": 2015,
+                "authors": "John D. Mayer, Peter Salovey",
+                "oa": true,
+                "oa_url": "https://scholars.unh.edu/personality_lab/8",
+                "pdf_url": null,
+                "landing": "https://doi.org/10.5040/9798881828059.ch-001"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -44,15 +85,42 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Foundational Eq",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Emotional%20Intelligence%202.0%20Travis%20Bradberry%20%26%20Jean%20Greaves&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL28100805W",
+                "title": "Summary and Analysis of Emotional Intelligence 2. 0",
+                "authors": "Acesprint",
+                "year": 2021,
+                "subjects": [],
+                "cover": null,
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL28100805W",
+                "availability": "catalog"
               },
               "archive": {
                 "found": false
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W4286491573",
+                "title": "Adversity Quotient Promotes Teachers’ Professional Competence More Strongly Than Emotional Intelligence: Evidence from Indonesia",
+                "year": 2022,
+                "authors": "Widodo Widodo, Irvandi Gustari, Chandrawaty Chandrawaty",
+                "oa": true,
+                "oa_url": "https://www.mdpi.com/2079-3200/10/3/44/pdf?version=1658382331",
+                "pdf_url": "https://www.mdpi.com/2079-3200/10/3/44/pdf?version=1658382331",
+                "landing": "https://doi.org/10.3390/jintelligence10030044"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -64,15 +132,49 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Foundational Eq",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Permission%20to%20Feel%20Marc%20Brackett&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL20128926W",
+                "title": "Permission to Feel",
+                "authors": "Marc Brackett",
+                "year": 2019,
+                "pages": 298,
+                "subjects": [
+                  "Psychology",
+                  "Emotional intelligence",
+                  "Emotions",
+                  "Well-being",
+                  "PSYCHOLOGY / Emotions"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/8781091-M.jpg",
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL20128926W",
+                "availability": "catalog"
               },
               "archive": {
                 "found": false
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W3035858679",
+                "title": "Permission to Feel: Unlock the Power of Emotions to Let Yourself and Your Child Thrive, Marc Brackett, Quercus, 2019 – ERRATUM",
+                "year": 2020,
+                "authors": "Erica Frydenberg",
+                "oa": false,
+                "oa_url": null,
+                "pdf_url": null,
+                "landing": "https://doi.org/10.1017/edp.2020.16"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -84,15 +186,49 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Foundational Eq",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Emotional%20Agility%20Susan%20David&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL20250601W",
+                "title": "Emotional Agility",
+                "authors": "Susan David",
+                "year": 2016,
+                "pages": 288,
+                "subjects": [],
+                "cover": "https://covers.openlibrary.org/b/id/8906617-M.jpg",
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL20250601W",
+                "availability": "catalog"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "bestpracticeidea0000unse_w8a3",
+                "url": "https://archive.org/details/bestpracticeidea0000unse_w8a3",
+                "title": "Best practice : ideas and insights from the world's foremost business thinkers",
+                "year": 2003,
+                "downloads": 239,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W2607936112",
+                "title": "Book Review. Emotional Agility: Get Unstuck, Embrace Change, and Thrive in Work and Life by Susan David",
+                "year": 2017,
+                "authors": "Francoise Orlov",
+                "oa": true,
+                "oa_url": "https://doi.org/10.22316/poc/02.1.06",
+                "pdf_url": "https://doi.org/10.22316/poc/02.1.06",
+                "landing": "https://doi.org/10.22316/poc/02.1.06"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -104,15 +240,55 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Foundational Eq",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Working%20with%20Emotional%20Intelligence%20Daniel%20Goleman&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL1878297W",
+                "title": "Working with Emotional Intelligence",
+                "authors": "Daniel Goleman",
+                "year": 1998,
+                "pages": 383,
+                "subjects": [
+                  "Management",
+                  "Emotions",
+                  "Développement de la personnalité",
+                  "Intelligenz",
+                  "Self-Improvement"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/6426034-M.jpg",
+                "ia_identifier": "lavorareconintel0000gole",
+                "borrow_url": "https://archive.org/details/lavorareconintel0000gole",
+                "availability": "borrow_available"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "bestpracticeidea0000unse_w8a3",
+                "url": "https://archive.org/details/bestpracticeidea0000unse_w8a3",
+                "title": "Best practice : ideas and insights from the world's foremost business thinkers",
+                "year": 2003,
+                "downloads": 239,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W2892992943",
+                "title": "What is Emotional Intelligence?",
+                "year": 2015,
+                "authors": "John D. Mayer, Peter Salovey",
+                "oa": true,
+                "oa_url": "https://scholars.unh.edu/personality_lab/8",
+                "pdf_url": null,
+                "landing": "https://doi.org/10.5040/9798881828059.ch-001"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             }
@@ -129,15 +305,52 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Relationships & Communication",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=The%20Seven%20Principles%20for%20Making%20Marriage%20Work%20John%20Gottman%20%26%20Nan%20Silver&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL27114440W",
+                "title": "Summary, Analysis, and Review of John M. Gottman and Nan Silver's the Seven Principles for Making Marriage Work",
+                "authors": "Start Publishing Notes",
+                "year": 2017,
+                "subjects": [],
+                "cover": "https://covers.openlibrary.org/b/id/13194989-M.jpg",
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL27114440W",
+                "availability": "catalog"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "isbn_9788401376702",
+                "url": "https://archive.org/details/isbn_9788401376702",
+                "title": "Siete reglas de oro para vivir en pareja",
+                "creator": [
+                  "Gottman, John Mordechai",
+                  "Silver, Nan"
+                ],
+                "year": 2000,
+                "downloads": 405,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W4400335146",
+                "title": "The effectiveness of the in‐person and online Gottman Seven Principles Couple Enhancement Program: A propensity score matching design",
+                "year": 2024,
+                "authors": "Rune Zahl‐Olsen, Frode Thuen, Thomas Bjerregaard Bertelsen",
+                "oa": true,
+                "oa_url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1111/jmft.12726",
+                "pdf_url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1111/jmft.12726",
+                "landing": "https://doi.org/10.1111/jmft.12726"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -149,15 +362,54 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Relationships & Communication",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Nonviolent%20Communication%3A%20A%20Language%20of%20Life%20Marshall%20B.%20Rosenberg&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL2018966W",
+                "title": "Nonviolent Communication",
+                "authors": "Marshall B. Rosenberg, Deepak Chopra, Magiarí Díaz Díaz, Alan Rafael Seid Llamas, Rosenberg",
+                "year": 1999,
+                "pages": 227,
+                "subjects": [
+                  "Nonviolence",
+                  "Psychological aspects of Communication",
+                  "Family & Relationships",
+                  "Self-Improvement",
+                  "Communication"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/940686-M.jpg",
+                "ia_identifier": "lesmotssontdesfe0000mars",
+                "borrow_url": "https://archive.org/details/lesmotssontdesfe0000mars",
+                "availability": "borrow_available"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "nonviolent-communication-a-language-of-life-marshall-b-rosenberg-1",
+                "url": "https://archive.org/details/nonviolent-communication-a-language-of-life-marshall-b-rosenberg-1",
+                "title": "Nonviolent Communication A Language Of Life Marshall B Rosenberg ( 1)",
+                "downloads": 10851,
+                "access": "open"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W601951395",
+                "title": "Speak Peace in a World of Conflict: What You Say Next Will Change Your World",
+                "year": 2005,
+                "authors": "Marshall B. Rosenberg",
+                "oa": false,
+                "oa_url": null,
+                "pdf_url": null,
+                "landing": "http://search.ebscohost.com/login.aspx?direct=true&amp;scope=site&amp;db=nlebk&amp;db=nlabk&amp;AN=204942"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -169,15 +421,49 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Relationships & Communication",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Attached%20Amir%20Levine%20%26%20Rachel%20Heller&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL28405184W",
+                "title": "Summary of Attached",
+                "authors": "Rachael Helen",
+                "year": 2021,
+                "subjects": [],
+                "cover": null,
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL28405184W",
+                "availability": "catalog"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "attachednewscien0000levi",
+                "url": "https://archive.org/details/attachednewscien0000levi",
+                "title": "Attached : the new science of adult attachment and how it can help you find- and keep -love",
+                "creator": "Levine, Amir",
+                "year": 2010,
+                "downloads": 3242,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W4404458095",
+                "title": "Being Attached: Weathering the Storm and Easing Friction in Relationships",
+                "year": 2024,
+                "authors": "Norah M Krishna",
+                "oa": true,
+                "oa_url": "https://www.ijngp.com/_files/ugd/89aacd_54000fc4bfa941faadea29b118e8d3a6.pdf",
+                "pdf_url": "https://www.ijngp.com/_files/ugd/89aacd_54000fc4bfa941faadea29b118e8d3a6.pdf",
+                "landing": "http://dx.doi.org/10.52522/ijngp.v5i1.2"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -189,15 +475,54 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Relationships & Communication",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Mating%20in%20Captivity%20Esther%20Perel&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL275862W",
+                "title": "Mating in Captivity",
+                "authors": "Esther Perel",
+                "year": 2006,
+                "pages": 272,
+                "subjects": [
+                  "Man-woman relationships",
+                  "Sexual desire disorders",
+                  "Couples",
+                  "Audiobooks",
+                  "Psychological aspects"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/46486-M.jpg",
+                "ia_identifier": "lintelligencerot0000esth",
+                "borrow_url": "https://archive.org/details/lintelligencerot0000esth",
+                "availability": "private"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "mating-in-captivity",
+                "url": "https://archive.org/details/mating-in-captivity",
+                "title": "Mating In Captivity",
+                "downloads": 10474,
+                "access": "open"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W4379535222",
+                "title": "Mating in Captivity: The Influence of Social Location on Sexual Satisfaction through Phases of the COVID-19 Pandemic",
+                "year": 2023,
+                "authors": "Elizabeth E. McElroy, Samuel L. Perry, Joshua B. Grubbs",
+                "oa": true,
+                "oa_url": "https://journals.sagepub.com/doi/pdf/10.1177/23780231231173899",
+                "pdf_url": "https://journals.sagepub.com/doi/pdf/10.1177/23780231231173899",
+                "landing": "https://doi.org/10.1177/23780231231173899"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -209,15 +534,56 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Relationships & Communication",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=The%20State%20of%20Affairs%20Esther%20Perel&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL19718878W",
+                "title": "The state of affairs",
+                "authors": "Esther Perel",
+                "year": 2017,
+                "pages": 319,
+                "subjects": [
+                  "Married people",
+                  "Man-woman relationships",
+                  "Marriage",
+                  "Adultery",
+                  "nyt:combined-print-and-e-book-nonfiction=2017-10-29"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/8814360-M.jpg",
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL19718878W",
+                "availability": "catalog"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "stateofaffairsre0000pere",
+                "url": "https://archive.org/details/stateofaffairsre0000pere",
+                "title": "The state of affairs : rethinking infidelity",
+                "creator": "Perel, Esther, author",
+                "year": 2017,
+                "downloads": 2373,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W2970765530",
+                "title": "The State of Affairs. Rethinking Infidelity",
+                "year": 2020,
+                "authors": "",
+                "oa": false,
+                "oa_url": null,
+                "pdf_url": null,
+                "landing": "https://doi.org/10.1055/a-1123-0912"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -229,15 +595,52 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Relationships & Communication",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Us%20Terrence%20Real&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL25920478W",
+                "title": "Us",
+                "authors": "Terrence Real, Bruce Springsteen",
+                "year": 2022,
+                "pages": 352,
+                "subjects": [
+                  "nyt:advice-how-to-and-miscellaneous=2022-06-26",
+                  "New York Times bestseller"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/12861474-M.jpg",
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL25920478W",
+                "availability": "catalog"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "perrinesliteratu0010unse",
+                "url": "https://archive.org/details/perrinesliteratu0010unse",
+                "title": "Perrine's literature : structure, sound, and sense",
+                "year": 2009,
+                "downloads": 379,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W2736601468",
+                "title": "Diagnosing Non-Intermittent Anomalies in Reinforcement Learning Policy Executions (Short Paper)",
+                "year": 2017,
+                "authors": "Natan, Avraham, Stern, Roni, Kalech, Meir",
+                "oa": true,
+                "oa_url": "https://arxiv.org/pdf/1707.06347",
+                "pdf_url": "https://arxiv.org/pdf/1707.06347",
+                "landing": "http://arxiv.org/abs/1707.06347"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -249,15 +652,41 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Relationships & Communication",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=How%20to%20Win%20Friends%20and%20Influence%20People%20Dale%20Carnegie&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": false,
+                "error": "read ECONNRESET"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "bwb_Y0-BUX-626",
+                "url": "https://archive.org/details/bwb_Y0-BUX-626",
+                "title": "how to win friends & influence people , how to stop worrying and start living",
+                "creator": "Dale Carnegie",
+                "year": 1984,
+                "downloads": 10,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W2329867059",
+                "title": "How to Win Friends and Influence People: Dale Carnegie and the Problem of Sincerity",
+                "year": 1977,
+                "authors": "Gail Thain Parker",
+                "oa": false,
+                "oa_url": null,
+                "pdf_url": null,
+                "landing": "https://doi.org/10.2307/2712571"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -269,15 +698,34 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Relationships & Communication",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=The%20Language%20of%20Emotional%20Intelligence%20Jeanne%20Segal&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": false,
+                "error": "read ECONNRESET"
               },
               "archive": {
                 "found": false
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W1021793808",
+                "title": "The five essential tools for building powerful and effective relationships: the language of emotional intelligence / Jeanne Segal)",
+                "year": 2008,
+                "authors": "Jeanne Segal",
+                "oa": false,
+                "oa_url": null,
+                "pdf_url": null,
+                "landing": "http://opac.library.um.ac.id/index.php?s_data=bp_buku&s_field=0&id=34616&mod=b&cat=3"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             }
@@ -294,15 +742,41 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Men, Masculinity & Inner Work",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=I%20Don't%20Want%20to%20Talk%20About%20It%20Terrence%20Real&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": false,
+                "error": "timeout"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "idontwanttotalka0000real_a8b5",
+                "url": "https://archive.org/details/idontwanttotalka0000real_a8b5",
+                "title": "I don't want to talk about it : overcoming the secret legacy of male depression",
+                "creator": "Real, Terrence",
+                "year": 1997,
+                "downloads": 515,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W2099019320",
+                "title": "A survey of socially interactive robots",
+                "year": 2003,
+                "authors": "Terrence Fong, Illah Nourbakhsh, Kerstin Dautenhahn",
+                "oa": true,
+                "oa_url": "https://www.sciencedirect.com/science/article/pii/S092188900200372X",
+                "pdf_url": "https://www.sciencedirect.com/science/article/pii/S092188900200372X",
+                "landing": "https://doi.org/10.1016/s0921-8890(02)00372-x"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -314,15 +788,56 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Men, Masculinity & Inner Work",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Daring%20Greatly%20Bren%C3%A9%20Brown&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL16664399W",
+                "title": "Daring Greatly",
+                "authors": "Brené Brown",
+                "year": 2012,
+                "pages": 251,
+                "subjects": [
+                  "Risk",
+                  "Courage",
+                  "Assertiveness (Psychology)",
+                  "nyt:hardcover-advice=2012-09-30",
+                  "New York Times bestseller"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/7367250-M.jpg",
+                "ia_identifier": "daringgreatlyhow0000brow",
+                "borrow_url": "https://archive.org/details/daringgreatlyhow0000brow",
+                "availability": "error"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "risingstrong0000brow_j5v9",
+                "url": "https://archive.org/details/risingstrong0000brow_j5v9",
+                "title": "Rising strong",
+                "creator": "Brown, Brené, author",
+                "year": 2015,
+                "downloads": 1412,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W2018465575",
+                "title": "Daring Greatly: How the Courage to Be Vulnerable Transforms the Way We Live, Love, Parent, and Lead",
+                "year": 2014,
+                "authors": "Marc Cutright",
+                "oa": false,
+                "oa_url": null,
+                "pdf_url": null,
+                "landing": "https://doi.org/10.1515/jcc-2014-0032"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -334,15 +849,49 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Men, Masculinity & Inner Work",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Atlas%20of%20the%20Heart%20Bren%C3%A9%20Brown&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL25023471W",
+                "title": "Atlas of the Heart",
+                "authors": "Brené Brown",
+                "year": 2021,
+                "pages": 396,
+                "subjects": [
+                  "nyt:advice-how-to-and-miscellaneous=2021-12-19",
+                  "New York Times bestseller",
+                  "Self-actualization (Psychology)",
+                  "Language and emotions",
+                  "Experience"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/11945339-M.jpg",
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL25023471W",
+                "availability": "catalog"
               },
               "archive": {
                 "found": false
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W4383105545",
+                "title": "Emotional Literacy and Self-Awareness in Adolescents: Exploring Brené Brown's Atlas of the Heart for Schools",
+                "year": 2023,
+                "authors": "Dianala M. Bernard",
+                "oa": true,
+                "oa_url": "https://ciencialatina.org/index.php/cienciala/article/download/6673/10168",
+                "pdf_url": "https://ciencialatina.org/index.php/cienciala/article/download/6673/10168",
+                "landing": "http://dx.doi.org/10.37811/cl_rcm.v7i3.6673"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -354,15 +903,40 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Men, Masculinity & Inner Work",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=The%20Way%20of%20the%20Superior%20Man%20David%20Deida&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": false,
+                "error": "timeout"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "the-way-of-the-superior-man-en",
+                "url": "https://archive.org/details/the-way-of-the-superior-man-en",
+                "title": "The Way of The Superior Man",
+                "creator": "David Deida",
+                "downloads": 4858,
+                "access": "open"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W2538648359",
+                "title": "The Five Stages of Masculinity: A New Model for Understanding Masculinities",
+                "year": 2016,
+                "authors": "Joseph Gelfer",
+                "oa": true,
+                "oa_url": "http://hipatiapress.com/hpjournals/index.php/mcs/article/download/2169/pdf",
+                "pdf_url": "http://hipatiapress.com/hpjournals/index.php/mcs/article/download/2169/pdf",
+                "landing": "https://doi.org/10.17583/mcs.2016.2169"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -374,15 +948,55 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Men, Masculinity & Inner Work",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Adult%20Children%20of%20Emotionally%20Immature%20Parents%20Lindsay%20C.%20Gibson&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL20006178W",
+                "title": "Adult children of emotionally immature parents",
+                "authors": "Lindsay C. Gibson, Marguerite Gavin, Gavin Marguerite",
+                "year": 2015,
+                "pages": 218,
+                "subjects": [
+                  "Dysfunctional families",
+                  "Adult children of dysfunctional families",
+                  "Mental health",
+                  "Emotional maturity",
+                  "Psychological aspects"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/11301956-M.jpg",
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL20006178W",
+                "availability": "catalog"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "oceanof-pdf.com-adult-children-of-emotionally-immature-parents-lindsay-c-gibson",
+                "url": "https://archive.org/details/oceanof-pdf.com-adult-children-of-emotionally-immature-parents-lindsay-c-gibson",
+                "title": "Oceanof PDF.com Adult Children Of Emotionally Immature Parents Lindsay C Gibson",
+                "creator": "Lindsay C. Gibson",
+                "downloads": 634,
+                "access": "open"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W1590536968",
+                "title": "Annual report of the Chief Medical Officer 2012 : our children deserve better : prevention pays",
+                "year": 2013,
+                "authors": "Claire Lemer",
+                "oa": true,
+                "oa_url": "http://dera.ioe.ac.uk/18694/7/33571_2901304_CMO_All_Redacted.pdf",
+                "pdf_url": "http://dera.ioe.ac.uk/18694/7/33571_2901304_CMO_All_Redacted.pdf",
+                "landing": null
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -394,7 +1008,13 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Men, Masculinity & Inner Work",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=The%20Masculine%20in%20Relationship%20G.S.%20Youngblood&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
                 "found": false
               },
@@ -402,7 +1022,19 @@
                 "found": false
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W2899197098",
+                "title": "The Impact of Nutrition and Environmental Epigenetics on Human Health and Disease",
+                "year": 2018,
+                "authors": "Céline Tiffon",
+                "oa": true,
+                "oa_url": "https://www.mdpi.com/1422-0067/19/11/3425/pdf?version=1541058680",
+                "pdf_url": "https://www.mdpi.com/1422-0067/19/11/3425/pdf?version=1541058680",
+                "landing": "https://doi.org/10.3390/ijms19113425"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             }
@@ -419,15 +1051,56 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Consciousness & Self-Awareness",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=The%20Body%20Keeps%20the%20Score%20Bessel%20van%20der%20Kolk&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL18147687W",
+                "title": "The Body Keeps the Score",
+                "authors": "Bessel van der Kolk",
+                "year": 2014,
+                "pages": 520,
+                "subjects": [
+                  "Post-traumatic stress disorder",
+                  "Treatment",
+                  "Therapie",
+                  "Physiopathology",
+                  "Posttraumatisches Stresssyndrom"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/8315367-M.jpg",
+                "ia_identifier": "bodykeepsscorebr0000vand",
+                "borrow_url": "https://archive.org/details/bodykeepsscorebr0000vand",
+                "availability": "private"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "traumaticstresse0000unse_n5d0",
+                "url": "https://archive.org/details/traumaticstresse0000unse_n5d0",
+                "title": "Traumatic stress : the effects of overwhelming experience on mind, body, and society",
+                "creator": "Bessel A. van der Kolk, Alexander C. McFarlane and Lars Weisaeth",
+                "year": 1996,
+                "downloads": 34,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W1124890917",
+                "title": "The Body Keeps the Score: Brain, Mind, and Body in the Healing of Trauma",
+                "year": 2014,
+                "authors": "van der Kolk, A Bessel",
+                "oa": true,
+                "oa_url": "https://ci.nii.ac.jp/ncid/BB19708339",
+                "pdf_url": null,
+                "landing": "https://ci.nii.ac.jp/ncid/BB19708339"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -439,15 +1112,56 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Consciousness & Self-Awareness",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Awareness%20Anthony%20de%20Mello&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL57353W",
+                "title": "Awareness",
+                "authors": "Anthony De Mello",
+                "year": 1990,
+                "pages": 184,
+                "subjects": [
+                  "Spiritual Enlightenment",
+                  "self help",
+                  "psychology",
+                  "Buddhism",
+                  "agnostic"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/238516-M.jpg",
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL57353W",
+                "availability": "catalog"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "sadhanawaytogodc0000deme_g3i8",
+                "url": "https://archive.org/details/sadhanawaytogodc0000deme_g3i8",
+                "title": "Sadhana, a way to God : Christian exercises in Eastern form",
+                "creator": "De Mello, Anthony, 1931-1987",
+                "year": 1984,
+                "downloads": 360,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W1983335380",
+                "title": "Sobre processos de \"ambientalização\" dos conflitos e sobre dilemas da participação",
+                "year": 2006,
+                "authors": "José Sérgio Leite Lopes",
+                "oa": true,
+                "oa_url": "https://www.scielo.br/j/ha/a/Cw4JM8d7rs5GzyxfkQVNyFj/?lang=pt&format=pdf",
+                "pdf_url": "https://www.scielo.br/j/ha/a/Cw4JM8d7rs5GzyxfkQVNyFj/?lang=pt&format=pdf",
+                "landing": "https://doi.org/10.1590/s0104-71832006000100003"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -459,15 +1173,54 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Consciousness & Self-Awareness",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Maybe%20You%20Should%20Talk%20to%20Someone%20Lori%20Gottlieb&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL19791590W",
+                "title": "Maybe You Should Talk to Someone",
+                "authors": "Lori Gottlieb",
+                "year": 2019,
+                "pages": 433,
+                "subjects": [
+                  "Psychotherapists",
+                  "Biography",
+                  "Therapist and patient",
+                  "PSYCHOLOGY",
+                  "Psychotherapy BIOGRAPHY & AUTOBIOGRAPHY"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/8596019-M.jpg",
+                "ia_identifier": "maybeyoushouldta0000gott_h4z0",
+                "borrow_url": "https://archive.org/details/maybeyoushouldta0000gott_h4z0",
+                "availability": "private"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "dr-anna-lembke-dopamine-nation-fargo-nd-2023",
+                "url": "https://archive.org/details/dr-anna-lembke-dopamine-nation-fargo-nd-2023",
+                "title": "Dr Anna Lembke Dopamine Nation Fargo ND 2023",
+                "downloads": 108,
+                "access": "open"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W3107358848",
+                "title": "Gottlieb, Lori. Maybe You Should Talk to Someone: A Therapist, Her Therapist and Our Lives Revealed",
+                "year": 2020,
+                "authors": "Pamela W. Proietti",
+                "oa": false,
+                "oa_url": null,
+                "pdf_url": null,
+                "landing": "http://doi.org/10.5840/jis2020321/214"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -479,15 +1232,51 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Consciousness & Self-Awareness",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Self-Compassion%20Kristin%20Neff&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL26628467W",
+                "title": "Summary of Kristin Neff's Self-Compassion",
+                "year": 2021,
+                "subjects": [
+                  "Self-help techniques",
+                  "Reference books"
+                ],
+                "cover": null,
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL26628467W",
+                "availability": "catalog"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "selfcompassionst0000neff",
+                "url": "https://archive.org/details/selfcompassionst0000neff",
+                "title": "Self-compassion : stop beating yourself up and leave insecurity behind",
+                "creator": "Neff, Kristin",
+                "year": 2011,
+                "downloads": 763,
+                "access": "restricted"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W3110701616",
+                "title": "The Сoncept of Self-compassion: a Russian Adaptation of the Scale by Kristin Neff",
+                "year": 2020,
+                "authors": "Ksenia Chistopolskaya, Evgeny Osin, С.Н. Ениколопов",
+                "oa": true,
+                "oa_url": "https://doi.org/10.17759/chp.2020160404",
+                "pdf_url": null,
+                "landing": "https://doi.org/10.17759/chp.2020160404"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -499,15 +1288,54 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Consciousness & Self-Awareness",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=How%20Emotions%20Are%20Made%20Lisa%20Feldman%20Barrett&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL20216664W",
+                "title": "How Emotions Are Made",
+                "authors": "Lisa Feldman Barrett",
+                "year": 2017,
+                "pages": 448,
+                "subjects": [
+                  "Emotions and cognition",
+                  "Emotions",
+                  "Neurosciences",
+                  "Cognitive science"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/8868353-M.jpg",
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL20216664W",
+                "availability": "catalog"
               },
               "archive": {
-                "found": false
+                "found": true,
+                "identifier": "how-emotions-are-made-the-secret-life-of-the-brain-lisa-feldman-barrett",
+                "url": "https://archive.org/details/how-emotions-are-made-the-secret-life-of-the-brain-lisa-feldman-barrett",
+                "title": "How Emotions Are Made The Secret Life Of The Brain - Lisa Feldman Barrett",
+                "creator": "Lisa Feldman Barrett",
+                "downloads": 93,
+                "access": "open"
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W2129134806",
+                "title": "The Experience of Emotion",
+                "year": 2006,
+                "authors": "Lisa Feldman Barrett, Batja Mesquita, Kevin N. Ochsner",
+                "oa": true,
+                "oa_url": "https://lirias.kuleuven.be/retrieve/8bfd88be-f8f3-473c-a546-aa75332fcd8e",
+                "pdf_url": null,
+                "landing": "https://doi.org/10.1146/annurev.psych.58.110405.085709"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -519,15 +1347,44 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Consciousness & Self-Awareness",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=The%20Genius%20of%20Empathy%20Judith%20Orloff&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL37617505W",
+                "title": "Genius of Empathy",
+                "authors": "Judith Orloff, Dalai Lama",
+                "year": 2024,
+                "subjects": [
+                  "Psychology"
+                ],
+                "cover": null,
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL37617505W",
+                "availability": "catalog"
               },
               "archive": {
                 "found": false
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W71881270",
+                "title": "Bride of Amazement : a Buddhist perspective on Mary Oliver's poetry",
+                "year": 2013,
+                "authors": "Gisela Ullyatt",
+                "oa": true,
+                "oa_url": "http://hdl.handle.net/10394/9710",
+                "pdf_url": "http://hdl.handle.net/10394/9710",
+                "landing": "http://hdl.handle.net/10394/9710"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -539,15 +1396,43 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Consciousness & Self-Awareness",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Hope%20for%20Cynics%20Jamil%20Zaki&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL37865349W",
+                "title": "Hope for Cynics",
+                "authors": "Jamil Zaki",
+                "year": 2024,
+                "pages": 288,
+                "subjects": [],
+                "cover": "https://covers.openlibrary.org/b/id/14751614-M.jpg",
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL37865349W",
+                "availability": "catalog"
               },
               "archive": {
                 "found": false
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W4409982664",
+                "title": "Hope",
+                "year": 2025,
+                "authors": "Patricia S. Yoder-Wise",
+                "oa": true,
+                "oa_url": "https://journals.healio.com/doi/pdf/10.3928/00220124-20250416-01?download=true",
+                "pdf_url": "https://journals.healio.com/doi/pdf/10.3928/00220124-20250416-01?download=true",
+                "landing": "https://doi.org/10.3928/00220124-20250416-01"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             },
@@ -559,15 +1444,45 @@
               "type": "Book",
               "section": "BOOKS",
               "subsection": "Consciousness & Self-Awareness",
-              "links": [],
+              "links": [
+                {
+                  "label": "Anna's Archive",
+                  "url": "https://annas-archive.org/search?q=Shift%20Ethan%20Kross&ext=pdf&content=book_any",
+                  "kind": "oa"
+                }
+              ],
               "openLibrary": {
-                "found": false
+                "found": true,
+                "key": "/works/OL42406177W",
+                "title": "Shift",
+                "authors": "Ethan Kross",
+                "year": 2025,
+                "pages": 288,
+                "subjects": [
+                  "Psychology"
+                ],
+                "cover": "https://covers.openlibrary.org/b/id/14841810-M.jpg",
+                "ia_identifier": null,
+                "borrow_url": "https://openlibrary.org/works/OL42406177W",
+                "availability": "catalog"
               },
               "archive": {
                 "found": false
               },
               "openAlex": {
-                "found": false
+                "found": true,
+                "id": "https://openalex.org/W4296674326",
+                "title": "A Conversation with … Ethan Kross PhD, the Psychologist Who Knows What We Should Say When We Talk to Ourselves",
+                "year": 2022,
+                "authors": "Seth S. Leopold",
+                "oa": true,
+                "oa_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/9556022",
+                "pdf_url": null,
+                "landing": "https://doi.org/10.1097/corr.0000000000002411"
+              },
+              "libgen": {
+                "found": false,
+                "error": "timeout"
               },
               "transcript": null
             }
@@ -594,6 +1509,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -608,6 +1524,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -622,6 +1539,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -636,6 +1554,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -650,6 +1569,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             }
           ]
@@ -669,6 +1589,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -683,6 +1604,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -697,6 +1619,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -711,6 +1634,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -725,6 +1649,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -739,6 +1664,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -753,6 +1679,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -767,6 +1694,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -781,6 +1709,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             },
             {
@@ -795,6 +1724,7 @@
               "openLibrary": null,
               "archive": null,
               "openAlex": null,
+              "libgen": null,
               "transcript": null
             }
           ]
@@ -815,6 +1745,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -829,6 +1760,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -843,6 +1775,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -857,6 +1790,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -871,6 +1805,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -885,6 +1820,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -899,6 +1835,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -913,6 +1850,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -926,6 +1864,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -940,6 +1879,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         }
       ],
@@ -959,6 +1899,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -972,6 +1913,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -985,6 +1927,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -998,6 +1941,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1012,6 +1956,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1025,6 +1970,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1038,6 +1984,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1051,6 +1998,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1064,6 +2012,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1077,6 +2026,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1090,6 +2040,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1103,6 +2054,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1116,6 +2068,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         }
       ],
@@ -1135,6 +2088,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1148,6 +2102,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1161,6 +2116,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1174,6 +2130,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1187,6 +2144,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1200,6 +2158,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1213,6 +2172,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1226,6 +2186,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1239,6 +2200,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1252,6 +2214,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         }
       ],
@@ -1271,6 +2234,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1284,6 +2248,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1297,6 +2262,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1310,6 +2276,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1323,6 +2290,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1336,6 +2304,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1349,6 +2318,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1362,6 +2332,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1375,6 +2346,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1388,6 +2360,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1401,6 +2374,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         }
       ],
@@ -1426,7 +2400,8 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
-          "transcript": null
+          "libgen": null,
+          "transcript": {}
         },
         {
           "id": "item-88",
@@ -1445,7 +2420,8 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
-          "transcript": null
+          "libgen": null,
+          "transcript": {}
         },
         {
           "id": "item-89",
@@ -1464,7 +2440,8 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
-          "transcript": null
+          "libgen": null,
+          "transcript": {}
         },
         {
           "id": "item-90",
@@ -1483,7 +2460,8 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
-          "transcript": null
+          "libgen": null,
+          "transcript": {}
         },
         {
           "id": "item-91",
@@ -1502,7 +2480,8 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
-          "transcript": null
+          "libgen": null,
+          "transcript": {}
         },
         {
           "id": "item-92",
@@ -1521,7 +2500,8 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
-          "transcript": null
+          "libgen": null,
+          "transcript": {}
         },
         {
           "id": "item-93",
@@ -1540,7 +2520,8 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
-          "transcript": null
+          "libgen": null,
+          "transcript": {}
         },
         {
           "id": "item-94",
@@ -1559,7 +2540,8 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
-          "transcript": null
+          "libgen": null,
+          "transcript": {}
         },
         {
           "id": "item-95",
@@ -1578,7 +2560,8 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
-          "transcript": null
+          "libgen": null,
+          "transcript": {}
         }
       ],
       "subsections": []
@@ -1597,6 +2580,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1610,6 +2594,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1624,6 +2609,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1637,6 +2623,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1650,6 +2637,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1663,6 +2651,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         },
         {
@@ -1676,6 +2665,7 @@
           "openLibrary": null,
           "archive": null,
           "openAlex": null,
+          "libgen": null,
           "transcript": null
         }
       ],
