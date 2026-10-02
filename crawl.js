@@ -445,27 +445,42 @@ async function queryOpenAlex(item) {
 }
 
 // ── LibGen ─────────────────────────────────────────────────────
-// Searches Library Genesis for books and returns direct download links.
-// LibGen API: search → parse HTML for IDs → JSON metadata → library.lol link
+// Searches Library Genesis across multiple mirrors (domains rotate and
+// are often down) and returns a direct download link via library.lol.
+const LIBGEN_MIRRORS = [
+  'https://libgen.is',
+  'https://libgen.rs',
+  'https://libgen.st',
+  'https://libgen.gs',
+  'http://libgen.is',
+];
+
 async function queryLibGen(item) {
   if (item.type !== 'Book') return null;
 
   const q = [item.title, item.author].filter(Boolean).join(' ');
+  let html = null, usedMirror = null, lastErr = 'no mirror reachable';
 
-  // Step 1: search page → extract row IDs
-  const searchUrl = `https://libgen.is/search.php?req=${enc(q)}&res=5&view=simple&phrase=1&column=def`;
-  let html;
-  try {
-    const r = await get(searchUrl, { json: false, timeout: 14000 });
-    if (r.status !== 200 || !r.data) return { found: false, error: `HTTP ${r.status}` };
-    html = r.data;
-  } catch (e) {
-    return { found: false, error: e.message };
+  // Try each mirror until one responds
+  for (const base of LIBGEN_MIRRORS) {
+    const searchUrl = `${base}/search.php?req=${enc(q)}&res=5&view=simple&phrase=1&column=def`;
+    try {
+      const r = await get(searchUrl, { json: false, timeout: 8000 });
+      if (r.status === 200 && r.data && r.data.length > 500) {
+        html = r.data; usedMirror = base;
+        break;
+      }
+      lastErr = `HTTP ${r.status}`;
+    } catch (e) {
+      lastErr = e.message;
+    }
   }
 
-  // Extract IDs from table: <a href="book/index.php?md5=..."> or row IDs
+  if (!html) return { found: false, error: lastErr };
+  const searchUrl = `${usedMirror}/search.php?req=${enc(q)}&res=5&view=simple&phrase=1&column=def`;
+
+  // Extract MD5 hashes directly from the results
   const ids = [];
-  const idRe = /\/book\/index\.php\?md5=[a-f0-9]{32}|<tr[^>]*>\s*<td[^>]*>(\d{5,9})<\/td>/gi;
   const md5Re = /md5=([a-f0-9]{32})/gi;
   let m;
   while ((m = md5Re.exec(html)) !== null && ids.length < 3) {
@@ -495,10 +510,10 @@ async function queryLibGen(item) {
     };
   }
 
-  // Step 3: use numeric IDs to get JSON metadata
+  // Step 3: use numeric IDs to get JSON metadata (from the reachable mirror)
   try {
-    const jsonUrl = `https://libgen.is/json.php?ids=${numIds.join(',')}&fields=id,title,author,md5,extension,filesize,year`;
-    const { data } = await get(jsonUrl, { json: true, timeout: 10000 });
+    const jsonUrl = `${usedMirror}/json.php?ids=${numIds.join(',')}&fields=id,title,author,md5,extension,filesize,year`;
+    const { data } = await get(jsonUrl, { json: true, timeout: 8000 });
     if (!Array.isArray(data) || !data.length) return { found: false, error: 'no JSON results' };
     const best = data[0];
     const md5  = best.md5?.toLowerCase();
@@ -601,6 +616,8 @@ async function main() {
       items_total: items.length,
       books_found_ol:  books.filter(b => b.openLibrary?.found).length,
       books_found_ia:  books.filter(b => b.archive?.found).length,
+      books_found_lg:  books.filter(b => b.libgen?.found).length,
+      books_downloadable: books.filter(b => b.libgen?.download_url || b.archive?.access === 'open').length,
       talks_with_transcript: talks.filter(t => t.transcript?.paragraphs?.length > 0).length,
     },
     sections: sections.map(sec => ({
