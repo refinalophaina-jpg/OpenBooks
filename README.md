@@ -59,8 +59,21 @@ The crawler:
 - Queries Open Library for book metadata and cover images
 - Searches Internet Archive for downloadable copies
 - Fetches OpenAlex records for academic papers
-- Downloads TED talk transcripts
+- Downloads TED talk transcripts (via **yt-dlp** — see below)
+- Rejects wrong-edition fuzzy matches (title + author similarity check)
 - Saves everything to `data/crawl-results.json`
+
+**For TED transcripts, install [yt-dlp](https://github.com/yt-dlp/yt-dlp):**
+
+```bash
+brew install yt-dlp      # macOS
+pip install yt-dlp       # any platform
+```
+
+TED moved to a JavaScript site that blocks simple scraping; yt-dlp's
+maintained TED extractor pulls the subtitles reliably. Without it the
+crawler falls back to scraping, which may return nothing. The crawler
+detects yt-dlp automatically and tells you at run time.
 
 After crawling, hard-refresh the browser (`Cmd+Shift+R`) to load the enriched data.
 

@@ -9,7 +9,51 @@ const fs   = require('fs');
 const path = require('path');
 const https = require('https');
 const http  = require('http');
+const os   = require('os');
+const { spawnSync } = require('child_process');
 const mirrors = require('./mirrors');
+
+// Detect yt-dlp once (used for TED / video transcripts)
+let _ytdlp = null;
+function hasYtDlp() {
+  if (_ytdlp !== null) return _ytdlp;
+  try {
+    const r = spawnSync('yt-dlp', ['--version'], { encoding: 'utf8', timeout: 8000 });
+    _ytdlp = r.status === 0;
+  } catch { _ytdlp = false; }
+  return _ytdlp;
+}
+
+// Convert a WebVTT subtitle file into clean reading paragraphs.
+function vttToParagraphs(vtt) {
+  const lines = String(vtt).split(/\r?\n/);
+  const cues = [];
+  let prev = '';
+  for (let line of lines) {
+    if (/^WEBVTT/i.test(line)) continue;
+    if (/-->/.test(line)) continue;        // timestamp line
+    if (/^\s*$/.test(line)) continue;       // blank
+    if (/^\d+$/.test(line)) continue;       // cue index
+    if (/^(Kind|Language):/i.test(line)) continue;
+    line = line.replace(/<[^>]+>/g, '').replace(/&nbsp;/gi, ' ')
+               .replace(/&amp;/gi, '&').replace(/&#39;/g, "'").trim();
+    if (!line || line === prev) continue;   // dedupe auto-sub repeats
+    prev = line;
+    cues.push(line);
+  }
+  // Group cues into ~paragraph-sized chunks, breaking on sentence ends.
+  const paras = [];
+  let buf = [];
+  for (const c of cues) {
+    buf.push(c);
+    const joined = buf.join(' ');
+    if (joined.length > 350 && /[.!?]["')\]]?$/.test(c)) {
+      paras.push(joined); buf = [];
+    }
+  }
+  if (buf.length) paras.push(buf.join(' '));
+  return paras;
+}
 
 // ── rate-limit helpers ──────────────────────────────────────────
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -305,18 +349,76 @@ function allItems(sections) {
   return out;
 }
 
+// ── match scoring ───────────────────────────────────────────────
+// Reject wrong-edition / wrong-book fuzzy matches. Returns 0..1.
+const STOP = new Set(['the','a','an','of','and','or','to','in','on','for','with','why','it','can','more','than','is','your','you','how','what','a','la','el','de']);
+
+function normTokens(s) {
+  return String(s || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter(w => w.length > 1 && !STOP.has(w));
+}
+
+function titleScore(queryTitle, resultTitle) {
+  const q = new Set(normTokens(queryTitle));
+  const r = new Set(normTokens(resultTitle));
+  if (!q.size || !r.size) return 0;
+  let hit = 0;
+  for (const w of q) if (r.has(w)) hit++;
+  // fraction of the query's significant words present in the result
+  return hit / q.size;
+}
+
+function authorScore(queryAuthor, resultAuthor) {
+  if (!queryAuthor || !resultAuthor) return null; // unknown, don't penalize
+  const q = normTokens(queryAuthor);
+  const r = new Set(normTokens(Array.isArray(resultAuthor) ? resultAuthor.join(' ') : resultAuthor));
+  if (!q.length) return null;
+  // match on last name (most reliable token)
+  const surname = q[q.length - 1];
+  return r.has(surname) ? 1 : 0;
+}
+
+// Accept a candidate if title overlap is strong, or decent title + author match.
+function isGoodMatch(item, resultTitle, resultAuthor) {
+  const ts = titleScore(item.title, resultTitle);
+  const as = authorScore(item.author, resultAuthor);
+  if (ts >= 0.6) return true;              // strong title overlap alone
+  if (ts >= 0.4 && as === 1) return true;  // decent title + right author
+  if (as === 1 && ts >= 0.34) return true; // right author + some title
+  return false;
+}
+
+// Pick the best matching doc from a candidate list, or null.
+function pickBest(item, docs, getTitle, getAuthor) {
+  let best = null, bestScore = -1;
+  for (const d of docs) {
+    const ts = titleScore(item.title, getTitle(d));
+    const as = authorScore(item.author, getAuthor(d));
+    const score = ts + (as === 1 ? 0.5 : 0);
+    if (score > bestScore && isGoodMatch(item, getTitle(d), getAuthor(d))) {
+      best = d; bestScore = score;
+    }
+  }
+  return best;
+}
+
 // ── Open Library ───────────────────────────────────────────────
 async function queryOpenLibrary(item) {
   if (item.type !== 'Book') return null;
   const q = [item.title, item.author].filter(Boolean).join(' ');
-  const url = `https://openlibrary.org/search.json?q=${enc(q)}&limit=3&fields=key,title,author_name,first_publish_year,ia,availability,cover_i,number_of_pages_median,subject`;
+  const url = `https://openlibrary.org/search.json?q=${enc(q)}&limit=5&fields=key,title,author_name,first_publish_year,ia,availability,cover_i,number_of_pages_median,subject`;
   try {
     const { data } = await get(url);
     if (!data?.docs?.length) return { found: false };
-    const best = data.docs[0];
+    const best = pickBest(item, data.docs, d => d.title, d => d.author_name);
+    if (!best) return { found: false, reason: 'no confident match' };
     const ia   = best.ia?.[0] ?? null;
     return {
       found:          true,
+      match_score:    +titleScore(item.title, best.title).toFixed(2),
       key:            best.key,
       title:          best.title,
       authors:        best.author_name?.join(', '),
@@ -337,14 +439,16 @@ async function queryOpenLibrary(item) {
 async function queryArchive(item) {
   if (!['Book','Paper'].includes(item.type)) return null;
   const q = [item.title, item.author].filter(Boolean).join(' ');
-  const url = `https://archive.org/advancedsearch.php?q=${enc(q)}+AND+mediatype%3Atexts&rows=3&page=1&output=json&fl[]=identifier,title,creator,year,mediatype,downloads,access-restricted-item`;
+  const url = `https://archive.org/advancedsearch.php?q=${enc(q)}+AND+mediatype%3Atexts&rows=5&page=1&output=json&fl[]=identifier,title,creator,year,mediatype,downloads,access-restricted-item`;
   try {
     const { data } = await get(url);
     const docs = data?.response?.docs ?? [];
     if (!docs.length) return { found: false };
-    const d = docs[0];
+    const d = pickBest(item, docs, x => x.title, x => x.creator);
+    if (!d) return { found: false, reason: 'no confident match' };
     return {
       found:      true,
+      match_score:+titleScore(item.title, d.title).toFixed(2),
       identifier: d.identifier,
       url:        `https://archive.org/details/${d.identifier}`,
       title:      d.title,
@@ -367,28 +471,90 @@ async function fetchTEDTranscript(item) {
   const slug = tedLink.url.match(/ted\.com\/talks\/([^/?#]+)/)?.[1];
   if (!slug) return null;
 
-  // TED's internal transcript JSON (language=en)
+  // ── Strategy 1: yt-dlp (maintained TED extractor, most reliable) ──
+  if (hasYtDlp()) {
+    const viaYt = await fetchTEDviaYtDlp(slug, tedLink.url);
+    if (viaYt?.paragraphs?.length) return viaYt;
+  }
+
+  // ── Strategy 2: __NEXT_DATA__ embedded JSON on the talk page ──
+  const viaNext = await fetchTEDviaNextData(slug, tedLink.url);
+  if (viaNext?.paragraphs?.length) return viaNext;
+
+  // ── Strategy 3: legacy transcript.json ──
   const url = `https://www.ted.com/talks/${slug}/transcript.json?language=en`;
   try {
     const { data, status } = await get(url, { json: true });
-    if (status !== 200 || !data?.captions) {
-      // fallback: try the HTML page and strip script tags
-      return await fetchTEDTranscriptHTML(slug);
-    }
-    const paragraphs = [];
-    let current = '';
-    for (const cap of data.captions) {
-      current += (current ? ' ' : '') + cap.content;
-      if (cap.startOfParagraph && current.trim()) {
-        paragraphs.push(current.trim());
-        current = '';
+    if (status === 200 && data?.captions?.length) {
+      const paragraphs = [];
+      let current = '';
+      for (const cap of data.captions) {
+        current += (current ? ' ' : '') + cap.content;
+        if (cap.startOfParagraph && current.trim()) { paragraphs.push(current.trim()); current = ''; }
       }
+      if (current.trim()) paragraphs.push(current.trim());
+      if (paragraphs.length)
+        return { source: 'ted.com', slug, url: tedLink.url, paragraphs, wordCount: paragraphs.join(' ').split(/\s+/).length };
     }
-    if (current.trim()) paragraphs.push(current.trim());
-    return { source: 'ted.com', slug, url: tedLink.url, paragraphs, wordCount: paragraphs.join(' ').split(/\s+/).length };
+  } catch { /* fall through */ }
+
+  // ── Strategy 4: HTML scrape ──
+  return await fetchTEDTranscriptHTML(slug);
+}
+
+// yt-dlp: download subtitles (manual then auto) as VTT, parse to paragraphs.
+async function fetchTEDviaYtDlp(slug, url) {
+  let tmpDir;
+  try {
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ted-'));
+    const outTmpl = path.join(tmpDir, 'sub');
+    const r = spawnSync('yt-dlp', [
+      '--skip-download',
+      '--write-subs', '--write-auto-subs',
+      '--sub-langs', 'en.*',
+      '--sub-format', 'vtt/best',
+      '--no-warnings',
+      '-o', outTmpl,
+      url,
+    ], { encoding: 'utf8', timeout: 90000 });
+
+    const vtt = fs.readdirSync(tmpDir).find(f => f.endsWith('.vtt'));
+    if (!vtt) return { found: false, error: 'yt-dlp: no subtitles', stderr: (r.stderr||'').slice(0,120) };
+    const paragraphs = vttToParagraphs(fs.readFileSync(path.join(tmpDir, vtt), 'utf8'));
+    return paragraphs.length
+      ? { source: 'ted.com (yt-dlp)', slug, url, paragraphs, wordCount: paragraphs.join(' ').split(/\s+/).length }
+      : { found: false, error: 'empty vtt' };
   } catch (e) {
     return { found: false, error: e.message };
+  } finally {
+    if (tmpDir) { try { fs.rmSync(tmpDir, { recursive: true, force: true }); } catch {} }
   }
+}
+
+// Parse the Next.js __NEXT_DATA__ blob for the transcript cues.
+async function fetchTEDviaNextData(slug, url) {
+  try {
+    const { data, status } = await get(`https://www.ted.com/talks/${slug}/transcript?language=en`, { json: false });
+    if (status !== 200 || !data) return null;
+    const m = data.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+    if (!m) return null;
+    const json = JSON.parse(m[1]);
+    // Walk the blob for a translation/paragraphs/cues structure
+    const found = [];
+    (function walk(o) {
+      if (!o || typeof o !== 'object') return;
+      if (Array.isArray(o.paragraphs) && o.paragraphs.length && o.paragraphs[0]?.cues) {
+        for (const p of o.paragraphs) {
+          const text = p.cues.map(c => c.text).join(' ').replace(/\s+/g, ' ').trim();
+          if (text) found.push(text);
+        }
+      }
+      for (const k in o) walk(o[k]);
+    })(json);
+    return found.length
+      ? { source: 'ted.com (next)', slug, url, paragraphs: found, wordCount: found.join(' ').split(/\s+/).length }
+      : null;
+  } catch { return null; }
 }
 
 async function fetchTEDTranscriptHTML(slug) {
@@ -428,9 +594,15 @@ async function queryOpenAlex(item) {
     const { data } = await get(url);
     const results = data?.results ?? [];
     if (!results.length) return { found: false };
-    const best = results[0];
+    const best = pickBest(
+      item, results,
+      r => r.title,
+      r => r.authorships?.map(a => a.author?.display_name).join(' ')
+    );
+    if (!best) return { found: false, reason: 'no confident match' };
     return {
       found:       true,
+      match_score: +titleScore(item.title, best.title).toFixed(2),
       id:          best.id,
       title:       best.title,
       year:        best.publication_year,
@@ -501,11 +673,52 @@ async function queryLibGen(item) {
 
   if (!ids.length && !numIds.length) return { found: false, error: 'no results parsed' };
 
-  // Step 2: if we have MD5s directly, build download links
+  // Step 2 (preferred): use numeric IDs to get JSON metadata with titles,
+  // so we can verify the match and pick the best format.
+  if (numIds.length) {
+    try {
+      const jsonUrl = `${usedMirror}/json.php?ids=${numIds.join(',')}&fields=id,title,author,md5,extension,filesize,year`;
+      const { data } = await get(jsonUrl, { json: true, timeout: 8000 });
+      if (Array.isArray(data) && data.length) {
+        // keep only confident title/author matches, prefer EPUB/PDF
+        const good = data.filter(d => isGoodMatch(item, d.title, d.author));
+        const pool = good.length ? good : [];
+        const fmtRank = e => ({ epub: 0, pdf: 1, mobi: 2, djvu: 3 }[(e || '').toLowerCase()] ?? 9);
+        pool.sort((a, b) =>
+          (titleScore(item.title, b.title) - titleScore(item.title, a.title)) ||
+          (fmtRank(a.extension) - fmtRank(b.extension))
+        );
+        const best = pool[0];
+        if (best && best.md5) {
+          const md5 = best.md5.toLowerCase();
+          return {
+            found:        true,
+            match_score:  +titleScore(item.title, best.title).toFixed(2),
+            md5,
+            title:        best.title,
+            author:       best.author,
+            year:         best.year,
+            format:       best.extension?.toUpperCase() || null,
+            size_bytes:   parseInt(best.filesize) || null,
+            size:         best.filesize ? `${(parseInt(best.filesize)/1024/1024).toFixed(1)}MB` : null,
+            download_url: `${dlBase}/main/${md5}`,
+            mirror_url:   `https://libgen.lc/ads.php?md5=${md5}`,
+            anna_url:     `https://annas-archive.org/md5/${md5}`,
+            search_url:   searchUrl,
+          };
+        }
+        // JSON returned but nothing matched confidently
+        return { found: false, reason: 'no confident match', search_url: searchUrl };
+      }
+    } catch { /* fall through to raw MD5 */ }
+  }
+
+  // Step 3 (fallback): raw MD5 with no title to verify — low confidence.
   if (ids.length) {
     const md5 = ids[0];
     return {
       found: true,
+      unverified: true,
       md5,
       download_url: `${dlBase}/main/${md5}`,
       search_url: searchUrl,
@@ -516,31 +729,7 @@ async function queryLibGen(item) {
     };
   }
 
-  // Step 3: use numeric IDs to get JSON metadata (from the reachable mirror)
-  try {
-    const jsonUrl = `${usedMirror}/json.php?ids=${numIds.join(',')}&fields=id,title,author,md5,extension,filesize,year`;
-    const { data } = await get(jsonUrl, { json: true, timeout: 8000 });
-    if (!Array.isArray(data) || !data.length) return { found: false, error: 'no JSON results' };
-    const best = data[0];
-    const md5  = best.md5?.toLowerCase();
-    if (!md5) return { found: false, error: 'no MD5 in result' };
-    return {
-      found:        true,
-      md5,
-      title:        best.title,
-      author:       best.author,
-      year:         best.year,
-      format:       best.extension?.toUpperCase() || null,
-      size_bytes:   parseInt(best.filesize) || null,
-      size:         best.filesize ? `${(parseInt(best.filesize)/1024/1024).toFixed(1)}MB` : null,
-      download_url: `${dlBase}/main/${md5}`,
-      mirror_url:   `https://libgen.lc/ads.php?md5=${md5}`,
-      anna_url:     `https://annas-archive.org/md5/${md5}`,
-      search_url:   searchUrl,
-    };
-  } catch (e) {
-    return { found: false, error: e.message };
-  }
+  return { found: false, reason: 'no confident match', search_url: searchUrl };
 }
 
 // ── Anna's Archive search URL (browser link, not API) ──────────
@@ -620,6 +809,13 @@ async function main() {
   console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('FETCHING: TED Transcripts');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  if (hasYtDlp()) {
+    console.log('  yt-dlp detected — using it for reliable transcripts.');
+  } else {
+    console.log('  ⚠ yt-dlp not found. Transcripts may be incomplete.');
+    console.log('    Install for best results:  brew install yt-dlp   (or: pip install yt-dlp)');
+  }
+  console.log('');
 
   for (const talk of talks) {
     process.stdout.write(`  [TALK] ${trim(talk.title, 50).padEnd(52)}`);
